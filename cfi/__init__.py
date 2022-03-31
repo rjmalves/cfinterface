@@ -2,7 +2,7 @@
 cfi
 ====
 
-inewave is a Python module for handling custom formatted files
+cfi is a Python module for handling custom formatted files
 and provide reading, storing and writing utilities.
 """
 
