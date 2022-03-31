@@ -19,7 +19,7 @@ jobs:
         python -m pip install -r deploy-requirements.txt
     - name: Runs tests
       run: |
-        python -m pytest --cov-report=xml --cov=inewave tests/
+        python -m pytest --cov-report=xml --cov=cfi tests/
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }} 
