@@ -26,6 +26,6 @@ setup(
         "Operating System :: OS Independent",
         "Development Status :: 2 - Pre-Alpha",
     ],
-    python_requires=">=3.5",
+    python_requires=">=3.7",
     install_requires=requirements,
 )
