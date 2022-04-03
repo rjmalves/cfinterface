@@ -4,8 +4,9 @@ import pytest
 
 from cfi.components.block import Block
 from cfi.components.state import ComponentState
+from tests.mocks.mock_open import mock_open
 
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, patch
 
 
 class DummyBlock(Block):

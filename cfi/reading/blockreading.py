@@ -94,3 +94,7 @@ class BlockReading:
     @property
     def data(self) -> BlockData:
         return self.__data
+
+    @property
+    def empty(self) -> bool:
+        return len(self.__data) == 1
