@@ -1,5 +1,7 @@
 from typing import IO
 
+import pytest
+
 from cfi.components.block import Block
 from cfi.components.state import ComponentState
 
@@ -10,11 +12,19 @@ class DummyBlock(Block):
     BEGIN_PATTERN = "beg"
     END_PATTERN = "end"
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+        else:
+            return o.data == self.data
+
     def read(self, file: IO) -> bool:
         self.data = file.readline().strip()
+        return True
 
     def write(self, file: IO) -> bool:
         file.write(self.data)
+        return True
 
 
 def test_single_block_success():
@@ -55,6 +65,40 @@ def test_block_simple_chain_properties():
     assert not b2.is_first
     assert not b2.is_last
     assert not b3.is_first
+    assert b1.empty
+    assert b2.empty
+    assert b3.empty
+
+
+def test_block_equal_error():
+    b1 = Block()
+    b2 = Block()
+    with pytest.raises(NotImplementedError):
+        b1 == b2
+
+
+def test_block_read_error():
+    b = Block()
+    with pytest.raises(NotImplementedError):
+        m: MagicMock = mock_open(read_data="")
+        with patch("builtins.open", m):
+            with open("", "r") as fp:
+                b.read_block(fp)
+
+
+def test_block_read_error():
+    b = Block(state=ComponentState.READ_SUCCESS)
+    with pytest.raises(NotImplementedError):
+        m: MagicMock = mock_open(read_data="")
+        with patch("builtins.open", m):
+            with open("", "r") as fp:
+                b.write_block(fp)
+
+
+def test_dummy_block_equal():
+    b1 = DummyBlock()
+    b2 = DummyBlock()
+    assert b1 == b2
 
 
 def test_dummy_block_read():
@@ -70,6 +114,7 @@ def test_dummy_block_read():
             assert DummyBlock.begins(fp.readline())
             b.read_block(fp)
             assert b.data == data
+            assert b.success
             assert DummyBlock.ends(fp.readline())
 
 

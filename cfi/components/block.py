@@ -77,7 +77,7 @@ class Block:
         """
         raise NotImplementedError()
 
-    def read_block(self, file: IO, previous: "Block" = None):
+    def read_block(self, file: IO):
         """
         Function that reads the block and evaluates the result.
 
@@ -86,9 +86,6 @@ class Block:
         """
         if self.read(file):
             self.__state = ComponentState.READ_SUCCESS
-            self.__previous = previous
-            if previous is not None:
-                previous.next = self
         else:
             self.__state = ComponentState.READ_ERROR
 
