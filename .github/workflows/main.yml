@@ -34,4 +34,4 @@ jobs:
         python -m mypy .
     - name: Verification of PEP8 linting
       run: |
-        python -m pylama --ignore E203 --skip tests** .
+        python -m pylama --ignore E203 ./cfi
