@@ -86,7 +86,7 @@ def test_block_read_error():
                 b.read_block(fp)
 
 
-def test_block_read_error():
+def test_block_write_error():
     b = Block(state=ComponentState.READ_SUCCESS)
     with pytest.raises(NotImplementedError):
         m: MagicMock = mock_open(read_data="")
