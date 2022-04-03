@@ -68,7 +68,7 @@ def mock_open(mock=None, read_data=""):
 
     global file_spec
     if file_spec is None:
-        import _io
+        import _io  # type: ignore
 
         file_spec = list(
             set(dir(_io.TextIOWrapper)).union(set(dir(_io.BytesIO)))

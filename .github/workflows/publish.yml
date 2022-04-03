@@ -9,28 +9,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Configura o Python
+    - name: Python setup
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Instala os requisitos do módulo
+    - name: Installs requirements
       run: |
         python -m pip install -r deploy-requirements.txt
-    - name: Executa os testes do pacote
+    - name: Runs tests
       run: |
         python -m pytest --cov=cfi tests/
-    - name: Veriricações de qualidade de código - tipagem estática
+    - name: Static typing check
       run: |
         python -m mypy .
-    - name: Verificações de qualidade de código - linter PEP8
+    - name: PEP8 check
       run: |
-        python -m pylama --ignore E203 .
-    - name: Instala dependências e constroi o pacote
+        python -m pylama --ignore E203 --skip tests/mocks** .
+    - name: Installs dependencies
       if: startsWith(github.ref, 'refs/tags')
       run: |
         python -m pip install --upgrade pip setuptools wheel twine
         python setup.py sdist bdist_wheel
-    - name: Publica o pacote no PyPI
+    - name: PyPI publish
       if: startsWith(github.ref, 'refs/tags')
       uses: pypa/gh-action-pypi-publish@master
       with:

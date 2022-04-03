@@ -1,7 +1,5 @@
 from typing import IO, List
 
-import pytest
-
 from cfi.components.block import Block
 from cfi.reading.blockreading import BlockReading
 
