@@ -24,7 +24,7 @@ jobs:
         python -m mypy .
     - name: PEP8 check
       run: |
-        python -m pylama --ignore E203 --skip tests/mocks** .
+        python -m pylama --ignore E203 --skip tests** .
     - name: Installs dependencies
       if: startsWith(github.ref, 'refs/tags')
       run: |
