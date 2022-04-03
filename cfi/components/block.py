@@ -11,8 +11,8 @@ class Block:
     for beginning and end and reading states.
     """
 
-    BEGIN_PATTERN = None
-    END_PATTERN = None
+    BEGIN_PATTERN = ""
+    END_PATTERN = ""
     MAX_LINES = 10000
 
     def __init__(

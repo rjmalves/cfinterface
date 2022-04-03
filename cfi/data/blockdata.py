@@ -1,4 +1,4 @@
-from typing import List, TypeVar, Type, Generator
+from typing import TypeVar, Type, Generator
 
 from cfi.components.block import Block
 

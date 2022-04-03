@@ -1,9 +1,5 @@
-import pytest
-
 from cfi.components.block import Block
 from cfi.data.blockdata import BlockData
-
-from unittest.mock import MagicMock, patch, mock_open
 
 
 class DummyBlock(Block):
