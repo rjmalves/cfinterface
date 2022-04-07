@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import Any, Optional
 
 
@@ -16,7 +15,6 @@ class Field:
         self._ending_column = size + starting_column
         self._value = value
 
-    @abstractmethod
     def read(self, line: str) -> Any:
         """
         Generic method for reading a field from a given line of a file.
@@ -28,7 +26,6 @@ class Field:
         """
         raise NotImplementedError()
 
-    @abstractmethod
     def write(self, line: str) -> str:
         """
         Generic method for writing a field to a given line of a file.

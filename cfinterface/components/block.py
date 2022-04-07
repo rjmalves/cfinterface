@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import Any, IO
 import re
 
@@ -51,7 +50,6 @@ class Block:
         """
         return re.search(cls.END_PATTERN, line) is not None
 
-    @abstractmethod
     def read(self, file: IO) -> bool:
         """
         Generic function to perform the reading of the block using
@@ -64,7 +62,6 @@ class Block:
         """
         raise NotImplementedError()
 
-    @abstractmethod
     def write(self, file: IO) -> bool:
         """
         Generic function to perform the writing of the block using
