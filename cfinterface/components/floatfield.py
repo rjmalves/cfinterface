@@ -23,9 +23,12 @@ class FloatField(Field):
         self.__format = format
 
     # Override
-    def read(self, line: str) -> float:
-        self._value = float(
-            line[self._starting_column : self._ending_column].strip()
+    def read(self, line: str) -> Optional[float]:
+        linevalue = line[self._starting_column : self._ending_column].strip()
+        self._value = (
+            float(linevalue)
+            if linevalue.replace(".", "").replace(self.__format, "").isdigit()
+            else None
         )
         return self._value
 

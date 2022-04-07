@@ -15,10 +15,9 @@ class IntegerField(Field):
         super().__init__(size, starting_column, value)
 
     # Override
-    def read(self, line: str) -> int:
-        self._value = int(
-            line[self._starting_column : self._ending_column].strip()
-        )
+    def read(self, line: str) -> Optional[int]:
+        linevalue = line[self._starting_column : self._ending_column].strip()
+        self._value = int(linevalue) if linevalue.isdigit() else None
         return self._value
 
     # Override
