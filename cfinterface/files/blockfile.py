@@ -13,15 +13,15 @@ class BlockFile:
     and writing are given by a series of blocks.
     """
 
+    BLOCKS: List[Type[Block]] = []
+
     def __init__(
         self,
-        allowed_blocks: List[Type[Block]],
         data=BlockData(DefaultBlock("")),
     ) -> None:
-        self.__allowed_blocks = allowed_blocks
         self.__data = data
 
-    def read(self, filename: str, directory: str):
+    def read(self, directory: str, filename: str = ""):
         """
         Reads the blockfile data from a given file in disk.
 
@@ -30,10 +30,10 @@ class BlockFile:
         :param directory: The directory where the file is
         :type directory: str
         """
-        reader = BlockReading(self.__allowed_blocks)
+        reader = BlockReading(self.__class__.BLOCKS)
         self.__data = reader.read(filename, directory)
 
-    def write(self, filename: str, directory: str):
+    def write(self, directory: str, filename: str = ""):
         """
         Write the blockfile data to a given file in disk.
 
