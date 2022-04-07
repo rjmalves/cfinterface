@@ -1,5 +1,5 @@
 from typing import IO
-from cfi.components.block import Block
+from cfinterface.components.block import Block
 
 
 class DefaultBlock(Block):

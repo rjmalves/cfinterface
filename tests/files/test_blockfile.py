@@ -1,10 +1,10 @@
 from typing import IO, List
 
-from cfi.components.block import Block
-from cfi.components.defaultblock import DefaultBlock
-from cfi.components.state import ComponentState
-from cfi.data.blockdata import BlockData
-from cfi.files.blockfile import BlockFile
+from cfinterface.components.block import Block
+from cfinterface.components.defaultblock import DefaultBlock
+from cfinterface.components.state import ComponentState
+from cfinterface.data.blockdata import BlockData
+from cfinterface.files.blockfile import BlockFile
 
 from tests.mocks.mock_open import mock_open
 

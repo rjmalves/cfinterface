@@ -1,4 +1,4 @@
-from cfi.components.integerfield import IntegerField
+from cfinterface.components.integerfield import IntegerField
 
 import pytest
 

@@ -1,7 +1,7 @@
 from typing import IO
 from os.path import join
 
-from cfi.data.blockdata import BlockData
+from cfinterface.data.blockdata import BlockData
 
 
 class BlockWriting:

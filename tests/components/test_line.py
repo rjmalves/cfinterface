@@ -1,5 +1,5 @@
-from cfi.components.line import Line
-from cfi.components.literalfield import LiteralField
+from cfinterface.components.line import Line
+from cfinterface.components.literalfield import LiteralField
 
 
 def test_line_read_no_fields():

@@ -2,8 +2,8 @@ from typing import IO
 
 import pytest
 
-from cfi.components.block import Block
-from cfi.components.state import ComponentState
+from cfinterface.components.block import Block
+from cfinterface.components.state import ComponentState
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch

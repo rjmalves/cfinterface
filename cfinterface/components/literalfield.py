@@ -1,6 +1,6 @@
 from typing import Optional
 
-from cfi.components.field import Field
+from cfinterface.components.field import Field
 
 
 class LiteralField(Field):
@@ -22,7 +22,7 @@ class LiteralField(Field):
     # Override
     def write(self, line: str) -> str:
         if self.value is None:
-            raise ValueError(f"Field cannot be written if has no value")
+            raise ValueError("Field cannot be written if has no value")
 
         if len(line) < self._ending_column:
             line = line.ljust(self._ending_column)

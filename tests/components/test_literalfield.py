@@ -1,6 +1,6 @@
 import pytest
 
-from cfi.components.literalfield import LiteralField
+from cfinterface.components.literalfield import LiteralField
 
 
 def test_literalfield_read():

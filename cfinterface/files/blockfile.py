@@ -1,10 +1,10 @@
 from typing import List, Type
 
-from cfi.components.block import Block
-from cfi.components.defaultblock import DefaultBlock
-from cfi.data.blockdata import BlockData
-from cfi.reading.blockreading import BlockReading
-from cfi.writing.blockwriting import BlockWriting
+from cfinterface.components.block import Block
+from cfinterface.components.defaultblock import DefaultBlock
+from cfinterface.data.blockdata import BlockData
+from cfinterface.reading.blockreading import BlockReading
+from cfinterface.writing.blockwriting import BlockWriting
 
 
 class BlockFile:

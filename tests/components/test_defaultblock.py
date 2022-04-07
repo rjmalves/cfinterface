@@ -1,5 +1,5 @@
-from cfi.components.defaultblock import DefaultBlock
-from cfi.components.state import ComponentState
+from cfinterface.components.defaultblock import DefaultBlock
+from cfinterface.components.state import ComponentState
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch

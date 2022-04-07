@@ -1,4 +1,4 @@
-from cfi.components.floatfield import FloatField
+from cfinterface.components.floatfield import FloatField
 
 import pytest
 

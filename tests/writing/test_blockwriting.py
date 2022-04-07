@@ -1,8 +1,8 @@
 from typing import IO, List
 
-from cfi.components.block import Block
-from cfi.data.blockdata import BlockData
-from cfi.writing.blockwriting import BlockWriting
+from cfinterface.components.block import Block
+from cfinterface.data.blockdata import BlockData
+from cfinterface.writing.blockwriting import BlockWriting
 
 from tests.mocks.mock_open import mock_open
 

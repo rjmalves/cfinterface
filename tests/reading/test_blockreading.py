@@ -1,7 +1,7 @@
 from typing import IO, List
 
-from cfi.components.block import Block
-from cfi.reading.blockreading import BlockReading
+from cfinterface.components.block import Block
+from cfinterface.reading.blockreading import BlockReading
 
 from tests.mocks.mock_open import mock_open
 

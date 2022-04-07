@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Any, IO
 import re
 
-from cfi.components.state import ComponentState
+from cfinterface.components.state import ComponentState
 
 
 class Block:

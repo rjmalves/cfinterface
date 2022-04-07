@@ -1,6 +1,6 @@
 import pytest
 
-from cfi.components.field import Field
+from cfinterface.components.field import Field
 
 
 def test_default_field():

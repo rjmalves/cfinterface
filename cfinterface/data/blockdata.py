@@ -1,6 +1,6 @@
 from typing import TypeVar, Type, Generator
 
-from cfi.components.block import Block
+from cfinterface.components.block import Block
 
 
 class BlockData:

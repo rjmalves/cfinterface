@@ -1,9 +1,9 @@
 from typing import IO, List, Type
 from os.path import join
 
-from cfi.components.block import Block
-from cfi.components.defaultblock import DefaultBlock
-from cfi.data.blockdata import BlockData
+from cfinterface.components.block import Block
+from cfinterface.components.defaultblock import DefaultBlock
+from cfinterface.data.blockdata import BlockData
 
 
 class BlockReading:

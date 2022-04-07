@@ -1,5 +1,5 @@
-from cfi.components.block import Block
-from cfi.data.blockdata import BlockData
+from cfinterface.components.block import Block
+from cfinterface.data.blockdata import BlockData
 
 
 class DummyBlock(Block):

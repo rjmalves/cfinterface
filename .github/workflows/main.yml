@@ -19,7 +19,7 @@ jobs:
         python -m pip install -r deploy-requirements.txt
     - name: Runs tests
       run: |
-        python -m pytest --cov-report=xml --cov=cfi tests/
+        python -m pytest --cov-report=xml --cov=cfinterface tests/
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }} 
@@ -34,4 +34,4 @@ jobs:
         python -m mypy .
     - name: Verification of PEP8 linting
       run: |
-        python -m pylama --ignore E203 ./cfi
+        python -m pylama --ignore E203 ./cfinterface

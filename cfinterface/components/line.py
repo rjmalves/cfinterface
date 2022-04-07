@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 
-from cfi.components.field import Field
+from cfinterface.components.field import Field
 
 
 class Line:
