@@ -59,20 +59,3 @@ def test_blockreading_withdata():
         assert dbs[0].data[0].strip() == DummyBlock.BEGIN_PATTERN
         assert dbs[0].data[1].strip() == data
         assert dbs[0].data[2].strip() == DummyBlock.END_PATTERN
-
-
-# def test_dummy_block_read():
-#     data = "Hello, world!"
-#     filedata = (
-#         "\n".join([DummyBlock.BEGIN_PATTERN, data, DummyBlock.END_PATTERN])
-#         + "\n"
-#     )
-#     m: MagicMock = mock_open(read_data=filedata)
-#     with patch("builtins.open", m):
-#         with open("", "r") as fp:
-#             b = DummyBlock()
-#             assert DummyBlock.begins(fp.readline())
-#             b.read_block(fp)
-#             assert b.data == data
-#             assert b.success
-#             assert DummyBlock.ends(fp.readline())

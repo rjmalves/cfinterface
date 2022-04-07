@@ -2,6 +2,8 @@ from typing import IO, List
 
 from cfi.components.block import Block
 from cfi.components.defaultblock import DefaultBlock
+from cfi.components.state import ComponentState
+from cfi.data.blockdata import BlockData
 from cfi.files.blockfile import BlockFile
 
 from tests.mocks.mock_open import mock_open
@@ -44,15 +46,16 @@ def test_blockfile_read():
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
         f.read("", "")
+        assert len(f.data) == 2
+        assert len(f.data.last.data) == 3
+        assert f.data.last.data[1] == data + "\n"
 
 
 def test_blockfile_write():
     data = "Hello, world!"
-    filedata = (
-        "\n".join([DummyBlock.BEGIN_PATTERN, data, DummyBlock.END_PATTERN])
-        + "\n"
-    )
-    f = BlockFile([DummyBlock])
-    m: MagicMock = mock_open(read_data=filedata)
+    bd = BlockData(DummyBlock(state=ComponentState.READ_SUCCESS, data=[data]))
+    f = BlockFile([DummyBlock], bd)
+    m: MagicMock = mock_open(read_data="")
     with patch("builtins.open", m):
         f.write("", "")
+    m().write.assert_called_once_with(data)
