@@ -42,10 +42,9 @@ def test_blockfile_read():
         + "\n"
     )
     BlockFile.BLOCKS = [DummyBlock]
-    f = BlockFile()
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        f.read("", "")
+        f = BlockFile.read("", "")
         assert len(f.data) == 2
         assert len(f.data.last.data) == 3
         assert f.data.last.data[1] == data + "\n"

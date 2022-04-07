@@ -21,7 +21,8 @@ class BlockFile:
     ) -> None:
         self.__data = data
 
-    def read(self, directory: str, filename: str = ""):
+    @classmethod
+    def read(cls, directory: str, filename: str = ""):
         """
         Reads the blockfile data from a given file in disk.
 
@@ -30,8 +31,8 @@ class BlockFile:
         :param directory: The directory where the file is
         :type directory: str
         """
-        reader = BlockReading(self.__class__.BLOCKS)
-        self.__data = reader.read(filename, directory)
+        reader = BlockReading(cls.BLOCKS)
+        return cls(reader.read(filename, directory))
 
     def write(self, directory: str, filename: str = ""):
         """
