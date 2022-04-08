@@ -11,6 +11,14 @@ def test_floatfield_read():
     assert field.value == data
 
 
+def test_floatfield_read_scientific_notation():
+    data = "1.2e3"
+    field = FloatField(5, 0, 1, format="e")
+    line = f"{data}-something-else"
+    field.read(line)
+    assert field.value == float(data)
+
+
 def test_floatfield_write():
     line_before = "field-12345-else"
     data = float(line_before[6:11])

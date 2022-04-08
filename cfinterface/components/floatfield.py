@@ -27,7 +27,11 @@ class FloatField(Field):
         linevalue = line[self._starting_column : self._ending_column].strip()
         self._value = (
             float(linevalue)
-            if linevalue.replace(".", "").replace(self.__format, "").isdigit()
+            if linevalue.replace(".", "")
+            .replace(self.__format, "")
+            .replace("+", "")
+            .replace("-", "")
+            .isdigit()
             else None
         )
         return self._value
