@@ -13,6 +13,18 @@ class DummyBlock(Block):
             return o.data == self.data
 
 
+def test_blockdata_eq():
+    bd1 = BlockData(DummyBlock(data=-1))
+    bd2 = BlockData(DummyBlock(data=-1))
+    assert bd1 == bd2
+
+
+def test_blockdata_not_eq():
+    bd1 = BlockData(DummyBlock(data=-1))
+    bd2 = BlockData(DummyBlock(data=+1))
+    assert bd1 != bd2
+
+
 def test_blockdata_append():
     bd = BlockData(DummyBlock(data=-1))
     n_blocks = 10

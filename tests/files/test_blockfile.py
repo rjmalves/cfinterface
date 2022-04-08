@@ -35,6 +35,32 @@ class DummyBlock(Block):
         return True
 
 
+def test_blockfile_eq():
+    bf1 = BlockFile(data=BlockData(DummyBlock(data=-1)))
+    bf2 = BlockFile(data=BlockData(DummyBlock(data=-1)))
+    assert bf1 == bf2
+
+
+def test_blockfile_not_eq_invalid_type():
+    bf1 = BlockFile(data=BlockData(DummyBlock(data=-1)))
+    bf2 = 5
+    assert bf1 != bf2
+
+
+def test_blockfile_not_eq_different_length():
+    bd = BlockData(DummyBlock(data=-1))
+    bd.append(DummyBlock(data=+1))
+    bf1 = BlockFile(data=bd)
+    bf2 = BlockFile(data=BlockData(DummyBlock(data=-1)))
+    assert bf1 != bf2
+
+
+def test_blockfile_not_eq_valid():
+    bf1 = BlockFile(data=BlockData(DummyBlock(data=-1)))
+    bf2 = BlockFile(data=BlockData(DummyBlock(data=+1)))
+    assert bf1 != bf2
+
+
 def test_blockfile_read():
     data = "Hello, world!"
     filedata = (

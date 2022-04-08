@@ -26,6 +26,17 @@ class BlockData:
             count += 1
         return count
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, BlockData):
+            return False
+        bd: BlockData = o
+        if len(self) != len(bd):
+            return False
+        for b1, b2 in zip(self, bd):
+            if b1 != b2:
+                return False
+        return True
+
     def preppend(self, b: Block):
         """
         Appends a block to the beginning of the data.

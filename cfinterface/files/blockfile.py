@@ -21,6 +21,12 @@ class BlockFile:
     ) -> None:
         self.__data = data
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, BlockFile):
+            return False
+        bf: BlockFile = o
+        return self.data == bf.data
+
     @classmethod
     def read(cls, directory: str, filename: str = ""):
         """
