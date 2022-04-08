@@ -11,9 +11,7 @@ class DefaultBlock(Block):
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, DefaultBlock):
             return False
-        my_data = (self.data, self.previous, self.next)
-        o_data = (o.data, o.previous, o.next)
-        return my_data == o_data
+        return self.data == o.data
 
     def read(self, file: IO) -> bool:
         self.data = file.readline()

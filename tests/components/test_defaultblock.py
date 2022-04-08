@@ -11,12 +11,6 @@ def test_default_block_eq():
     assert b1 == b2
     b1.data = 1
     assert b1 != b2
-    b1.data = 0
-    b1.previous = b2
-    assert b1 != b2
-    b1.previous = None
-    b1.next = b2
-    assert b1 != b2
 
 
 def test_default_block_read():
