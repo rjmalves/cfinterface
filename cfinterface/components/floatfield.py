@@ -16,15 +16,21 @@ class FloatField(Field):
         starting_column: int,
         decimal_digits: int,
         format: str = "F",
+        sep: str = ".",
         value: Optional[float] = None,
     ) -> None:
         super().__init__(size, starting_column, value)
         self.__decimal_digits = decimal_digits
         self.__format = format
+        self.__sep = sep
 
     # Override
     def read(self, line: str) -> Optional[float]:
-        linevalue = line[self._starting_column : self._ending_column].strip()
+        linevalue = (
+            line[self._starting_column : self._ending_column]
+            .strip()
+            .replace(self.__sep, ".")
+        )
         self._value = (
             float(linevalue)
             if linevalue.replace(".", "")

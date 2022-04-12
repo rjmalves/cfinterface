@@ -19,6 +19,14 @@ def test_floatfield_read_scientific_notation():
     assert field.value == float(data)
 
 
+def test_floatfield_comma_separator():
+    data = "1,23"
+    field = FloatField(4, 0, 1, sep=",")
+    line = f"{data}-something-else"
+    field.read(line)
+    assert field.value == 1.23
+
+
 def test_floatfield_write():
     line_before = "field-12345-else"
     data = float(line_before[6:11])
