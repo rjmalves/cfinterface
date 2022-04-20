@@ -19,14 +19,13 @@ def test_line_read_with_fields():
 
 def test_line_write_no_fields():
     line = Line([])
-    fileline = ""
-    assert len(line.write(fileline)) == 0
+    assert len(line.write([])) == 1
 
 
 def test_line_write_with_fields():
     fields = [LiteralField(6, 0), LiteralField(6, 7)]
     values = ["hello,", "world!"]
     line = Line(fields, values)
-    fileline = "hello, world!"
-    outline = line.write(fileline)
+    fileline = "hello, world!\n"
+    outline = line.write(values)
     assert fileline == outline

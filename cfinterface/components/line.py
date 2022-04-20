@@ -31,20 +31,21 @@ class Line:
             field.read(line)
         return self.values
 
-    def write(self, line: str) -> str:
+    def write(self, values: List[Any]) -> str:
         """
         Writes to a line with the existing information
-        if the given fields.
+        in the given fields.
 
-        :param line: The line to be written
-        :type line: str
+        :param values: The value of the fields to be written
+        :type line: List[Any]
         :return: The line with the new field information
         :rtype: str
         """
-        newline = line
+        line = ""
+        self.values = values
         for field in self._fields:
-            newline = field.write(newline)
-        return newline
+            line = field.write(line)
+        return line + "\n"
 
     @property
     def values(self) -> List[Any]:
