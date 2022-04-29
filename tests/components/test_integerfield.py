@@ -1,7 +1,5 @@
 from cfinterface.components.integerfield import IntegerField
 
-import pytest
-
 
 def test_integerfield_read():
     data = 12345
@@ -19,10 +17,9 @@ def test_integerfield_write():
     assert line_before == line_after
 
 
-def test_integerfield_write_error():
-    with pytest.raises(ValueError):
-        field = IntegerField(5, 0)
-        field.write("")
+def test_integerfield_write_empty():
+    field = IntegerField(5, 0)
+    assert len(field.write("")) == 5
 
 
 def test_integerfield_write_short_line():

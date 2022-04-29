@@ -23,12 +23,14 @@ class IntegerField(Field):
     # Override
     def write(self, line: str) -> str:
         if self.value is None:
-            raise ValueError("Field cannot be written if has no value")
+            value = ""
+        else:
+            value = str(self.value)
         if len(line) < self._ending_column:
             line = line.ljust(self._ending_column)
         return (
             line[: self._starting_column]
-            + str(self.value).rjust(self._size)
+            + value.rjust(self._size)
             + line[self._ending_column :]
         )
 

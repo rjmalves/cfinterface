@@ -22,13 +22,14 @@ class LiteralField(Field):
     # Override
     def write(self, line: str) -> str:
         if self.value is None:
-            raise ValueError("Field cannot be written if has no value")
-
+            value = ""
+        else:
+            value = self.value
         if len(line) < self._ending_column:
             line = line.ljust(self._ending_column)
         return (
             line[: self._starting_column]
-            + self.value.ljust(self._size)
+            + value.ljust(self._size)
             + line[self._ending_column :]
         )
 

@@ -44,19 +44,18 @@ class FloatField(Field):
 
     # Override
     def write(self, line: str) -> str:
-        if self.value is None:
-            raise ValueError("Field cannot be written if has no value")
         if len(line) < self._ending_column:
             line = line.ljust(self._ending_column)
         value = ""
-        for d in range(self.__decimal_digits, -1, -1):
-            value = "{:.{d}{format}}".format(
-                round(self.value, d),
-                d=d,
-                format=self.__format,
-            )
-            if len(value) <= self._size:
-                break
+        if self.value is not None:
+            for d in range(self.__decimal_digits, -1, -1):
+                value = "{:.{d}{format}}".format(
+                    round(self.value, d),
+                    d=d,
+                    format=self.__format,
+                )
+                if len(value) <= self._size:
+                    break
 
         return (
             line[: self._starting_column]

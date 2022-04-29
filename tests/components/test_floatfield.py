@@ -1,7 +1,5 @@
 from cfinterface.components.floatfield import FloatField
 
-import pytest
-
 
 def test_floatfield_read():
     data = 12345
@@ -35,10 +33,9 @@ def test_floatfield_write():
     assert line_before == line_after
 
 
-def test_floatfield_write_error():
-    with pytest.raises(ValueError):
-        field = FloatField(5, 0, 1)
-        field.write("")
+def test_floatfield_write_empty():
+    field = FloatField(5, 0, 1)
+    assert len(field.write("")) == 5
 
 
 def test_floatfield_write_short_line():

@@ -1,5 +1,3 @@
-import pytest
-
 from cfinterface.components.literalfield import LiteralField
 
 
@@ -19,10 +17,9 @@ def test_literalfield_write():
     assert line_before == line_after
 
 
-def test_literalfield_write_error():
-    with pytest.raises(ValueError):
-        field = LiteralField(5, 0)
-        field.write("")
+def test_literalfield_write_empty():
+    field = LiteralField(5, 0)
+    assert len(field.write("")) == 5
 
 
 def test_literalfield_write_short_line():
