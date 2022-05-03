@@ -71,7 +71,7 @@ def test_sectionfile_write():
     bd = SectionData(
         DummySection(state=ComponentState.READ_SUCCESS, data=[data])
     )
-    SectionFile.BLOCKS = [DummySection]
+    SectionFile.SECTIONS = [DummySection]
     f = SectionFile(bd)
     m: MagicMock = mock_open(read_data="")
     with patch("builtins.open", m):
