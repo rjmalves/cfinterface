@@ -19,7 +19,7 @@ def test_registerreading_empty():
     br = RegisterReading([DummyRegister])
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        bd = br.read("", "")
+        bd = br.read("", "", "utf-8")
         assert br.empty
         assert len(bd) == 1
 
@@ -31,7 +31,7 @@ def test_registerreading_withdata():
         read_data=DummyRegister.IDENTIFIER + " " + data + "\n"
     )
     with patch("builtins.open", m):
-        bd = br.read("", "")
+        bd = br.read("", "", "utf-8")
         assert not br.empty
         dbs = [b for b in bd.of_type(DummyRegister)]
         assert len(dbs) == 1

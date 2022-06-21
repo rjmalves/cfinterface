@@ -63,7 +63,9 @@ class SectionReading:
             self.__data.append(section)
         return self.__data
 
-    def read(self, filename: str, directory: str) -> SectionData:
+    def read(
+        self, filename: str, directory: str, encoding: str
+    ) -> SectionData:
         """
         Reads a file with a given name in a given directory and
         extracts the data from the specified sections.
@@ -72,11 +74,13 @@ class SectionReading:
         :type filename: str
         :param directory: The directory where the file is
         :type directory: str
+        :param encoding: The encoding for reading the file
+        :type encoding: str
         :return: The data from the sections found in the file
         :rtype: SectionData
         """
         filepath = join(directory, filename)
-        with open(filepath, "r") as fp:
+        with open(filepath, "r", encoding=encoding) as fp:
             return self.__read_file(fp)
 
     @property

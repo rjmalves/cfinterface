@@ -23,7 +23,7 @@ class RegisterWriting:
         for r in self.__data:
             r.write(file)
 
-    def write(self, filename: str, directory: str):
+    def write(self, filename: str, directory: str, encoding: str):
         """
         Writes a file with a given name in a given directory with
         the data from the RegisterData structure.
@@ -32,9 +32,11 @@ class RegisterWriting:
         :type filename: str
         :param directory: The directory where the file will be
         :type directory: str
+        :param encoding: The encoding for reading the file
+        :type encoding: str
         """
         filepath = join(directory, filename)
-        with open(filepath, "w") as fp:
+        with open(filepath, "w", encoding=encoding) as fp:
             return self.__write_file(fp)
 
     @property

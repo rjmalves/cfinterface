@@ -75,7 +75,7 @@ class BlockReading:
             self.__data.append(block)
         return self.__data
 
-    def read(self, filename: str, directory: str) -> BlockData:
+    def read(self, filename: str, directory: str, encoding: str) -> BlockData:
         """
         Reads a file with a given name in a given directory and
         extracts the data from the specified blocks.
@@ -84,11 +84,13 @@ class BlockReading:
         :type filename: str
         :param directory: The directory where the file is
         :type directory: str
+        :param encoding: The encoding for reading the file
+        :type encoding: str
         :return: The data from the blocks found in the file
         :rtype: BlockData
         """
         filepath = join(directory, filename)
-        with open(filepath, "r") as fp:
+        with open(filepath, "r", encoding=encoding) as fp:
             return self.__read_file(fp)
 
     @property

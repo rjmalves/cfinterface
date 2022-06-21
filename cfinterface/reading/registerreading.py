@@ -75,7 +75,9 @@ class RegisterReading:
             self.__data.append(register)
         return self.__data
 
-    def read(self, filename: str, directory: str) -> RegisterData:
+    def read(
+        self, filename: str, directory: str, encoding: str
+    ) -> RegisterData:
         """
         Reads a file with a given name in a given directory and
         extracts the data from the specified registers.
@@ -84,11 +86,13 @@ class RegisterReading:
         :type filename: str
         :param directory: The directory where the file is
         :type directory: str
+        :param encoding: The encoding for reading the file
+        :type encoding: str
         :return: The data from the registers found in the file
         :rtype: RegisterData
         """
         filepath = join(directory, filename)
-        with open(filepath, "r") as fp:
+        with open(filepath, "r", encoding=encoding) as fp:
             return self.__read_file(fp)
 
     @property

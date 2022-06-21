@@ -14,6 +14,7 @@ class RegisterFile:
     """
 
     REGISTERS: List[Type[Register]] = []
+    ENCODING = "utf-8"
 
     def __init__(
         self,
@@ -38,7 +39,7 @@ class RegisterFile:
         :type directory: str
         """
         reader = RegisterReading(cls.REGISTERS)
-        return cls(reader.read(filename, directory))
+        return cls(reader.read(filename, directory, cls.ENCODING))
 
     def write(self, directory: str, filename: str = ""):
         """
@@ -50,7 +51,7 @@ class RegisterFile:
         :type directory: str
         """
         writer = RegisterWriting(self.__data)
-        writer.write(filename, directory)
+        writer.write(filename, directory, self.__class__.ENCODING)
 
     @property
     def data(self) -> RegisterData:

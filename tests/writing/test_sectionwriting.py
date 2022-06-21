@@ -33,5 +33,5 @@ def test_sectionwriting_withdata():
     bw = SectionWriting(bd)
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        bw.write("", "")
+        bw.write("", "", "utf-8")
     m().write.assert_called_once_with(filedata)
