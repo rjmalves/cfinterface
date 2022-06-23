@@ -2,6 +2,10 @@ from typing import Any, List, Optional
 
 from cfinterface.components.field import Field
 
+from cfinterface.adapters.repository import Repository
+from cfinterface.adapters.positionalrepository import PositionalRepository
+from cfinterface.adapters.delimitedrepository import DelimitedRepository
+
 
 class Line:
     """
@@ -10,12 +14,16 @@ class Line:
     """
 
     def __init__(
-        self, fields: List[Field], values: Optional[List[Any]] = None
+        self,
+        fields: List[Field],
+        values: Optional[List[Any]] = None,
+        delimiter: Optional[str] = None,
     ):
-        self._fields = fields
-        if values is not None:
-            for f, v in zip(self._fields, values):
-                f.value = v
+        self._repository: Repository = None  # type: ignore
+        if delimiter is None:
+            self._repository = PositionalRepository(fields, values)
+        else:
+            self._repository = DelimitedRepository(fields, values, delimiter)
 
     def read(self, line: str) -> List[Any]:
         """
@@ -27,9 +35,7 @@ class Line:
         :return: The extracted values, in order
         :rtype: List[Any]
         """
-        for field in self._fields:
-            field.read(line)
-        return self.values
+        return self._repository.read(line)
 
     def write(self, values: List[Any]) -> str:
         """
@@ -41,17 +47,12 @@ class Line:
         :return: The line with the new field information
         :rtype: str
         """
-        line = ""
-        self.values = values
-        for field in self._fields:
-            line = field.write(line)
-        return line + "\n"
+        return self._repository.write(values)
 
     @property
     def values(self) -> List[Any]:
-        return [f.value for f in self._fields]
+        return self._repository.values
 
     @values.setter
     def values(self, vals: List[Any]):
-        for f, v in zip(self._fields, vals):
-            f.value = v
+        self._repository.values = vals

@@ -38,6 +38,30 @@ class Field:
         raise NotImplementedError()
 
     @property
+    def size(self) -> int:
+        return self._size
+
+    @size.setter
+    def size(self, val: int):
+        self._size = val
+
+    @property
+    def starting_column(self) -> int:
+        return self._starting_column
+
+    @starting_column.setter
+    def starting_column(self, val: int):
+        self._starting_column = val
+
+    @property
+    def ending_column(self) -> int:
+        return self._ending_column
+
+    @ending_column.setter
+    def ending_column(self, val: int):
+        self._ending_column = val
+
+    @property
     def value(self) -> Any:
         return self._value
 
