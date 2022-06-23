@@ -37,7 +37,7 @@ class DelimitedRepository(Repository):
         :return: The extracted values, in order
         :rtype: List[Any]
         """
-        values = line.split(self._delimter)
+        values = [v.strip() for v in line.split(self._delimter)]
         for field, value in zip(self._fields, values):
             field.read(value)
         return self.values
