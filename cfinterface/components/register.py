@@ -1,6 +1,8 @@
 from typing import Any, IO
 import re
+from cfinterface.components.field import Field
 
+from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.state import ComponentState
 from cfinterface.components.line import Line
 
@@ -22,6 +24,13 @@ class Register:
         next=None,
         data=None,
     ) -> None:
+        identifier_field: Field = LiteralField(
+            self.__class__.IDENTIFIER_DIGITS, 0
+        )
+        self.__line = Line(
+            [identifier_field] + self.__class__.LINE.fields,
+            delimiter=self.__class__.LINE.delimiter,
+        )
         self.__state = state
         self.__previous = previous
         self.__next = next
@@ -57,7 +66,7 @@ class Register:
         :return: The success, or not, in the reading
         :rtype: bool
         """
-        self.data = self.__class__.LINE.read(file.readline())
+        self.data = self.__line.read(file.readline())[1:]
         return True
 
     def write(self, file: IO) -> bool:
@@ -70,11 +79,7 @@ class Register:
         :return: The success, or not, in the writing
         :rtype: bool
         """
-        line = self.__class__.LINE.write(self.data)
-        line = (
-            self.__class__.IDENTIFIER.ljust(self.__class__.IDENTIFIER_DIGITS)
-            + line[self.__class__.IDENTIFIER_DIGITS :]
-        )
+        line = self.__line.write([self.__class__.IDENTIFIER] + self.data)
         file.write(line)
         return True
 

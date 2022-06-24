@@ -6,7 +6,7 @@ cfi is a Python module for handling custom formatted files
 and provide reading, storing and writing utilities.
 """
 
-__version__ = "0.0.13"
+__version__ = "0.0.14"
 
 from . import components  # noqa
 from . import data  # noqa

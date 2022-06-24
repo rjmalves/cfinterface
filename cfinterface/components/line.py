@@ -19,6 +19,7 @@ class Line:
         values: Optional[List[Any]] = None,
         delimiter: Optional[str] = None,
     ):
+        self._delimiter = delimiter
         self._repository: Repository = None  # type: ignore
         if delimiter is None:
             self._repository = PositionalRepository(fields, values)
@@ -50,9 +51,25 @@ class Line:
         return self._repository.write(values)
 
     @property
+    def fields(self) -> List[Field]:
+        return self._repository.fields
+
+    @fields.setter
+    def fields(self, vals: List[Field]):
+        self._repository.fields = vals
+
+    @property
     def values(self) -> List[Any]:
         return self._repository.values
 
     @values.setter
     def values(self, vals: List[Any]):
         self._repository.values = vals
+
+    @property
+    def delimiter(self) -> Optional[str]:
+        return self._delimiter
+
+    @delimiter.setter
+    def delimiter(self, d: Optional[str]):
+        self._delimiter = d
