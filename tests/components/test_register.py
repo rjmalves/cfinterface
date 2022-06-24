@@ -13,6 +13,12 @@ class DummyRegister(Register):
     LINE = Line([LiteralField(13, 4)])
 
 
+class DummyDelimitedRegister(Register):
+    IDENTIFIER = "reg"
+    IDENTIFIER_DIGITS = 4
+    LINE = Line([LiteralField(13, 4)], delimiter=";")
+
+
 def test_single_register_success():
     r1 = Register(state=ComponentState.READ_SUCCESS)
     assert r1.success
@@ -82,6 +88,31 @@ def test_dummy_register_write():
     with patch("builtins.open", m):
         with open("", "w") as fp:
             b = DummyRegister(state=ComponentState.READ_SUCCESS)
+            b.data = [data]
+            b.write_register(fp)
+    m().write.assert_called_once_with(write_data)
+
+
+def test_dummy_delimiterregister_read():
+    data = "Hello, world!"
+    filedata = DummyDelimitedRegister.IDENTIFIER + " ;" + data + "\n"
+    m: MagicMock = mock_open(read_data=filedata)
+    with patch("builtins.open", m):
+        with open("", "r") as fp:
+            b = DummyDelimitedRegister()
+            b.read_register(fp)
+            assert b.data[0] == data
+            assert b.success
+
+
+def test_dummy_delimiterregister_write():
+    data = "Hello, world!"
+    write_data = DummyDelimitedRegister.IDENTIFIER + " ;" + data + "\n"
+    filedata = ""
+    m = mock_open(read_data=filedata)
+    with patch("builtins.open", m):
+        with open("", "w") as fp:
+            b = DummyDelimitedRegister(state=ComponentState.READ_SUCCESS)
             b.data = [data]
             b.write_register(fp)
     m().write.assert_called_once_with(write_data)
