@@ -54,5 +54,5 @@ class DelimitedRepository(Repository):
         :rtype: str
         """
         self.values = values
-        separated = [field.write("") for field in self._fields]
+        separated = [field.write("").strip() for field in self._fields]
         return self._delimter.join(separated) + "\n"

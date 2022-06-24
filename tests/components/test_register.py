@@ -107,7 +107,7 @@ def test_dummy_delimiterregister_read():
 
 def test_dummy_delimiterregister_write():
     data = "Hello, world!"
-    write_data = DummyDelimitedRegister.IDENTIFIER + " ;" + data + "\n"
+    write_data = DummyDelimitedRegister.IDENTIFIER + ";" + data + "\n"
     filedata = ""
     m = mock_open(read_data=filedata)
     with patch("builtins.open", m):
