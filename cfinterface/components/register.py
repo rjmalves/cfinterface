@@ -3,7 +3,6 @@ import re
 from cfinterface.components.field import Field
 
 from cfinterface.components.literalfield import LiteralField
-from cfinterface.components.state import ComponentState
 from cfinterface.components.line import Line
 
 
@@ -19,7 +18,6 @@ class Register:
 
     def __init__(
         self,
-        state=ComponentState.NOT_FOUND,
         previous=None,
         next=None,
         data=None,
@@ -31,10 +29,12 @@ class Register:
             [identifier_field] + self.__class__.LINE.fields,
             delimiter=self.__class__.LINE.delimiter,
         )
-        self.__state = state
         self.__previous = previous
         self.__next = next
-        self.__data: Any = data
+        if data is None:
+            self.__data = [None] * len(self.__class__.LINE.fields)
+        else:
+            self.__data = data
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, self.__class__):
@@ -90,10 +90,7 @@ class Register:
         :param file: The filepointer
         :type file: IO
         """
-        if self.read(file):
-            self.__state = ComponentState.READ_SUCCESS
-        else:
-            self.__state = ComponentState.READ_ERROR
+        self.read(file)
 
     def write_register(self, file: IO):
         """
@@ -102,11 +99,7 @@ class Register:
         :param file: The filepointer
         :type file: IO
         """
-        if self.__state == ComponentState.READ_SUCCESS:
-            if self.write(file):
-                self.__state = ComponentState.WRITE_SUCCESS
-            else:
-                self.__state = ComponentState.WRITE_ERROR
+        self.write(file)
 
     @property
     def previous(self) -> "Register":
@@ -142,11 +135,4 @@ class Register:
 
     @property
     def empty(self) -> bool:
-        return self.__data is None
-
-    @property
-    def success(self) -> bool:
-        return self.__state in [
-            ComponentState.READ_SUCCESS,
-            ComponentState.WRITE_SUCCESS,
-        ]
+        return len([d for d in self.__data if d is not None]) == 0

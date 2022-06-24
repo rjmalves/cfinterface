@@ -1,5 +1,4 @@
 from cfinterface.components.defaultsection import DefaultSection
-from cfinterface.components.state import ComponentState
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -21,7 +20,6 @@ def test_default_section_read():
             b = DefaultSection()
             b.read_section(fp)
             assert b.data == data
-            assert b.success
 
 
 def test_default_section_write():
@@ -30,7 +28,7 @@ def test_default_section_write():
     m = mock_open(read_data=filedata)
     with patch("builtins.open", m):
         with open("", "w") as fp:
-            b = DefaultSection(state=ComponentState.READ_SUCCESS)
+            b = DefaultSection()
             b.data = data
             b.write_section(fp)
     m().write.assert_called_once_with(data)

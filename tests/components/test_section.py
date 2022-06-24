@@ -3,7 +3,6 @@ from typing import IO
 import pytest
 
 from cfinterface.components.section import Section
-from cfinterface.components.state import ComponentState
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -23,21 +22,6 @@ class DummySection(Section):
     def write(self, file: IO) -> bool:
         file.write(self.data)
         return True
-
-
-def test_single_section_success():
-    s1 = Section(state=ComponentState.READ_SUCCESS)
-    assert s1.success
-
-
-def test_single_section_not_found_error():
-    s1 = Section(state=ComponentState.NOT_FOUND)
-    assert not s1.success
-
-
-def test_single_section_read_error():
-    s1 = Section(state=ComponentState.READ_ERROR)
-    assert not s1.success
 
 
 def test_single_section_properties():
@@ -85,7 +69,7 @@ def test_section_read_error():
 
 
 def test_section_write_error():
-    s = Section(state=ComponentState.READ_SUCCESS)
+    s = Section()
     with pytest.raises(NotImplementedError):
         m: MagicMock = mock_open(read_data="")
         with patch("builtins.open", m):
@@ -107,7 +91,6 @@ def test_dummy_section_read():
             s = DummySection()
             s.read_section(fp)
             assert s.data == data
-            assert s.success
 
 
 def test_dummy_block_write():
@@ -116,7 +99,7 @@ def test_dummy_block_write():
     m = mock_open(read_data=filedata)
     with patch("builtins.open", m):
         with open("", "w") as fp:
-            b = DummySection(state=ComponentState.READ_SUCCESS)
+            b = DummySection()
             b.data = data
             b.write_section(fp)
     m().write.assert_called_once_with(data)

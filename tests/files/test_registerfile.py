@@ -1,7 +1,6 @@
 from cfinterface.components.line import Line
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.register import Register
-from cfinterface.components.state import ComponentState
 from cfinterface.data.registerdata import RegisterData
 from cfinterface.files.registerfile import RegisterFile
 
@@ -55,9 +54,7 @@ def test_registerfile_read():
 
 def test_registerfile_write():
     data = "Hello, world!"
-    bd = RegisterData(
-        DummyRegister(state=ComponentState.READ_SUCCESS, data=[data])
-    )
+    bd = RegisterData(DummyRegister(data=[data]))
     RegisterFile.REGISTERS = [DummyRegister]
     f = RegisterFile(bd)
     m: MagicMock = mock_open(read_data="")

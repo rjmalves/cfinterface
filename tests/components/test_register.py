@@ -1,7 +1,6 @@
 from cfinterface.components.line import Line
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.register import Register
-from cfinterface.components.state import ComponentState
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -17,21 +16,6 @@ class DummyDelimitedRegister(Register):
     IDENTIFIER = "reg"
     IDENTIFIER_DIGITS = 4
     LINE = Line([LiteralField(13, 4)], delimiter=";")
-
-
-def test_single_register_success():
-    r1 = Register(state=ComponentState.READ_SUCCESS)
-    assert r1.success
-
-
-def test_single_register_not_found_error():
-    r1 = Register(state=ComponentState.NOT_FOUND)
-    assert not r1.success
-
-
-def test_single_register_read_error():
-    r1 = Register(state=ComponentState.READ_ERROR)
-    assert not r1.success
 
 
 def test_single_register_properties():
@@ -77,7 +61,6 @@ def test_dummy_register_read():
             b = DummyRegister()
             b.read_register(fp)
             assert b.data[0] == data
-            assert b.success
 
 
 def test_dummy_register_write():
@@ -87,7 +70,7 @@ def test_dummy_register_write():
     m = mock_open(read_data=filedata)
     with patch("builtins.open", m):
         with open("", "w") as fp:
-            b = DummyRegister(state=ComponentState.READ_SUCCESS)
+            b = DummyRegister()
             b.data = [data]
             b.write_register(fp)
     m().write.assert_called_once_with(write_data)
@@ -102,7 +85,6 @@ def test_dummy_delimiterregister_read():
             b = DummyDelimitedRegister()
             b.read_register(fp)
             assert b.data[0] == data
-            assert b.success
 
 
 def test_dummy_delimiterregister_write():
@@ -112,7 +94,7 @@ def test_dummy_delimiterregister_write():
     m = mock_open(read_data=filedata)
     with patch("builtins.open", m):
         with open("", "w") as fp:
-            b = DummyDelimitedRegister(state=ComponentState.READ_SUCCESS)
+            b = DummyDelimitedRegister()
             b.data = [data]
             b.write_register(fp)
     m().write.assert_called_once_with(write_data)

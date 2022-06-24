@@ -1,8 +1,6 @@
 from typing import Any, IO
 import re
 
-from cfinterface.components.state import ComponentState
-
 
 class Block:
     """
@@ -16,12 +14,10 @@ class Block:
 
     def __init__(
         self,
-        state=ComponentState.NOT_FOUND,
         previous=None,
         next=None,
         data=None,
     ) -> None:
-        self.__state = state
         self.__previous = previous
         self.__next = next
         self.__data: Any = data
@@ -81,10 +77,7 @@ class Block:
         :param file: The filepointer
         :type file: IO
         """
-        if self.read(file):
-            self.__state = ComponentState.READ_SUCCESS
-        else:
-            self.__state = ComponentState.READ_ERROR
+        self.read(file)
 
     def write_block(self, file: IO):
         """
@@ -93,11 +86,7 @@ class Block:
         :param file: The filepointer
         :type file: IO
         """
-        if self.__state == ComponentState.READ_SUCCESS:
-            if self.write(file):
-                self.__state = ComponentState.WRITE_SUCCESS
-            else:
-                self.__state = ComponentState.WRITE_ERROR
+        self.write(file)
 
     @property
     def previous(self) -> "Block":
@@ -134,10 +123,3 @@ class Block:
     @property
     def empty(self) -> bool:
         return self.__data is None
-
-    @property
-    def success(self) -> bool:
-        return self.__state in [
-            ComponentState.READ_SUCCESS,
-            ComponentState.WRITE_SUCCESS,
-        ]

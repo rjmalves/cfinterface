@@ -1,5 +1,4 @@
 from cfinterface.components.defaultregister import DefaultRegister
-from cfinterface.components.state import ComponentState
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -21,7 +20,6 @@ def test_default_register_read():
             r = DefaultRegister()
             r.read_register(fp)
             assert r.data == data
-            assert r.success
 
 
 def test_default_register_write():
@@ -30,7 +28,7 @@ def test_default_register_write():
     m = mock_open(read_data=filedata)
     with patch("builtins.open", m):
         with open("", "w") as fp:
-            r = DefaultRegister(state=ComponentState.READ_SUCCESS)
+            r = DefaultRegister()
             r.data = data
             r.write_register(fp)
     m().write.assert_called_once_with(data)

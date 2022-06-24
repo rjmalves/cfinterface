@@ -1,7 +1,6 @@
 from typing import IO, List
 
 from cfinterface.components.block import Block
-from cfinterface.components.state import ComponentState
 from cfinterface.data.blockdata import BlockData
 from cfinterface.files.blockfile import BlockFile
 
@@ -78,7 +77,7 @@ def test_blockfile_read():
 
 def test_blockfile_write():
     data = "Hello, world!"
-    bd = BlockData(DummyBlock(state=ComponentState.READ_SUCCESS, data=[data]))
+    bd = BlockData(DummyBlock(data=[data]))
     BlockFile.BLOCKS = [DummyBlock]
     f = BlockFile(bd)
     m: MagicMock = mock_open(read_data="")

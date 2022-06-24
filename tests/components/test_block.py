@@ -3,7 +3,6 @@ from typing import IO
 import pytest
 
 from cfinterface.components.block import Block
-from cfinterface.components.state import ComponentState
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -26,21 +25,6 @@ class DummyBlock(Block):
     def write(self, file: IO) -> bool:
         file.write(self.data)
         return True
-
-
-def test_single_block_success():
-    b1 = Block(state=ComponentState.READ_SUCCESS)
-    assert b1.success
-
-
-def test_single_block_not_found_error():
-    b1 = Block(state=ComponentState.NOT_FOUND)
-    assert not b1.success
-
-
-def test_single_block_read_error():
-    b1 = Block(state=ComponentState.READ_ERROR)
-    assert not b1.success
 
 
 def test_single_block_properties():
@@ -88,7 +72,7 @@ def test_block_read_error():
 
 
 def test_block_write_error():
-    b = Block(state=ComponentState.READ_SUCCESS)
+    b = Block()
     with pytest.raises(NotImplementedError):
         m: MagicMock = mock_open(read_data="")
         with patch("builtins.open", m):
@@ -115,7 +99,6 @@ def test_dummy_block_read():
             assert DummyBlock.begins(fp.readline())
             b.read_block(fp)
             assert b.data == data
-            assert b.success
             assert DummyBlock.ends(fp.readline())
 
 
@@ -125,7 +108,7 @@ def test_dummy_block_write():
     m = mock_open(read_data=filedata)
     with patch("builtins.open", m):
         with open("", "w") as fp:
-            b = DummyBlock(state=ComponentState.READ_SUCCESS)
+            b = DummyBlock()
             b.data = data
             b.write_block(fp)
     m().write.assert_called_once_with(data)

@@ -1,7 +1,6 @@
 from typing import IO, List
 
 from cfinterface.components.section import Section
-from cfinterface.components.state import ComponentState
 from cfinterface.data.sectiondata import SectionData
 from cfinterface.files.sectionfile import SectionFile
 
@@ -68,9 +67,7 @@ def test_sectionfile_read():
 
 def test_sectionfile_write():
     data = "Hello, world!"
-    bd = SectionData(
-        DummySection(state=ComponentState.READ_SUCCESS, data=[data])
-    )
+    bd = SectionData(DummySection(data=[data]))
     SectionFile.SECTIONS = [DummySection]
     f = SectionFile(bd)
     m: MagicMock = mock_open(read_data="")

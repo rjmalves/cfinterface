@@ -1,5 +1,4 @@
 from cfinterface.components.defaultblock import DefaultBlock
-from cfinterface.components.state import ComponentState
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -21,7 +20,6 @@ def test_default_block_read():
             b = DefaultBlock()
             b.read_block(fp)
             assert b.data == data
-            assert b.success
 
 
 def test_default_block_write():
@@ -30,7 +28,7 @@ def test_default_block_write():
     m = mock_open(read_data=filedata)
     with patch("builtins.open", m):
         with open("", "w") as fp:
-            b = DefaultBlock(state=ComponentState.READ_SUCCESS)
+            b = DefaultBlock()
             b.data = data
             b.write_block(fp)
     m().write.assert_called_once_with(data)
