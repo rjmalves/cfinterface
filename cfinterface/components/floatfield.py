@@ -12,9 +12,9 @@ class FloatField(Field):
 
     def __init__(
         self,
-        size: int,
-        starting_column: int,
-        decimal_digits: int,
+        size: int = 16,
+        starting_column: int = 0,
+        decimal_digits: int = 4,
         format: str = "F",
         sep: str = ".",
         value: Optional[float] = None,

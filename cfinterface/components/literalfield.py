@@ -10,7 +10,10 @@ class LiteralField(Field):
     """
 
     def __init__(
-        self, size: int, starting_column: int, value: Optional[str] = None
+        self,
+        size: int = 80,
+        starting_column: int = 0,
+        value: Optional[str] = None,
     ) -> None:
         super().__init__(size, starting_column, value)
 

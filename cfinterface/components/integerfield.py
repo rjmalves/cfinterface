@@ -10,7 +10,10 @@ class IntegerField(Field):
     """
 
     def __init__(
-        self, size: int, starting_column: int, value: Optional[int] = None
+        self,
+        size: int = 16,
+        starting_column: int = 0,
+        value: Optional[int] = None,
     ) -> None:
         super().__init__(size, starting_column, value)
 
