@@ -36,7 +36,7 @@ class DatetimeField(Field):
             line = line.ljust(self._ending_column)
         value = ""
         if self.value is not None:
-            value = self._value.strftime(self.__format)
+            value = self.value.strftime(self.__format)
         return (
             line[: self._starting_column]
             + value.rjust(self._size)
