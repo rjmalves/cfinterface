@@ -1,4 +1,5 @@
 from typing import Optional
+import numpy as np
 
 from cfinterface.components.field import Field
 
@@ -47,7 +48,7 @@ class FloatField(Field):
         if len(line) < self._ending_column:
             line = line.ljust(self._ending_column)
         value = ""
-        if self.value is not None:
+        if self.value is not None and not np.isnan(self.value):
             for d in range(self.__decimal_digits, -1, -1):
                 value = "{:.{d}{format}}".format(
                     round(self.value, d),
