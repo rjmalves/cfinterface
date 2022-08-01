@@ -34,7 +34,7 @@ class LiteralField(Field):
         if self.value is None or pd.isnull(self.value):
             value = "".ljust(self._size)
         else:
-            value = self.value
+            value = str(self.value)
         return self._interface.write(
             value, line, self._starting_position, self._ending_position
         )

@@ -35,7 +35,7 @@ class IntegerField(Field):
         if self.value is None or pd.isnull(self.value):
             value = "".ljust(self._size)
         else:
-            value = str(self.value)
+            value = str(int(self.value))
         return self._interface.write(
             value, line, self._starting_position, self._ending_position
         )
