@@ -1,9 +1,10 @@
 pytest==7.1.2
 pytest-cov==3.0.0
+pyflakes==2.4.0
 numpy==1.22.4
 pandas==1.4.2
-pylama==8.3.8
-mypy==0.971
+pylama
+mypy
 sphinx
 sphinx-gallery
 sphinx-rtd-theme
