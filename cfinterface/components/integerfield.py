@@ -1,4 +1,5 @@
 from typing import Optional, Union
+import pandas as pd  # type: ignore
 from cfinterface.adapters.field.repository import Repository
 from cfinterface.adapters.field.textualrepository import TextualRepository
 
@@ -31,7 +32,7 @@ class IntegerField(Field):
 
     # Override
     def write(self, line: Union[str, bytes]) -> Union[str, bytes]:
-        if self.value is None:
+        if self.value is None or pd.isnull(self.value):
             value = "".ljust(self._size)
         else:
             value = str(self.value)

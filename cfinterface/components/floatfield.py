@@ -1,5 +1,5 @@
 from typing import Optional, Union
-import numpy as np
+import pandas as pd  # type: ignore
 from cfinterface.adapters.field.repository import Repository
 from cfinterface.adapters.field.textualrepository import TextualRepository
 
@@ -50,7 +50,7 @@ class FloatField(Field):
     # Override
     def write(self, line: Union[str, bytes]) -> Union[str, bytes]:
         value = ""
-        if self.value is not None and not np.isnan(self.value):
+        if self.value is not None and not pd.isnull(self.value):
             for d in range(self.__decimal_digits, -1, -1):
                 value = "{:.{d}{format}}".format(
                     round(self.value, d),
