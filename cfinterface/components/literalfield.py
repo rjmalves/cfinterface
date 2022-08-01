@@ -1,6 +1,9 @@
-from typing import Optional
+from typing import Optional, Union
 
 from cfinterface.components.field import Field
+
+from cfinterface.adapters.field.repository import Repository
+from cfinterface.adapters.field.textualrepository import TextualRepository
 
 
 class LiteralField(Field):
@@ -12,28 +15,28 @@ class LiteralField(Field):
     def __init__(
         self,
         size: int = 80,
-        starting_column: int = 0,
+        starting_position: int = 0,
         value: Optional[str] = None,
+        interface: Repository = TextualRepository(),
     ) -> None:
-        super().__init__(size, starting_column, value)
+        super().__init__(size, starting_position, value, interface)
 
     # Override
-    def read(self, line: str) -> str:
-        self._value = line[self._starting_column : self._ending_column].strip()
+    def read(self, line: Union[str, bytes]) -> str:
+        readline = self._interface.read(line)
+        self._value = readline[
+            self._starting_position : self._ending_position
+        ].strip()
         return self._value
 
     # Override
-    def write(self, line: str) -> str:
+    def write(self, line: Union[str, bytes]) -> Union[str, bytes]:
         if self.value is None:
-            value = ""
+            value = "".ljust(self._size)
         else:
             value = self.value
-        if len(line) < self._ending_column:
-            line = line.ljust(self._ending_column)
-        return (
-            line[: self._starting_column]
-            + value.ljust(self._size)
-            + line[self._ending_column :]
+        return self._interface.write(
+            value, line, self._starting_position, self._ending_position
         )
 
     @property

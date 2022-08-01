@@ -2,9 +2,9 @@ from typing import Any, List, Optional
 
 from cfinterface.components.field import Field
 
-from cfinterface.adapters.repository import Repository
-from cfinterface.adapters.positionalrepository import PositionalRepository
-from cfinterface.adapters.delimitedrepository import DelimitedRepository
+from cfinterface.adapters.line.repository import Repository
+from cfinterface.adapters.line.positionalrepository import PositionalRepository
+from cfinterface.adapters.line.delimitedrepository import DelimitedRepository
 
 
 class Line:

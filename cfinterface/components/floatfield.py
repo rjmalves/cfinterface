@@ -1,5 +1,7 @@
-from typing import Optional
+from typing import Optional, Union
 import numpy as np
+from cfinterface.adapters.field.repository import Repository
+from cfinterface.adapters.field.textualrepository import TextualRepository
 
 from cfinterface.components.field import Field
 
@@ -14,21 +16,23 @@ class FloatField(Field):
     def __init__(
         self,
         size: int = 16,
-        starting_column: int = 0,
+        starting_position: int = 0,
         decimal_digits: int = 4,
         format: str = "F",
         sep: str = ".",
         value: Optional[float] = None,
+        interface: Repository = TextualRepository(),
     ) -> None:
-        super().__init__(size, starting_column, value)
+        super().__init__(size, starting_position, value, interface)
         self.__decimal_digits = decimal_digits
         self.__format = format
         self.__sep = sep
 
     # Override
-    def read(self, line: str) -> Optional[float]:
+    def read(self, line: Union[str, bytes]) -> Optional[float]:
+        readline = self._interface.read(line)
         linevalue = (
-            line[self._starting_column : self._ending_column]
+            readline[self._starting_position : self._ending_position]
             .strip()
             .replace(self.__sep, ".")
         )
@@ -44,9 +48,7 @@ class FloatField(Field):
         return self._value
 
     # Override
-    def write(self, line: str) -> str:
-        if len(line) < self._ending_column:
-            line = line.ljust(self._ending_column)
+    def write(self, line: Union[str, bytes]) -> Union[str, bytes]:
         value = ""
         if self.value is not None and not np.isnan(self.value):
             for d in range(self.__decimal_digits, -1, -1):
@@ -58,10 +60,11 @@ class FloatField(Field):
                 if len(value) <= self._size:
                     break
 
-        return (
-            line[: self._starting_column]
-            + value.rjust(self._size)
-            + line[self._ending_column :]
+        return self._interface.write(
+            value.rjust(self._size),
+            line,
+            self._starting_position,
+            self._ending_position,
         )
 
     @property

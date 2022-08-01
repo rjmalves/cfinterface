@@ -1,6 +1,6 @@
 from typing import List, Any
 
-from cfinterface.adapters.repository import Repository
+from cfinterface.adapters.line.repository import Repository
 
 
 class PositionalRepository(Repository):

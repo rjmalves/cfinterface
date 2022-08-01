@@ -1,7 +1,7 @@
 from typing import List, Any, Optional
 
 from cfinterface.components.field import Field
-from cfinterface.adapters.repository import Repository
+from cfinterface.adapters.line.repository import Repository
 
 
 class DelimitedRepository(Repository):
@@ -22,8 +22,8 @@ class DelimitedRepository(Repository):
 
     @staticmethod
     def __positional_to_delimited_field(f: Field) -> Field:
-        f.ending_column = f.size
-        f.starting_column = 0
+        f.ending_position = f.size
+        f.starting_position = 0
         return f
 
     # Override

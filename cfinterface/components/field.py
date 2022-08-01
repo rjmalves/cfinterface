@@ -1,4 +1,7 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
+
+from cfinterface.adapters.field.repository import Repository
+from cfinterface.adapters.field.textualrepository import TextualRepository
 
 
 class Field:
@@ -8,34 +11,39 @@ class Field:
     """
 
     def __init__(
-        self, size: int, starting_column: int, value: Optional[Any] = None
+        self,
+        size: int,
+        starting_position: int,
+        value: Optional[Any] = None,
+        interface: Repository = TextualRepository(),
     ) -> None:
         self._size = size
-        self._starting_column = starting_column
-        self._ending_column = size + starting_column
+        self._starting_position = starting_position
+        self._ending_position = size + starting_position
         self._value = value
+        self._interface = interface
 
-    def read(self, line: str) -> Any:
+    def read(self, line: Union[str, bytes]) -> Any:
         """
         Generic method for reading a field from a given line of a file.
 
         :param line: The line read from the file
-        :type line: str
+        :type line: Union[str, bytes]
         :return: The value read from the field
         :rtype: Any
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
-    def write(self, line: str) -> str:
+    def write(self, line: Union[str, bytes]) -> Any:
         """
         Generic method for writing a field to a given line of a file.
 
         :param line: The line read from the file
-        :type line: str
+        :type line: Union[str, bytes]
         :return: The value read from the field
         :rtype: Any
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @property
     def size(self) -> int:
@@ -46,20 +54,20 @@ class Field:
         self._size = val
 
     @property
-    def starting_column(self) -> int:
-        return self._starting_column
+    def starting_position(self) -> int:
+        return self._starting_position
 
-    @starting_column.setter
-    def starting_column(self, val: int):
-        self._starting_column = val
+    @starting_position.setter
+    def starting_position(self, val: int):
+        self._starting_position = val
 
     @property
-    def ending_column(self) -> int:
-        return self._ending_column
+    def ending_position(self) -> int:
+        return self._ending_position
 
-    @ending_column.setter
-    def ending_column(self, val: int):
-        self._ending_column = val
+    @ending_position.setter
+    def ending_position(self, val: int):
+        self._ending_position = val
 
     @property
     def value(self) -> Any:

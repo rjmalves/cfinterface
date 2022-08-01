@@ -1,4 +1,4 @@
-from cfinterface.adapters.delimitedrepository import DelimitedRepository
+from cfinterface.adapters.line.delimitedrepository import DelimitedRepository
 from cfinterface.components.literalfield import LiteralField
 
 

@@ -1,4 +1,6 @@
-from typing import Optional
+from typing import Optional, Union
+from cfinterface.adapters.field.repository import Repository
+from cfinterface.adapters.field.textualrepository import TextualRepository
 
 from cfinterface.components.field import Field
 
@@ -12,29 +14,29 @@ class IntegerField(Field):
     def __init__(
         self,
         size: int = 16,
-        starting_column: int = 0,
+        starting_position: int = 0,
         value: Optional[int] = None,
+        interface: Repository = TextualRepository(),
     ) -> None:
-        super().__init__(size, starting_column, value)
+        super().__init__(size, starting_position, value, interface)
 
     # Override
-    def read(self, line: str) -> Optional[int]:
-        linevalue = line[self._starting_column : self._ending_column].strip()
+    def read(self, line: Union[str, bytes]) -> Optional[int]:
+        readline = self._interface.read(line)
+        linevalue = readline[
+            self._starting_position : self._ending_position
+        ].strip()
         self._value = int(linevalue) if linevalue.isdigit() else None
         return self._value
 
     # Override
-    def write(self, line: str) -> str:
+    def write(self, line: Union[str, bytes]) -> Union[str, bytes]:
         if self.value is None:
-            value = ""
+            value = "".ljust(self._size)
         else:
             value = str(self.value)
-        if len(line) < self._ending_column:
-            line = line.ljust(self._ending_column)
-        return (
-            line[: self._starting_column]
-            + value.rjust(self._size)
-            + line[self._ending_column :]
+        return self._interface.write(
+            value, line, self._starting_position, self._ending_position
         )
 
     @property
