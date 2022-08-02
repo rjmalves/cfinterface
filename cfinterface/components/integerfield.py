@@ -33,11 +33,14 @@ class IntegerField(Field):
     # Override
     def write(self, line: Union[str, bytes]) -> Union[str, bytes]:
         if self.value is None or pd.isnull(self.value):
-            value = "".ljust(self._size)
+            value = ""
         else:
             value = str(int(self.value))
         return self._interface.write(
-            value, line, self._starting_position, self._ending_position
+            value.rjust(self._size),
+            line,
+            self._starting_position,
+            self._ending_position,
         )
 
     @property

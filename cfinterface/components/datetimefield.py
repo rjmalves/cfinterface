@@ -43,7 +43,10 @@ class DatetimeField(Field):
         if self.value is not None and not pd.isnull(self.value):
             value = self.value.strftime(self.__format)
         return self._interface.write(
-            value, line, self._starting_position, self._ending_position
+            value.rjust(self._size),
+            line,
+            self._starting_position,
+            self._ending_position,
         )
 
     @property
