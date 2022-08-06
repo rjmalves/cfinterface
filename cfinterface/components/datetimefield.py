@@ -1,8 +1,10 @@
 from typing import Optional, Union
 from datetime import datetime
 import pandas as pd  # type: ignore
-from cfinterface.adapters.field.repository import Repository
-from cfinterface.adapters.field.textualrepository import TextualRepository
+from cfinterface.adapters.components.field.repository import Repository
+from cfinterface.adapters.components.field.textualrepository import (
+    TextualRepository,
+)
 
 from cfinterface.components.field import Field
 
@@ -20,17 +22,16 @@ class DatetimeField(Field):
         starting_position: int = 0,
         format: str = "%Y/%m/%d",
         value: Optional[datetime] = None,
-        interface: Repository = TextualRepository(),
+        interface: Repository = TextualRepository("c", str),
     ) -> None:
         super().__init__(size, starting_position, value, interface)
         self.__format = format
 
     # Override
     def read(self, line: Union[str, bytes]) -> Optional[datetime]:
-        readline = self._interface.read(line)
-        linevalue = readline[
-            self._starting_position : self._ending_position
-        ].strip()
+        linevalue = self._interface.read(
+            line[self._starting_position : self._ending_position]
+        )
         try:
             self._value = datetime.strptime(linevalue, self.__format)
         except ValueError:

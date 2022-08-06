@@ -1,4 +1,9 @@
-from typing import Any, IO
+from typing import Any, IO, Type
+
+from cfinterface.adapters.components.section.repository import Repository
+from cfinterface.adapters.components.section.textualrepository import (
+    TextualRepository,
+)
 
 
 class Section:
@@ -6,6 +11,8 @@ class Section:
     Class for a generic section in a textfile, which begins and ends in
     a given order
     """
+
+    REPOSITORY: Type[Repository] = TextualRepository
 
     def __init__(
         self,
@@ -30,7 +37,7 @@ class Section:
         :return: The success, or not, in the reading
         :rtype: bool
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def write(self, file: IO) -> bool:
         """
@@ -42,7 +49,7 @@ class Section:
         :return: The success, or not, in the writing
         :rtype: bool
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def read_section(self, file: IO):
         """

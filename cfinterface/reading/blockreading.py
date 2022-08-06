@@ -1,9 +1,12 @@
-from typing import IO, List, Type
+from typing import List, Type, Union
 from os.path import join
 
 from cfinterface.components.block import Block
 from cfinterface.components.defaultblock import DefaultBlock
 from cfinterface.data.blockdata import BlockData
+
+from cfinterface.adapters.reading.repository import Repository
+from cfinterface.adapters.reading.textualrepository import TextualRepository
 
 
 class BlockReading:
@@ -11,67 +14,71 @@ class BlockReading:
     Class for reading custom files based on a BlockData structure.
     """
 
-    def __init__(self, allowed_blocks: List[Type[Block]]) -> None:
+    def __init__(
+        self,
+        allowed_blocks: List[Type[Block]],
+        repository: Type[Repository] = TextualRepository,
+        linesize: int = 1,
+    ) -> None:
         self.__allowed_blocks = allowed_blocks
         self.__data = BlockData(DefaultBlock(data=""))
         self.__last_position_filepointer = 0
+        self.__repository = repository
+        self.__interface: Repository = None  # type: ignore
+        self.__linesize = linesize
 
-    def __read_line_with_backup(self, file: IO) -> str:
+    def __read_line_with_backup(self) -> Union[str, bytes]:
         """
-        Reads a line of the file, saving the filepointer position
-        in case one desired to return to the previous line.
+        Reads a block of information from a file,
+        saving the filepointer position in case one desired to return
+        to the previous block.
 
-        :param file: THe filepoiner for the reading file
-        :type file: IO
-        :return: The read line
-        :rtype: str
+        :return: The read block
+        :rtype: str | bytes
         """
-        self.__last_position_filepointer = file.tell()
-        return file.readline()
+        self.__last_position_filepointer = self.__interface.file.tell()
+        return self.__interface.read(self.__linesize)
 
-    def __restore_previous_line(self, file: IO):
+    def __restore_previous_line(self):
         """
         Restores the filepointer to the beginning of the previously
-        read line.
-
-        :param file: The filepointer
-        :type file: IO
+        read block.
         """
-        file.seek(self.__last_position_filepointer)
+        self.__interface.file.seek(self.__last_position_filepointer)
 
-    def __find_starting_block(self, line: str) -> Type[Block]:
+    def __find_starting_block(
+        self, blockdata: Union[str, bytes]
+    ) -> Type[Block]:
         """
         Searches among the given blocks for the block that begins in
-        a line of the reading file.
+        a certain position of the reading file.
 
-        :param line: A line of the reading file
-        :type line: str
-        :return: The block type that begins on the given line
+        :param blockdata: A portion of data in the reading file
+        :type blockdata: str | bytes
+        :return: The block type that begins on the given blockdata
         :rtype: Type[Block]
         """
         for b in self.__allowed_blocks:
-            if b.begins(line):
+            if b.begins(blockdata):
                 return b
         return DefaultBlock
 
-    def __read_file(self, file: IO) -> BlockData:
+    def __read_file(self) -> BlockData:
         """
         Reads all the blocks from the given blocks in a file and
         returns the BlockData structure.
 
-        :param file: The filepointer
-        :type file: IO
         :return: The block data from the file
         :rtype: BlockData
         """
         while True:
-            line = self.__read_line_with_backup(file)
+            line = self.__read_line_with_backup()
             if len(line) == 0:
                 break
-            self.__restore_previous_line(file)
+            self.__restore_previous_line()
             blocktype = self.__find_starting_block(line)
             block = blocktype()
-            block.read(file)
+            block.read(self.__interface.file)
             self.__data.append(block)
         return self.__data
 
@@ -90,8 +97,9 @@ class BlockReading:
         :rtype: BlockData
         """
         filepath = join(directory, filename)
-        with open(filepath, "r", encoding=encoding) as fp:
-            return self.__read_file(fp)
+        self.__interface = self.__repository(filepath, encoding)
+        with self.__interface:
+            return self.__read_file()
 
     @property
     def data(self) -> BlockData:

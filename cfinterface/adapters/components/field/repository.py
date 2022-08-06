@@ -1,15 +1,19 @@
-from typing import Any
+from typing import Any, Union
 from abc import ABC, abstractmethod
 
 
 class Repository(ABC):
+    def __init__(self, format: str, datatype: type) -> None:
+        self._format = format
+        self._datatype: type = datatype
+
     @abstractmethod
-    def read(self, source: Any) -> str:
+    def read(self, source: Union[str, bytes]) -> Any:
         """
         Reads a field for extracting information.
 
         :param source: The source to be read
-        :type source: Any
+        :type source: Union[str, bytes]
         :return: The extracted value
         :rtype: Any
         """

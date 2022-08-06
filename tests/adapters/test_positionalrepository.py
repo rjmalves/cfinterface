@@ -1,4 +1,6 @@
-from cfinterface.adapters.line.positionalrepository import PositionalRepository
+from cfinterface.adapters.components.line.positionalrepository import (
+    PositionalRepository,
+)
 from cfinterface.components.literalfield import LiteralField
 
 

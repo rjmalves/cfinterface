@@ -1,5 +1,9 @@
-from typing import Any, IO
-import re
+from typing import Any, IO, Union, Type
+
+from cfinterface.adapters.components.block.repository import Repository
+from cfinterface.adapters.components.block.textualrepository import (
+    TextualRepository,
+)
 
 
 class Block:
@@ -8,9 +12,10 @@ class Block:
     for beginning and end and reading states.
     """
 
-    BEGIN_PATTERN = ""
-    END_PATTERN = ""
+    BEGIN_PATTERN: Union[str, bytes] = ""
+    END_PATTERN: Union[str, bytes] = ""
     MAX_LINES = 10000
+    REPOSITORY: Type[Repository] = TextualRepository
 
     def __init__(
         self,
@@ -23,28 +28,28 @@ class Block:
         self.__data: Any = data
 
     def __eq__(self, o: object) -> bool:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @classmethod
-    def begins(cls, line: str):
+    def begins(cls, line: Union[str, bytes]):
         """
         Checks if the current line marks the beginning of the block.
 
         :param line: The candidate line for being the beggining of
             the block.
-        :type line: str
+        :type line: str | bytes
         """
-        return re.search(cls.BEGIN_PATTERN, line) is not None
+        return cls.REPOSITORY.begins(cls.BEGIN_PATTERN, line)
 
     @classmethod
-    def ends(cls, line: str):
+    def ends(cls, line: Union[str, bytes]):
         """
         Checks if the current line marks the end of the block.
 
         :param line: The candidate line for being the end of the block.
-        :type line: str
+        :type line: str | bytes
         """
-        return re.search(cls.END_PATTERN, line) is not None
+        return cls.REPOSITORY.ends(cls.END_PATTERN, line)
 
     def read(self, file: IO) -> bool:
         """
@@ -56,7 +61,7 @@ class Block:
         :return: The success, or not, in the reading
         :rtype: bool
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def write(self, file: IO) -> bool:
         """
@@ -68,7 +73,7 @@ class Block:
         :return: The success, or not, in the writing
         :rtype: bool
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def read_block(self, file: IO):
         """

@@ -1,7 +1,9 @@
 from typing import Optional, Union
 import pandas as pd  # type: ignore
-from cfinterface.adapters.field.repository import Repository
-from cfinterface.adapters.field.textualrepository import TextualRepository
+from cfinterface.adapters.components.field.repository import Repository
+from cfinterface.adapters.components.field.textualrepository import (
+    TextualRepository,
+)
 
 from cfinterface.components.field import Field
 
@@ -21,7 +23,7 @@ class FloatField(Field):
         format: str = "F",
         sep: str = ".",
         value: Optional[float] = None,
-        interface: Repository = TextualRepository(),
+        interface: Repository = TextualRepository("f", float),
     ) -> None:
         super().__init__(size, starting_position, value, interface)
         self.__decimal_digits = decimal_digits
@@ -30,21 +32,11 @@ class FloatField(Field):
 
     # Override
     def read(self, line: Union[str, bytes]) -> Optional[float]:
-        readline = self._interface.read(line)
-        linevalue = (
-            readline[self._starting_position : self._ending_position]
-            .strip()
-            .replace(self.__sep, ".")
-        )
-        self._value = (
-            float(linevalue)
-            if linevalue.replace(".", "")
-            .replace(self.__format, "")
-            .replace("+", "")
-            .replace("-", "")
-            .isdigit()
-            else None
-        )
+        # Support for multiple decimal separators in textfiles
+        linedata = line[self._starting_position : self._ending_position]
+        if isinstance(linedata, str):
+            linedata = linedata.replace(self.__sep, ".")
+        self._value = self._interface.read(linedata)
         return self._value
 
     # Override

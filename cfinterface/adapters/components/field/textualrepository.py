@@ -1,24 +1,28 @@
-from typing import Union
+from typing import Union, TypeVar, Optional
 
-from cfinterface.adapters.field.repository import Repository
+from cfinterface.adapters.components.field.repository import Repository
 
 
 class TextualRepository(Repository):
 
+    T = TypeVar("T")
+
     # Override
-    def read(self, source: Union[str, bytes]) -> str:
+    def read(self, source: Union[str, bytes]) -> Optional[T]:
         """
         Reads a field for extracting information.
 
         :param line: The line to be read
         :type line: str
-        :return: The extracted values, in order
-        :rtype: List[Any]
+        :return: The extracted value, in order
+        :rtype: T
         """
-        if isinstance(source, str):
-            return source
-        else:
-            raise TypeError(f"Trying to read textual data from {type(source)}")
+        try:
+            if isinstance(source, str):
+                return self._datatype(source)
+            raise TypeError("Incorrect type")
+        except Exception:
+            return None
 
     # Override
     def write(

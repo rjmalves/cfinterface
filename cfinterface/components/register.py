@@ -1,9 +1,14 @@
-from typing import Any, IO
-import re
+from typing import Any, IO, Union, Type
 from cfinterface.components.field import Field
 
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.line import Line
+
+
+from cfinterface.adapters.components.register.repository import Repository
+from cfinterface.adapters.components.register.textualrepository import (
+    TextualRepository,
+)
 
 
 class Register:
@@ -12,9 +17,10 @@ class Register:
     which is located at the beginning of the line.
     """
 
-    IDENTIFIER = ""
+    IDENTIFIER: Union[str, bytes] = ""
     IDENTIFIER_DIGITS = 0
     LINE = Line([])
+    REPOSITORY: Type[Repository] = TextualRepository
 
     def __init__(
         self,
@@ -43,17 +49,16 @@ class Register:
             return o.data == self.data
 
     @classmethod
-    def matches(cls, line: str):
+    def matches(cls, line: Union[str, bytes]):
         """
         Checks if the current line matches the identifier of the register.
 
         :param line: The candidate line for containing
             the register information
-        :type line: str
+        :type line: str | bytes
         """
-        return (
-            re.search(cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS])
-            is not None
+        return cls.REPOSITORY.matches(
+            cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS]
         )
 
     def read(self, file: IO) -> bool:
@@ -66,7 +71,11 @@ class Register:
         :return: The success, or not, in the reading
         :rtype: bool
         """
-        self.data = self.__line.read(file.readline())[1:]
+        self.data = self.__line.read(
+            self.REPOSITORY.read(
+                file, self.IDENTIFIER_DIGITS + self.__line.size
+            )
+        )[1:]
         return True
 
     def write(self, file: IO) -> bool:
@@ -80,7 +89,7 @@ class Register:
         :rtype: bool
         """
         line = self.__line.write([self.__class__.IDENTIFIER] + self.data)
-        file.write(line)
+        self.REPOSITORY.write(file, line)
         return True
 
     def read_register(self, file: IO):

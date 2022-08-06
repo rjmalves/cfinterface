@@ -1,7 +1,7 @@
 from typing import List, Any, Optional
 
 from cfinterface.components.field import Field
-from cfinterface.adapters.line.repository import Repository
+from cfinterface.adapters.components.line.repository import Repository
 
 
 class DelimitedRepository(Repository):

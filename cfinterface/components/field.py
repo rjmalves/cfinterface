@@ -1,7 +1,9 @@
 from typing import Any, Optional, Union
 
-from cfinterface.adapters.field.repository import Repository
-from cfinterface.adapters.field.textualrepository import TextualRepository
+from cfinterface.adapters.components.field.repository import Repository
+from cfinterface.adapters.components.field.textualrepository import (
+    TextualRepository,
+)
 
 
 class Field:
@@ -15,7 +17,7 @@ class Field:
         size: int,
         starting_position: int,
         value: Optional[Any] = None,
-        interface: Repository = TextualRepository(),
+        interface: Repository = TextualRepository("c", str),
     ) -> None:
         self._size = size
         self._starting_position = starting_position
