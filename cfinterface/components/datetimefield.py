@@ -1,10 +1,6 @@
 from typing import Optional, Union
 from datetime import datetime
 import pandas as pd  # type: ignore
-from cfinterface.adapters.components.field.repository import Repository
-from cfinterface.adapters.components.field.textualrepository import (
-    TextualRepository,
-)
 
 from cfinterface.components.field import Field
 
@@ -22,9 +18,9 @@ class DatetimeField(Field):
         starting_position: int = 0,
         format: str = "%Y/%m/%d",
         value: Optional[datetime] = None,
-        interface: Repository = TextualRepository("c", str),
+        repository: str = "TEXT",
     ) -> None:
-        super().__init__(size, starting_position, value, interface)
+        super().__init__(size, starting_position, value, repository, "c", str)
         self.__format = format
 
     # Override

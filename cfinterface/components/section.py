@@ -1,9 +1,4 @@
-from typing import Any, IO, Type
-
-from cfinterface.adapters.components.section.repository import Repository
-from cfinterface.adapters.components.section.textualrepository import (
-    TextualRepository,
-)
+from typing import Any, IO
 
 
 class Section:
@@ -12,7 +7,7 @@ class Section:
     a given order
     """
 
-    REPOSITORY: Type[Repository] = TextualRepository
+    STORAGE: str = "TEXT"
 
     def __init__(
         self,

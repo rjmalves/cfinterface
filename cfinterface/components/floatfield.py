@@ -1,9 +1,6 @@
 from typing import Optional, Union
 import pandas as pd  # type: ignore
-from cfinterface.adapters.components.field.repository import Repository
-from cfinterface.adapters.components.field.textualrepository import (
-    TextualRepository,
-)
+
 
 from cfinterface.components.field import Field
 
@@ -23,9 +20,16 @@ class FloatField(Field):
         format: str = "F",
         sep: str = ".",
         value: Optional[float] = None,
-        interface: Repository = TextualRepository("f", float),
+        repository: str = "TEXT",
     ) -> None:
-        super().__init__(size, starting_position, value, interface)
+        super().__init__(
+            size,
+            starting_position,
+            value,
+            repository,
+            "f",
+            float,
+        )
         self.__decimal_digits = decimal_digits
         self.__format = format
         self.__sep = sep

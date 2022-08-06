@@ -1,8 +1,7 @@
 from typing import Any, Optional, Union
 
-from cfinterface.adapters.components.field.repository import Repository
-from cfinterface.adapters.components.field.textualrepository import (
-    TextualRepository,
+from cfinterface.adapters.components.field.repository import (
+    factory,
 )
 
 
@@ -17,13 +16,15 @@ class Field:
         size: int,
         starting_position: int,
         value: Optional[Any] = None,
-        interface: Repository = TextualRepository("c", str),
+        repository: str = "TEXT",
+        format: str = "c",
+        datatype: type = str,
     ) -> None:
         self._size = size
         self._starting_position = starting_position
         self._ending_position = size + starting_position
         self._value = value
-        self._interface = interface
+        self._interface = factory(repository)(format, datatype)
 
     def read(self, line: Union[str, bytes]) -> Any:
         """

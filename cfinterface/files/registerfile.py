@@ -15,12 +15,15 @@ class RegisterFile:
 
     REGISTERS: List[Type[Register]] = []
     ENCODING = "utf-8"
+    STORAGE = "TEXT"
 
     def __init__(
         self,
         data=RegisterData(DefaultRegister("")),
     ) -> None:
         self.__data = data
+        self.__storage = self.__class__.STORAGE
+        self.__encoding = self.__class__.ENCODING
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, RegisterFile):
@@ -38,7 +41,7 @@ class RegisterFile:
         :param directory: The directory where the file is
         :type directory: str
         """
-        reader = RegisterReading(cls.REGISTERS)
+        reader = RegisterReading(cls.REGISTERS, cls.STORAGE)
         return cls(reader.read(filename, directory, cls.ENCODING))
 
     def write(self, directory: str, filename: str = ""):
@@ -50,8 +53,8 @@ class RegisterFile:
         :param directory: The directory where the file will be
         :type directory: str
         """
-        writer = RegisterWriting(self.__data)
-        writer.write(filename, directory, self.__class__.ENCODING)
+        writer = RegisterWriting(self.__data, self.__storage)
+        writer.write(filename, directory, self.__encoding)
 
     @property
     def data(self) -> RegisterData:

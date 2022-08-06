@@ -1,7 +1,10 @@
-from typing import IO
 from os.path import join
 
 from cfinterface.data.sectiondata import SectionData
+from cfinterface.adapters.writing.repository import (
+    Repository,
+    factory,
+)
 
 
 class SectionWriting:
@@ -9,19 +12,19 @@ class SectionWriting:
     Class for writing custom files based on a SectionData structure.
     """
 
-    def __init__(self, data: SectionData) -> None:
+    def __init__(self, data: SectionData, repository: str = "") -> None:
         self.__data = data
+        self.__repository = repository
+        self.__interface: Repository = None  # type: ignore
 
-    def __write_file(self, file: IO):
+    def __write_file(self):
         """
         Writes all the registers from the given SectionData structure
         to the specified file.
 
-        :param file: The filepointer
-        :type file: IO
         """
         for s in self.__data:
-            s.write(file)
+            s.write(self.__interface.file)
 
     def write(self, filename: str, directory: str, encoding: str):
         """
@@ -36,8 +39,9 @@ class SectionWriting:
         :type encoding: str
         """
         filepath = join(directory, filename)
-        with open(filepath, "w", encoding=encoding) as fp:
-            return self.__write_file(fp)
+        self.__interface = factory(self.__repository)(filepath, encoding)
+        with self.__interface:
+            return self.__write_file()
 
     @property
     def data(self) -> SectionData:

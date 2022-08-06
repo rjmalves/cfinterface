@@ -1,14 +1,11 @@
-from typing import Any, IO, Union, Type
+from typing import Any, IO, Union
 from cfinterface.components.field import Field
 
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.line import Line
 
 
-from cfinterface.adapters.components.register.repository import Repository
-from cfinterface.adapters.components.register.textualrepository import (
-    TextualRepository,
-)
+from cfinterface.adapters.components.register.repository import factory
 
 
 class Register:
@@ -20,7 +17,7 @@ class Register:
     IDENTIFIER: Union[str, bytes] = ""
     IDENTIFIER_DIGITS = 0
     LINE = Line([])
-    REPOSITORY: Type[Repository] = TextualRepository
+    STORAGE: str = "TEXT"
 
     def __init__(
         self,
@@ -34,6 +31,7 @@ class Register:
         self.__line = Line(
             [identifier_field] + self.__class__.LINE.fields,
             delimiter=self.__class__.LINE.delimiter,
+            storage=self.__class__.STORAGE,
         )
         self.__previous = previous
         self.__next = next
@@ -57,7 +55,7 @@ class Register:
             the register information
         :type line: str | bytes
         """
-        return cls.REPOSITORY.matches(
+        return factory(cls.STORAGE).matches(
             cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS]
         )
 
@@ -72,7 +70,7 @@ class Register:
         :rtype: bool
         """
         self.data = self.__line.read(
-            self.REPOSITORY.read(
+            factory(self.STORAGE).read(
                 file, self.IDENTIFIER_DIGITS + self.__line.size
             )
         )[1:]
@@ -89,7 +87,7 @@ class Register:
         :rtype: bool
         """
         line = self.__line.write([self.__class__.IDENTIFIER] + self.data)
-        self.REPOSITORY.write(file, line)
+        factory(self.STORAGE).write(file, line)
         return True
 
     def read_register(self, file: IO):

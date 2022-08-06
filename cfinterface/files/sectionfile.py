@@ -15,12 +15,15 @@ class SectionFile:
 
     SECTIONS: List[Type[Section]] = []
     ENCODING = "utf-8"
+    STORAGE = "TEXT"
 
     def __init__(
         self,
         data=SectionData(DefaultSection("")),
     ) -> None:
         self.__data = data
+        self.__storage = self.__class__.STORAGE
+        self.__encoding = self.__class__.ENCODING
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, SectionFile):
@@ -38,7 +41,7 @@ class SectionFile:
         :param directory: The directory where the file is
         :type directory: str
         """
-        reader = SectionReading(cls.SECTIONS)
+        reader = SectionReading(cls.SECTIONS, cls.STORAGE)
         return cls(reader.read(filename, directory, cls.ENCODING))
 
     def write(self, directory: str, filename: str = ""):
@@ -50,8 +53,8 @@ class SectionFile:
         :param directory: The directory where the file will be
         :type directory: str
         """
-        writer = SectionWriting(self.__data)
-        writer.write(filename, directory, self.__class__.ENCODING)
+        writer = SectionWriting(self.__data, self.__storage)
+        writer.write(filename, directory, self.__encoding)
 
     @property
     def data(self) -> SectionData:

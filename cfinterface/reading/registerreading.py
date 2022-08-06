@@ -1,9 +1,11 @@
-from typing import IO, List, Type
+from typing import List, Type, Union
 from os.path import join
 
 from cfinterface.components.register import Register
 from cfinterface.components.defaultregister import DefaultRegister
 from cfinterface.data.registerdata import RegisterData
+
+from cfinterface.adapters.reading.repository import Repository, factory
 
 
 class RegisterReading:
@@ -11,25 +13,31 @@ class RegisterReading:
     Class for reading custom files based on a RegisterData structure.
     """
 
-    def __init__(self, allowed_registers: List[Type[Register]]) -> None:
+    def __init__(
+        self,
+        allowed_registers: List[Type[Register]],
+        repository: str = "",
+        linesize: int = 1,
+    ) -> None:
         self.__allowed_registers = allowed_registers
         self.__data = RegisterData(DefaultRegister(data=""))
         self.__last_position_filepointer = 0
+        self.__repository = repository
+        self.__interface: Repository = None  # type: ignore
+        self.__linesize = linesize
 
-    def __read_line_with_backup(self, file: IO) -> str:
+    def __read_line_with_backup(self) -> Union[str, bytes]:
         """
         Reads a line of the file, saving the filepointer position
         in case one desired to return to the previous line.
 
-        :param file: THe filepoiner for the reading file
-        :type file: IO
         :return: The read line
-        :rtype: str
+        :rtype: str | bytes
         """
-        self.__last_position_filepointer = file.tell()
-        return file.readline()
+        self.__last_position_filepointer = self.__interface.file.tell()
+        return self.__interface.read(self.__linesize)
 
-    def __restore_previous_line(self, file: IO):
+    def __restore_previous_line(self):
         """
         Restores the filepointer to the beginning of the previously
         read line.
@@ -37,41 +45,41 @@ class RegisterReading:
         :param file: The filepointer
         :type file: IO
         """
-        file.seek(self.__last_position_filepointer)
+        self.__interface.file.seek(self.__last_position_filepointer)
 
-    def __find_starting_register(self, line: str) -> Type[Register]:
+    def __find_starting_register(
+        self, registerdata: Union[str, bytes]
+    ) -> Type[Register]:
         """
         Searches among the given registers for the register that begins in
         a line of the reading file.
 
-        :param line: A line of the reading file
-        :type line: str
+        :param registerdata: A portion of data in the reading file
+        :type registerdata: str | bytes
         :return: The register type that begins on the given line
         :rtype: Type[Register]
         """
         for r in self.__allowed_registers:
-            if r.matches(line):
+            if r.matches(registerdata):
                 return r
         return DefaultRegister
 
-    def __read_file(self, file: IO) -> RegisterData:
+    def __read_file(self) -> RegisterData:
         """
         Reads all the registers from the given registers in a file and
         returns the RegisterData structure.
 
-        :param file: The filepointer
-        :type file: IO
         :return: The register data from the file
         :rtype: RegisterData
         """
         while True:
-            line = self.__read_line_with_backup(file)
+            line = self.__read_line_with_backup()
             if len(line) == 0:
                 break
-            self.__restore_previous_line(file)
+            self.__restore_previous_line()
             registertype = self.__find_starting_register(line)
             register = registertype()
-            register.read(file)
+            register.read(self.__interface.file)
             self.__data.append(register)
         return self.__data
 
@@ -92,8 +100,9 @@ class RegisterReading:
         :rtype: RegisterData
         """
         filepath = join(directory, filename)
-        with open(filepath, "r", encoding=encoding) as fp:
-            return self.__read_file(fp)
+        self.__interface = factory(self.__repository)(filepath, encoding)
+        with self.__interface:
+            return self.__read_file()
 
     @property
     def data(self) -> RegisterData:

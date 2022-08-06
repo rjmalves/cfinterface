@@ -2,11 +2,6 @@ from typing import Optional, Union
 import pandas as pd  # type: ignore
 from cfinterface.components.field import Field
 
-from cfinterface.adapters.components.field.repository import Repository
-from cfinterface.adapters.components.field.textualrepository import (
-    TextualRepository,
-)
-
 
 class LiteralField(Field):
     """
@@ -19,9 +14,9 @@ class LiteralField(Field):
         size: int = 80,
         starting_position: int = 0,
         value: Optional[str] = None,
-        interface: Repository = TextualRepository("c", str),
+        repository: str = "TEXT",
     ) -> None:
-        super().__init__(size, starting_position, value, interface)
+        super().__init__(size, starting_position, value, repository, "c", str)
 
     # Override
     def read(self, line: Union[str, bytes]) -> Optional[str]:

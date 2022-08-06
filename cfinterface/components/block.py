@@ -1,9 +1,6 @@
-from typing import Any, IO, Union, Type
+from typing import Any, IO, Union
 
-from cfinterface.adapters.components.block.repository import Repository
-from cfinterface.adapters.components.block.textualrepository import (
-    TextualRepository,
-)
+from cfinterface.adapters.components.block.repository import factory
 
 
 class Block:
@@ -15,7 +12,7 @@ class Block:
     BEGIN_PATTERN: Union[str, bytes] = ""
     END_PATTERN: Union[str, bytes] = ""
     MAX_LINES = 10000
-    REPOSITORY: Type[Repository] = TextualRepository
+    STORAGE = "TEXT"
 
     def __init__(
         self,
@@ -39,7 +36,7 @@ class Block:
             the block.
         :type line: str | bytes
         """
-        return cls.REPOSITORY.begins(cls.BEGIN_PATTERN, line)
+        return factory(cls.STORAGE).begins(cls.BEGIN_PATTERN, line)
 
     @classmethod
     def ends(cls, line: Union[str, bytes]):
@@ -49,7 +46,7 @@ class Block:
         :param line: The candidate line for being the end of the block.
         :type line: str | bytes
         """
-        return cls.REPOSITORY.ends(cls.END_PATTERN, line)
+        return factory(cls.STORAGE).ends(cls.END_PATTERN, line)
 
     def read(self, file: IO) -> bool:
         """

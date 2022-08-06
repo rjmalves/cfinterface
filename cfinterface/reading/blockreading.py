@@ -5,8 +5,7 @@ from cfinterface.components.block import Block
 from cfinterface.components.defaultblock import DefaultBlock
 from cfinterface.data.blockdata import BlockData
 
-from cfinterface.adapters.reading.repository import Repository
-from cfinterface.adapters.reading.textualrepository import TextualRepository
+from cfinterface.adapters.reading.repository import Repository, factory
 
 
 class BlockReading:
@@ -17,7 +16,7 @@ class BlockReading:
     def __init__(
         self,
         allowed_blocks: List[Type[Block]],
-        repository: Type[Repository] = TextualRepository,
+        repository: str = "",
         linesize: int = 1,
     ) -> None:
         self.__allowed_blocks = allowed_blocks
@@ -29,11 +28,11 @@ class BlockReading:
 
     def __read_line_with_backup(self) -> Union[str, bytes]:
         """
-        Reads a block of information from a file,
+        Reads a line of information from a file,
         saving the filepointer position in case one desired to return
-        to the previous block.
+        to the previous line.
 
-        :return: The read block
+        :return: The read line
         :rtype: str | bytes
         """
         self.__last_position_filepointer = self.__interface.file.tell()
@@ -42,7 +41,7 @@ class BlockReading:
     def __restore_previous_line(self):
         """
         Restores the filepointer to the beginning of the previously
-        read block.
+        read line.
         """
         self.__interface.file.seek(self.__last_position_filepointer)
 
@@ -97,7 +96,7 @@ class BlockReading:
         :rtype: BlockData
         """
         filepath = join(directory, filename)
-        self.__interface = self.__repository(filepath, encoding)
+        self.__interface = factory(self.__repository)(filepath, encoding)
         with self.__interface:
             return self.__read_file()
 

@@ -1,33 +1,33 @@
-from cfinterface.adapters.components.line.delimitedrepository import (
-    DelimitedRepository,
+from cfinterface.adapters.components.line.repository import (
+    TextualRepository,
 )
 from cfinterface.components.literalfield import LiteralField
 
 
 def test_delimitedrepository_read_no_fields():
-    repo = DelimitedRepository([])
+    repo = TextualRepository([])
     fileline = ""
     assert len(repo.read(fileline)) == 0
 
 
 def test_delimitedrepository_read_with_fields():
     fields = [LiteralField(6, 0), LiteralField(6, 7)]
-    repo = DelimitedRepository(fields)
+    repo = TextualRepository(fields)
     fileline = "hello,;world!"
-    values = repo.read(fileline)
+    values = repo.read(fileline, delimiter=";")
     assert values[0] == "hello,"
     assert values[1] == "world!"
 
 
 def test_delimitedrepository_write_no_fields():
-    repo = DelimitedRepository([])
-    assert len(repo.write([])) == 1
+    repo = TextualRepository([])
+    assert len(repo.write([], delimiter=";")) == 1
 
 
 def test_delimitedrepository_write_with_fields():
     fields = [LiteralField(6, 0), LiteralField(6, 7)]
     values = ["hello,", "world!"]
-    repo = DelimitedRepository(fields, values)
+    repo = TextualRepository(fields, values)
     fileline = "hello,;world!\n"
-    outline = repo.write(values)
+    outline = repo.write(values, delimiter=";")
     assert fileline == outline

@@ -1,9 +1,10 @@
-from typing import Type
 from os.path import join
 
 from cfinterface.data.blockdata import BlockData
-from cfinterface.adapters.writing.repository import Repository
-from cfinterface.adapters.writing.textualrepository import TextualRepository
+from cfinterface.adapters.writing.repository import (
+    Repository,
+    factory,
+)
 
 
 class BlockWriting:
@@ -11,11 +12,7 @@ class BlockWriting:
     Class for writing custom files based on a BlockData structure.
     """
 
-    def __init__(
-        self,
-        data: BlockData,
-        repository: Type[Repository] = TextualRepository,
-    ) -> None:
+    def __init__(self, data: BlockData, repository: str = "") -> None:
         self.__data = data
         self.__repository = repository
         self.__interface: Repository = None  # type: ignore
@@ -42,7 +39,7 @@ class BlockWriting:
         :type encoding: str
         """
         filepath = join(directory, filename)
-        self.__interface = self.__repository(filepath, encoding)
+        self.__interface = factory(self.__repository)(filepath, encoding)
         with self.__interface:
             return self.__write_file()
 

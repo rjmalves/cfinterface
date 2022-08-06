@@ -2,15 +2,8 @@ from typing import Any, List, Optional, Union
 
 from cfinterface.components.field import Field
 
-from cfinterface.adapters.components.line.repository import Repository
-from cfinterface.adapters.components.line.positionalrepository import (
-    PositionalRepository,
-)
-from cfinterface.adapters.components.line.delimitedrepository import (
-    DelimitedRepository,
-)
-from cfinterface.adapters.components.line.binaryrepository import (
-    BinaryRepository,
+from cfinterface.adapters.components.line.repository import (
+    factory,
 )
 
 
@@ -25,15 +18,10 @@ class Line:
         fields: List[Field],
         values: Optional[List[Any]] = None,
         delimiter: Optional[Union[str, bytes]] = None,
+        storage: str = "TEXT",
     ):
         self._delimiter = delimiter
-        self._repository: Repository = None  # type: ignore
-        if delimiter is None:
-            self._repository = PositionalRepository(fields, values)
-        elif isinstance(delimiter, str):
-            self._repository = DelimitedRepository(fields, values, delimiter)
-        else:
-            self._repository = BinaryRepository(fields, values)
+        self._repository = factory(storage)(fields, values)
         self._size = sum([f.size for f in fields])
 
     def read(self, line: Union[str, bytes]) -> List[Any]:
@@ -46,7 +34,7 @@ class Line:
         :return: The extracted values, in order
         :rtype: List[Any]
         """
-        return self._repository.read(line)
+        return self._repository.read(line, self._delimiter)
 
     def write(self, values: List[Any]) -> Union[str, bytes]:
         """
@@ -58,7 +46,7 @@ class Line:
         :return: The line with the new field information
         :rtype: str | bytes
         """
-        return self._repository.write(values)
+        return self._repository.write(values, self._delimiter)
 
     @property
     def fields(self) -> List[Field]:
