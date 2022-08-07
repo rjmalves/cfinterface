@@ -16,13 +16,13 @@ class IntegerField(Field):
         size: int = 16,
         starting_position: int = 0,
         value: Optional[int] = None,
-        repository: str = "TEXT",
+        storage: str = "",
     ) -> None:
-        super().__init__(size, starting_position, value, repository, "i", int)
+        super().__init__(size, starting_position, value, storage, "i", int)
 
     # Override
     def read(self, line: Union[str, bytes]) -> Optional[int]:
-        self._value = self._interface.read(
+        self._value = self._repository.read(
             line[self._starting_position : self._ending_position]
         )
         return self._value
@@ -33,7 +33,7 @@ class IntegerField(Field):
             value = ""
         else:
             value = str(int(self.value))
-        return self._interface.write(
+        return self._repository.write(
             value.rjust(self._size),
             line,
             self._starting_position,

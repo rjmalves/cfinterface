@@ -16,14 +16,14 @@ class RegisterReading:
     def __init__(
         self,
         allowed_registers: List[Type[Register]],
-        repository: str = "",
+        storage: str = "",
         linesize: int = 1,
     ) -> None:
         self.__allowed_registers = allowed_registers
         self.__data = RegisterData(DefaultRegister(data=""))
         self.__last_position_filepointer = 0
-        self.__repository = repository
-        self.__interface: Repository = None  # type: ignore
+        self.__storage = storage
+        self.__repository: Repository = None  # type: ignore
         self.__linesize = linesize
 
     def __read_line_with_backup(self) -> Union[str, bytes]:
@@ -34,8 +34,8 @@ class RegisterReading:
         :return: The read line
         :rtype: str | bytes
         """
-        self.__last_position_filepointer = self.__interface.file.tell()
-        return self.__interface.read(self.__linesize)
+        self.__last_position_filepointer = self.__repository.file.tell()
+        return self.__repository.read(self.__linesize)
 
     def __restore_previous_line(self):
         """
@@ -45,7 +45,7 @@ class RegisterReading:
         :param file: The filepointer
         :type file: IO
         """
-        self.__interface.file.seek(self.__last_position_filepointer)
+        self.__repository.file.seek(self.__last_position_filepointer)
 
     def __find_starting_register(
         self, registerdata: Union[str, bytes]
@@ -79,7 +79,7 @@ class RegisterReading:
             self.__restore_previous_line()
             registertype = self.__find_starting_register(line)
             register = registertype()
-            register.read(self.__interface.file)
+            register.read(self.__repository.file)
             self.__data.append(register)
         return self.__data
 
@@ -100,8 +100,8 @@ class RegisterReading:
         :rtype: RegisterData
         """
         filepath = join(directory, filename)
-        self.__interface = factory(self.__repository)(filepath, encoding)
-        with self.__interface:
+        self.__repository = factory(self.__storage)(filepath, encoding)
+        with self.__repository:
             return self.__read_file()
 
     @property

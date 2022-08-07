@@ -14,13 +14,13 @@ class LiteralField(Field):
         size: int = 80,
         starting_position: int = 0,
         value: Optional[str] = None,
-        repository: str = "TEXT",
+        storage: str = "",
     ) -> None:
-        super().__init__(size, starting_position, value, repository, "c", str)
+        super().__init__(size, starting_position, value, storage, "c", str)
 
     # Override
     def read(self, line: Union[str, bytes]) -> Optional[str]:
-        self._value = self._interface.read(
+        self._value = self._repository.read(
             line[self._starting_position : self._ending_position]
         )
         return self._value
@@ -31,7 +31,7 @@ class LiteralField(Field):
             value = ""
         else:
             value = str(self.value)
-        return self._interface.write(
+        return self._repository.write(
             value.ljust(self._size),
             line,
             self._starting_position,

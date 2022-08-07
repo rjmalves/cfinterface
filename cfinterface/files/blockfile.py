@@ -19,7 +19,7 @@ class BlockFile:
 
     def __init__(
         self,
-        data=BlockData(DefaultBlock("")),
+        data=BlockData(DefaultBlock()),
     ) -> None:
         self.__data = data
         self.__storage = self.__class__.STORAGE

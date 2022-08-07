@@ -196,4 +196,4 @@ def factory(kind: str) -> Type[Repository]:
         "TEXT": TextualRepository,
         "BINARY": BinaryRepository,
     }
-    return mappings[kind]
+    return mappings.get(kind, TextualRepository)

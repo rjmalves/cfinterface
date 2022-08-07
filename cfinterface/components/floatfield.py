@@ -20,13 +20,13 @@ class FloatField(Field):
         format: str = "F",
         sep: str = ".",
         value: Optional[float] = None,
-        repository: str = "TEXT",
+        storage: str = "",
     ) -> None:
         super().__init__(
             size,
             starting_position,
             value,
-            repository,
+            storage,
             "f",
             float,
         )
@@ -40,7 +40,7 @@ class FloatField(Field):
         linedata = line[self._starting_position : self._ending_position]
         if isinstance(linedata, str):
             linedata = linedata.replace(self.__sep, ".")
-        self._value = self._interface.read(linedata)
+        self._value = self._repository.read(linedata)
         return self._value
 
     # Override
@@ -56,7 +56,7 @@ class FloatField(Field):
                 if len(value) <= self._size:
                     break
 
-        return self._interface.write(
+        return self._repository.write(
             value.rjust(self._size),
             line,
             self._starting_position,

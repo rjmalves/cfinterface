@@ -13,10 +13,10 @@ class DefaultRegister(Register):
             return False
         return self.data == o.data
 
-    def read(self, file: IO) -> bool:
+    def read(self, file: IO, storage: str = "") -> bool:
         self.data = file.readline()
         return True
 
-    def write(self, file: IO) -> bool:
+    def write(self, file: IO, storage: str = "") -> bool:
         file.write(self.data)
         return True

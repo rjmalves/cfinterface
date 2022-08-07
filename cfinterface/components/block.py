@@ -12,7 +12,6 @@ class Block:
     BEGIN_PATTERN: Union[str, bytes] = ""
     END_PATTERN: Union[str, bytes] = ""
     MAX_LINES = 10000
-    STORAGE = "TEXT"
 
     def __init__(
         self,
@@ -28,7 +27,7 @@ class Block:
         raise NotImplementedError
 
     @classmethod
-    def begins(cls, line: Union[str, bytes]):
+    def begins(cls, line: Union[str, bytes], storage: str = ""):
         """
         Checks if the current line marks the beginning of the block.
 
@@ -36,17 +35,17 @@ class Block:
             the block.
         :type line: str | bytes
         """
-        return factory(cls.STORAGE).begins(cls.BEGIN_PATTERN, line)
+        return factory(storage).begins(cls.BEGIN_PATTERN, line)
 
     @classmethod
-    def ends(cls, line: Union[str, bytes]):
+    def ends(cls, line: Union[str, bytes], storage: str = ""):
         """
         Checks if the current line marks the end of the block.
 
         :param line: The candidate line for being the end of the block.
         :type line: str | bytes
         """
-        return factory(cls.STORAGE).ends(cls.END_PATTERN, line)
+        return factory(storage).ends(cls.END_PATTERN, line)
 
     def read(self, file: IO) -> bool:
         """

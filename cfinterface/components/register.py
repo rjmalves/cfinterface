@@ -17,7 +17,6 @@ class Register:
     IDENTIFIER: Union[str, bytes] = ""
     IDENTIFIER_DIGITS = 0
     LINE = Line([])
-    STORAGE: str = "TEXT"
 
     def __init__(
         self,
@@ -25,13 +24,8 @@ class Register:
         next=None,
         data=None,
     ) -> None:
-        identifier_field: Field = LiteralField(
+        self.__identifier_field: Field = LiteralField(
             self.__class__.IDENTIFIER_DIGITS, 0
-        )
-        self.__line = Line(
-            [identifier_field] + self.__class__.LINE.fields,
-            delimiter=self.__class__.LINE.delimiter,
-            storage=self.__class__.STORAGE,
         )
         self.__previous = previous
         self.__next = next
@@ -47,7 +41,7 @@ class Register:
             return o.data == self.data
 
     @classmethod
-    def matches(cls, line: Union[str, bytes]):
+    def matches(cls, line: Union[str, bytes], storage: str = ""):
         """
         Checks if the current line matches the identifier of the register.
 
@@ -55,11 +49,11 @@ class Register:
             the register information
         :type line: str | bytes
         """
-        return factory(cls.STORAGE).matches(
+        return factory(storage).matches(
             cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS]
         )
 
-    def read(self, file: IO) -> bool:
+    def read(self, file: IO, storage: str = "") -> bool:
         """
         Generic function to perform the reading of the register using
         a filepointer.
@@ -69,14 +63,17 @@ class Register:
         :return: The success, or not, in the reading
         :rtype: bool
         """
-        self.data = self.__line.read(
-            factory(self.STORAGE).read(
-                file, self.IDENTIFIER_DIGITS + self.__line.size
-            )
+        line = Line(
+            [self.__identifier_field] + self.__class__.LINE.fields,
+            delimiter=self.__class__.LINE.delimiter,
+            storage=storage,
+        )
+        self.data = line.read(
+            factory(storage).read(file, self.IDENTIFIER_DIGITS + line.size)
         )[1:]
         return True
 
-    def write(self, file: IO) -> bool:
+    def write(self, file: IO, storage: str = "") -> bool:
         """
         Generic function to perform the writing of the register using
         a filepointer.
@@ -86,27 +83,31 @@ class Register:
         :return: The success, or not, in the writing
         :rtype: bool
         """
-        line = self.__line.write([self.__class__.IDENTIFIER] + self.data)
-        factory(self.STORAGE).write(file, line)
+        line = Line(
+            [self.__identifier_field] + self.__class__.LINE.fields,
+            delimiter=self.__class__.LINE.delimiter,
+            storage=storage,
+        ).write([self.__class__.IDENTIFIER] + self.data)
+        factory(storage).write(file, line)
         return True
 
-    def read_register(self, file: IO):
+    def read_register(self, file: IO, storage: str = ""):
         """
         Function that reads the register and evaluates the result.
 
         :param file: The filepointer
         :type file: IO
         """
-        self.read(file)
+        self.read(file, storage)
 
-    def write_register(self, file: IO):
+    def write_register(self, file: IO, storage: str = ""):
         """
         Function that writes the register, if it was succesfully read.
 
         :param file: The filepointer
         :type file: IO
         """
-        self.write(file)
+        self.write(file, storage)
 
     @property
     def previous(self) -> "Register":

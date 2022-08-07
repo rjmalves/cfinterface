@@ -19,7 +19,7 @@ class SectionFile:
 
     def __init__(
         self,
-        data=SectionData(DefaultSection("")),
+        data=SectionData(DefaultSection()),
     ) -> None:
         self.__data = data
         self.__storage = self.__class__.STORAGE

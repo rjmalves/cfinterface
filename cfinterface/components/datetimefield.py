@@ -18,14 +18,14 @@ class DatetimeField(Field):
         starting_position: int = 0,
         format: str = "%Y/%m/%d",
         value: Optional[datetime] = None,
-        repository: str = "TEXT",
+        storage: str = "",
     ) -> None:
-        super().__init__(size, starting_position, value, repository, "c", str)
+        super().__init__(size, starting_position, value, storage, "c", str)
         self.__format = format
 
     # Override
     def read(self, line: Union[str, bytes]) -> Optional[datetime]:
-        linevalue = self._interface.read(
+        linevalue = self._repository.read(
             line[self._starting_position : self._ending_position]
         )
         try:
@@ -39,7 +39,7 @@ class DatetimeField(Field):
         value = "".ljust(self._size)
         if self.value is not None and not pd.isnull(self.value):
             value = self.value.strftime(self.__format)
-        return self._interface.write(
+        return self._repository.write(
             value.rjust(self._size),
             line,
             self._starting_position,

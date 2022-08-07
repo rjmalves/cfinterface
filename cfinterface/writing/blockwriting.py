@@ -12,10 +12,10 @@ class BlockWriting:
     Class for writing custom files based on a BlockData structure.
     """
 
-    def __init__(self, data: BlockData, repository: str = "") -> None:
+    def __init__(self, data: BlockData, storage: str = "") -> None:
         self.__data = data
-        self.__repository = repository
-        self.__interface: Repository = None  # type: ignore
+        self.__storage = storage
+        self.__repository: Repository = None  # type: ignore
 
     def __write_file(self):
         """
@@ -24,7 +24,7 @@ class BlockWriting:
 
         """
         for b in self.__data:
-            b.write(self.__interface.file)
+            b.write(self.__repository.file)
 
     def write(self, filename: str, directory: str, encoding: str):
         """
@@ -39,8 +39,8 @@ class BlockWriting:
         :type encoding: str
         """
         filepath = join(directory, filename)
-        self.__interface = factory(self.__repository)(filepath, encoding)
-        with self.__interface:
+        self.__repository = factory(self.__storage)(filepath, encoding)
+        with self.__repository:
             return self.__write_file()
 
     @property

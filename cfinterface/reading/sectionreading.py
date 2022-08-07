@@ -16,14 +16,14 @@ class SectionReading:
     def __init__(
         self,
         sections: List[Type[Section]],
-        repository: str = "",
+        storage: str = "",
         linesize: int = 1,
     ) -> None:
         self.__sections = sections
         self.__data = SectionData(DefaultSection(data=""))
         self.__last_position_filepointer = 0
-        self.__repository = repository
-        self.__interface: Repository = None  # type: ignore
+        self.__storage = storage
+        self.__repository: Repository = None  # type: ignore
         self.__linesize = linesize
 
     def __read_line_with_backup(self) -> Union[str, bytes]:
@@ -35,8 +35,8 @@ class SectionReading:
         :return: The read line
         :rtype: str | bytes
         """
-        self.__last_position_filepointer = self.__interface.file.tell()
-        return self.__interface.read(self.__linesize)
+        self.__last_position_filepointer = self.__repository.file.tell()
+        return self.__repository.read(self.__linesize)
 
     def __restore_previous_line(self):
         """
@@ -44,7 +44,7 @@ class SectionReading:
         read line.
 
         """
-        self.__interface.file.seek(self.__last_position_filepointer)
+        self.__repository.file.seek(self.__last_position_filepointer)
 
     def __read_file(self) -> SectionData:
         """
@@ -56,7 +56,7 @@ class SectionReading:
         """
         for sectiontype in self.__sections:
             section = sectiontype()
-            section.read(self.__interface.file)
+            section.read(self.__repository.file)
             self.__data.append(section)
         while True:
             line = self.__read_line_with_backup()
@@ -64,7 +64,7 @@ class SectionReading:
                 break
             self.__restore_previous_line()
             section = DefaultSection()
-            section.read(self.__interface.file)
+            section.read(self.__repository.file)
             self.__data.append(section)
         return self.__data
 
@@ -85,8 +85,8 @@ class SectionReading:
         :rtype: SectionData
         """
         filepath = join(directory, filename)
-        self.__interface = factory(self.__repository)(filepath, encoding)
-        with self.__interface:
+        self.__repository = factory(self.__storage)(filepath, encoding)
+        with self.__repository:
             return self.__read_file()
 
     @property

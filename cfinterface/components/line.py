@@ -18,11 +18,19 @@ class Line:
         fields: List[Field],
         values: Optional[List[Any]] = None,
         delimiter: Optional[Union[str, bytes]] = None,
-        storage: str = "TEXT",
+        storage: str = "",
     ):
         self._delimiter = delimiter
-        self._repository = factory(storage)(fields, values)
+        self._fields = fields
+        self._values = values
+        self._storage = storage
+        self.__generate_repository()
         self._size = sum([f.size for f in fields])
+
+    def __generate_repository(self):
+        for f in self._fields:
+            f.storage = self._storage
+        self._repository = factory(self._storage)(self._fields, self._values)
 
     def read(self, line: Union[str, bytes]) -> List[Any]:
         """
@@ -71,6 +79,15 @@ class Line:
     @delimiter.setter
     def delimiter(self, d: Optional[Union[str, bytes]]):
         self._delimiter = d
+
+    @property
+    def storage(self) -> str:
+        return self._storage
+
+    @storage.setter
+    def storage(self, s: str):
+        self._storage = s
+        self.__generate_repository()
 
     @property
     def size(self) -> int:

@@ -12,10 +12,10 @@ class SectionWriting:
     Class for writing custom files based on a SectionData structure.
     """
 
-    def __init__(self, data: SectionData, repository: str = "") -> None:
+    def __init__(self, data: SectionData, storage: str = "") -> None:
         self.__data = data
-        self.__repository = repository
-        self.__interface: Repository = None  # type: ignore
+        self.__storage = storage
+        self.__repository: Repository = None  # type: ignore
 
     def __write_file(self):
         """
@@ -24,7 +24,7 @@ class SectionWriting:
 
         """
         for s in self.__data:
-            s.write(self.__interface.file)
+            s.write(self.__repository.file)
 
     def write(self, filename: str, directory: str, encoding: str):
         """
@@ -39,8 +39,8 @@ class SectionWriting:
         :type encoding: str
         """
         filepath = join(directory, filename)
-        self.__interface = factory(self.__repository)(filepath, encoding)
-        with self.__interface:
+        self.__repository = factory(self.__storage)(filepath, encoding)
+        with self.__repository:
             return self.__write_file()
 
     @property

@@ -1,9 +1,3 @@
-# TODO - implement basic funcions for opening, reading,
-# seeking data, etc. in files, being them binary or textual.
-
-# Will need a blocksize parameter for the binary case
-# The textual case is trivial, reads line by line
-
 from typing import IO, BinaryIO, TextIO, Union, Optional, Dict, Type
 from abc import ABC, abstractmethod
 

@@ -16,14 +16,14 @@ class BlockReading:
     def __init__(
         self,
         allowed_blocks: List[Type[Block]],
-        repository: str = "",
+        storage: str = "",
         linesize: int = 1,
     ) -> None:
         self.__allowed_blocks = allowed_blocks
         self.__data = BlockData(DefaultBlock(data=""))
         self.__last_position_filepointer = 0
-        self.__repository = repository
-        self.__interface: Repository = None  # type: ignore
+        self.__storage = storage
+        self.__repository: Repository = None  # type: ignore
         self.__linesize = linesize
 
     def __read_line_with_backup(self) -> Union[str, bytes]:
@@ -35,15 +35,15 @@ class BlockReading:
         :return: The read line
         :rtype: str | bytes
         """
-        self.__last_position_filepointer = self.__interface.file.tell()
-        return self.__interface.read(self.__linesize)
+        self.__last_position_filepointer = self.__repository.file.tell()
+        return self.__repository.read(self.__linesize)
 
     def __restore_previous_line(self):
         """
         Restores the filepointer to the beginning of the previously
         read line.
         """
-        self.__interface.file.seek(self.__last_position_filepointer)
+        self.__repository.file.seek(self.__last_position_filepointer)
 
     def __find_starting_block(
         self, blockdata: Union[str, bytes]
@@ -77,7 +77,7 @@ class BlockReading:
             self.__restore_previous_line()
             blocktype = self.__find_starting_block(line)
             block = blocktype()
-            block.read(self.__interface.file)
+            block.read(self.__repository.file)
             self.__data.append(block)
         return self.__data
 
@@ -96,8 +96,8 @@ class BlockReading:
         :rtype: BlockData
         """
         filepath = join(directory, filename)
-        self.__interface = factory(self.__repository)(filepath, encoding)
-        with self.__interface:
+        self.__repository = factory(self.__storage)(filepath, encoding)
+        with self.__repository:
             return self.__read_file()
 
     @property
