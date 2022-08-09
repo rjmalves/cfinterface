@@ -1,11 +1,10 @@
-from typing import IO, BinaryIO, TextIO, Union, Optional, Dict, Type
+from typing import IO, BinaryIO, TextIO, Union, Dict, Type
 from abc import ABC, abstractmethod
 
 
 class Repository(ABC):
-    def __init__(self, path: str, encoding: Optional[str]) -> None:
+    def __init__(self, path: str, *args) -> None:
         self._path = path
-        self._encoding = encoding
 
     def __enter__(self) -> "Repository":
         return self
@@ -30,8 +29,8 @@ class Repository(ABC):
 
 
 class BinaryRepository(Repository):
-    def __init__(self, path: str) -> None:
-        super().__init__(path, None)
+    def __init__(self, path: str, *args) -> None:
+        super().__init__(path)
         self._filepointer: BinaryIO = None  # type: ignore
 
     def __enter__(self):
@@ -59,8 +58,9 @@ class BinaryRepository(Repository):
 
 class TextualRepository(Repository):
     def __init__(self, path: str, encoding: str) -> None:
-        super().__init__(path, encoding)
+        super().__init__(path)
         self._filepointer: TextIO = None  # type: ignore
+        self._encoding = encoding
 
     def __enter__(self):
         self._filepointer = open(self._path, "w", encoding=self._encoding)

@@ -1,6 +1,6 @@
 from typing import Any, IO, Union
 
-from cfinterface.adapters.components.block.repository import factory
+from cfinterface.adapters.components.repository import factory
 
 
 class Block:

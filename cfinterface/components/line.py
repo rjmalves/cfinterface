@@ -28,8 +28,6 @@ class Line:
         self._size = sum([f.size for f in fields])
 
     def __generate_repository(self):
-        for f in self._fields:
-            f.storage = self._storage
         self._repository = factory(self._storage)(self._fields, self._values)
 
     def read(self, line: Union[str, bytes]) -> List[Any]:

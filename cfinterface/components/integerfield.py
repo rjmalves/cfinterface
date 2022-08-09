@@ -1,5 +1,6 @@
-from typing import Optional, Union
+from typing import Optional
 import pandas as pd  # type: ignore
+import numpy as np  # type: ignore
 
 
 from cfinterface.components.field import Field
@@ -16,29 +17,37 @@ class IntegerField(Field):
         size: int = 16,
         starting_position: int = 0,
         value: Optional[int] = None,
-        storage: str = "",
     ) -> None:
-        super().__init__(size, starting_position, value, storage, "i", int)
+        super().__init__(size, starting_position, value)
 
     # Override
-    def read(self, line: Union[str, bytes]) -> Optional[int]:
-        self._value = self._repository.read(
-            line[self._starting_position : self._ending_position]
+    def _binary_read(self, line: bytes) -> int:
+        return int(
+            np.frombuffer(
+                line[self._starting_position : self._ending_position],
+                dtype=np.int32,
+                count=1,
+            )[0]
         )
-        return self._value
 
     # Override
-    def write(self, line: Union[str, bytes]) -> Union[str, bytes]:
+    def _textual_read(self, line: str) -> int:
+        return int(line[self._starting_position : self._ending_position])
+
+    # Override
+    def _binary_write(self) -> bytes:
+        if self.value is None or pd.isnull(self.value):
+            return np.array([0], dtype=np.int32).tobytes()
+        else:
+            return np.array([self._value], dtype=np.int32).tobytes()
+
+    # Override
+    def _textual_write(self) -> str:
         if self.value is None or pd.isnull(self.value):
             value = ""
         else:
             value = str(int(self.value))
-        return self._repository.write(
-            value.rjust(self._size),
-            line,
-            self._starting_position,
-            self._ending_position,
-        )
+        return value.rjust(self.size)
 
     @property
     def value(self) -> Optional[int]:

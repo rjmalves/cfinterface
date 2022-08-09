@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 import pandas as pd  # type: ignore
 from cfinterface.components.field import Field
 
@@ -14,29 +14,35 @@ class LiteralField(Field):
         size: int = 80,
         starting_position: int = 0,
         value: Optional[str] = None,
-        storage: str = "",
     ) -> None:
-        super().__init__(size, starting_position, value, storage, "c", str)
+        super().__init__(size, starting_position, value)
 
     # Override
-    def read(self, line: Union[str, bytes]) -> Optional[str]:
-        self._value = self._repository.read(
+    def _binary_read(self, line: bytes) -> str:
+        return (
             line[self._starting_position : self._ending_position]
+            .decode("utf-8")
+            .strip()
         )
-        return self._value
 
     # Override
-    def write(self, line: Union[str, bytes]) -> Union[str, bytes]:
+    def _textual_read(self, line: str) -> str:
+        return line[self._starting_position : self._ending_position].strip()
+
+    # Override
+    def _binary_write(self) -> bytes:
+        if self.value is None or pd.isnull(self.value):
+            return b"".ljust(self.size)
+        else:
+            return self.value.ljust(self.size).encode("utf-8")
+
+    # Override
+    def _textual_write(self) -> str:
         if self.value is None or pd.isnull(self.value):
             value = ""
         else:
             value = str(self.value)
-        return self._repository.write(
-            value.ljust(self._size),
-            line,
-            self._starting_position,
-            self._ending_position,
-        )
+        return value.ljust(self._size)
 
     @property
     def value(self) -> Optional[str]:

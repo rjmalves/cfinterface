@@ -18,7 +18,7 @@ def test_default_register_read():
     with patch("builtins.open", m):
         with open("", "r") as fp:
             r = DefaultRegister()
-            r.read_register(fp)
+            r.read_register(fp, storage="TEXT")
             assert r.data == data
 
 

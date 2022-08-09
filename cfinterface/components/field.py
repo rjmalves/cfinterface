@@ -1,6 +1,5 @@
-from typing import Any, Optional, Union
-
-from cfinterface.adapters.components.field.repository import factory
+from abc import abstractmethod
+from typing import Any, Optional, Union, TypeVar
 
 
 class Field:
@@ -9,27 +8,28 @@ class Field:
     in a file.
     """
 
+    T = TypeVar("T", str, bytes)
+
     def __init__(
         self,
         size: int,
         starting_position: int,
         value: Optional[Any] = None,
-        storage: str = "",
-        format: str = "c",
-        datatype: type = str,
     ) -> None:
         self._size = size
         self._starting_position = starting_position
         self._ending_position = size + starting_position
         self._value = value
-        self._storage = storage
-        self._dataformat = format
-        self._datatype = datatype
-        self._repository = factory(self._storage)(
-            self._dataformat, self._datatype
-        )
 
-    def read(self, line: Union[str, bytes]) -> Any:
+    @abstractmethod
+    def _binary_read(self, line: bytes) -> Any:
+        raise NotImplementedError
+
+    @abstractmethod
+    def _textual_read(self, line: str) -> Any:
+        raise NotImplementedError
+
+    def read(self, line: T) -> Any:
         """
         Generic method for reading a field from a given line of a file.
 
@@ -38,18 +38,55 @@ class Field:
         :return: The value read from the field
         :rtype: Any
         """
+        try:
+            if isinstance(line, bytes):
+                self._value = self._binary_read(line)
+            else:
+                self._value = self._textual_read(line)
+        except ValueError:
+            self._value = None
+        return self._value
+
+    @abstractmethod
+    def _binary_write(self) -> bytes:
         raise NotImplementedError
 
-    def write(self, line: Union[str, bytes]) -> Any:
+    @abstractmethod
+    def _textual_write(self) -> str:
+        raise NotImplementedError
+
+    def write(self, line: T) -> T:
         """
         Generic method for writing a field to a given line of a file.
 
         :param line: The line read from the file
         :type line: Union[str, bytes]
-        :return: The value read from the field
-        :rtype: Any
+        :return: The value written to the field
+        :rtype: Union[str, bytes]
         """
-        raise NotImplementedError
+        value: Union[str, bytes] = ""
+        if isinstance(line, bytes):
+            value = self._binary_write()
+        else:
+            value = self._textual_write()
+
+        if len(line) < self.ending_position:
+            line = line.ljust(self.ending_position)
+
+        if isinstance(value, str) and isinstance(line, str):
+            return (
+                line[: self.starting_position]
+                + value
+                + line[self.ending_position :]
+            )
+        elif isinstance(value, bytes) and isinstance(line, bytes):
+            return (
+                line[: self.starting_position]
+                + value
+                + line[self.ending_position :]
+            )
+        else:
+            return line
 
     @property
     def size(self) -> int:
@@ -58,15 +95,6 @@ class Field:
     @size.setter
     def size(self, val: int):
         self._size = val
-
-    @property
-    def storage(self) -> str:
-        return self._storage
-
-    @storage.setter
-    def storage(self, s: str):
-        self._storage = s
-        self._repository = factory(s)(self._dataformat, self._datatype)
 
     @property
     def starting_position(self) -> int:

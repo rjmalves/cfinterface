@@ -1,6 +1,6 @@
-from typing import Optional, Union
 from datetime import datetime
 import pandas as pd  # type: ignore
+from typing import Optional
 
 from cfinterface.components.field import Field
 
@@ -18,33 +18,44 @@ class DatetimeField(Field):
         starting_position: int = 0,
         format: str = "%Y/%m/%d",
         value: Optional[datetime] = None,
-        storage: str = "",
     ) -> None:
-        super().__init__(size, starting_position, value, storage, "c", str)
+        super().__init__(size, starting_position, value)
         self.__format = format
 
     # Override
-    def read(self, line: Union[str, bytes]) -> Optional[datetime]:
-        linevalue = self._repository.read(
+    def _binary_read(self, line: bytes) -> datetime:
+        return datetime.strptime(
             line[self._starting_position : self._ending_position]
+            .decode("utf-8")
+            .strip(),
+            self.__format,
         )
-        try:
-            self._value = datetime.strptime(linevalue, self.__format)
-        except ValueError:
-            self._value = None
-        return self._value
 
     # Override
-    def write(self, line: Union[str, bytes]) -> str:
-        value = "".ljust(self._size)
-        if self.value is not None and not pd.isnull(self.value):
-            value = self.value.strftime(self.__format)
-        return self._repository.write(
-            value.rjust(self._size),
-            line,
-            self._starting_position,
-            self._ending_position,
+    def _textual_read(self, line: str) -> datetime:
+        return datetime.strptime(
+            line[self._starting_position : self._ending_position].strip(),
+            self.__format,
         )
+
+    # Override
+    def _binary_write(self) -> bytes:
+        if self.value is None or pd.isnull(self.value):
+            return b"".ljust(self.size)
+        else:
+            return (
+                self.value.strftime(self.__format)
+                .ljust(self.size)
+                .encode("utf-8")
+            )
+
+    # Override
+    def _textual_write(self) -> str:
+        if self.value is None or pd.isnull(self.value):
+            value = ""
+        else:
+            value = self.value.strftime(self.__format)
+        return value.ljust(self._size)
 
     @property
     def value(self) -> Optional[datetime]:

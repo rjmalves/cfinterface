@@ -24,7 +24,7 @@ class RegisterWriting:
 
         """
         for r in self.__data:
-            r.write(self.__repository.file)
+            r.write(self.__repository.file, self.__storage)
 
     def write(self, filename: str, directory: str, encoding: str):
         """

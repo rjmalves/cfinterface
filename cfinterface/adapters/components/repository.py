@@ -1,6 +1,6 @@
-from typing import IO, Union, Type, Dict
-from abc import ABC, abstractmethod
+from typing import Union, Dict, Type, IO
 import re
+from abc import ABC, abstractmethod
 
 
 class Repository(ABC):
@@ -16,6 +16,38 @@ class Repository(ABC):
             the register information
         :type line: str | bytes
         :return: The register in the current line
+        :rtype: bool
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    @abstractmethod
+    def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
+        """
+         Checks if the current line marks the beginning of the block.
+
+        :param pattern: The pattern for matching the beginning
+        :type pattern: str | bytes
+        :param line: The candidate line for being the beginning of
+            the block.
+        :type line: str | bytes
+        :return: The beginning of the block in the current line
+        :rtype: bool
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    @abstractmethod
+    def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
+        """
+        Checks if the current line marks the end of the block.
+
+        :param pattern: The pattern for matching the ending
+        :type pattern: str | bytes
+        :param line: The candidate line for being the ending of
+            the block.
+        :type line: str | bytes
+        :return: The ending of the block in the current line
         :rtype: bool
         """
         raise NotImplementedError
@@ -67,6 +99,42 @@ class BinaryRepository(Repository):
         """
         if isinstance(pattern, bytes) and isinstance(line, bytes):
             return re.search(pattern, line) is not None
+        elif isinstance(pattern, str) and isinstance(line, bytes):
+            return re.search(pattern, line.decode("utf-8")) is not None
+        return False
+
+    @staticmethod
+    def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
+        """
+         Checks if the current line marks the beginning of the block.
+
+        :param pattern: The pattern for matching the beginning
+        :type pattern: str | bytes
+        :param line: The candidate line for being the beginning of
+            the block.
+        :type line: str | bytes
+        :return: The beginning of the block in the current line
+        :rtype: bool
+        """
+        if isinstance(line, bytes) and isinstance(pattern, bytes):
+            return re.search(pattern, line) is not None
+        return False
+
+    @staticmethod
+    def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
+        """
+        Checks if the current line marks the end of the block.
+
+        :param pattern: The pattern for matching the ending
+        :type pattern: str | bytes
+        :param line: The candidate line for being the ending of
+            the block.
+        :type line: str | bytes
+        :return: The ending of the block in the current line
+        :rtype: bool
+        """
+        if isinstance(line, bytes) and isinstance(pattern, bytes):
+            return re.search(pattern, line) is not None
         return False
 
     @staticmethod
@@ -113,6 +181,40 @@ class TextualRepository(Repository):
         :rtype: bool
         """
         if isinstance(pattern, str) and isinstance(line, str):
+            return re.search(pattern, line) is not None
+        return False
+
+    @staticmethod
+    def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
+        """
+         Checks if the current line marks the beginning of the block.
+
+        :param pattern: The pattern for matching the beginning
+        :type pattern: str | bytes
+        :param line: The candidate line for being the beginning of
+            the block.
+        :type line: str | bytes
+        :return: The beginning of the block in the current line
+        :rtype: bool
+        """
+        if isinstance(line, str) and isinstance(pattern, str):
+            return re.search(pattern, line) is not None
+        return False
+
+    @staticmethod
+    def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
+        """
+        Checks if the current line marks the end of the block.
+
+        :param pattern: The pattern for matching the ending
+        :type pattern: str | bytes
+        :param line: The candidate line for being the ending of
+            the block.
+        :type line: str | bytes
+        :return: The ending of the block in the current line
+        :rtype: bool
+        """
+        if isinstance(line, str) and isinstance(pattern, str):
             return re.search(pattern, line) is not None
         return False
 

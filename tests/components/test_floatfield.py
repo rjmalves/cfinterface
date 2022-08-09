@@ -44,3 +44,17 @@ def test_floatfield_write_short_line():
     field = FloatField(5, 6, 1, value=data)
     line_after = field.write("   ")
     assert data == float(line_after[6:])
+
+
+# import numpy as np
+
+
+# with open("teste.dat", "wb") as arq:
+#     arq.write(np.array([1.0], dtype=np.float32).tobytes())
+#     arq.write(np.array([5], dtype=np.int32).tobytes())
+#     arq.write(np.array([2.0], dtype=np.float32).tobytes())
+#     arq.write(np.array([6], dtype=np.int32).tobytes())
+#     arq.write(np.array([3.0], dtype=np.float32).tobytes())
+#     arq.write(np.array([7], dtype=np.int32).tobytes())
+#     arq.write(np.array([4.0], dtype=np.float32).tobytes())
+#     arq.write(np.array([8], dtype=np.int32).tobytes())

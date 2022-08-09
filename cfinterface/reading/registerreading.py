@@ -20,7 +20,7 @@ class RegisterReading:
         linesize: int = 1,
     ) -> None:
         self.__allowed_registers = allowed_registers
-        self.__data = RegisterData(DefaultRegister(data=""))
+        self.__data = RegisterData(DefaultRegister())
         self.__last_position_filepointer = 0
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
@@ -60,7 +60,7 @@ class RegisterReading:
         :rtype: Type[Register]
         """
         for r in self.__allowed_registers:
-            if r.matches(registerdata):
+            if r.matches(registerdata, self.__storage):
                 return r
         return DefaultRegister
 
@@ -79,7 +79,7 @@ class RegisterReading:
             self.__restore_previous_line()
             registertype = self.__find_starting_register(line)
             register = registertype()
-            register.read(self.__repository.file)
+            register.read(self.__repository.file, self.__storage)
             self.__data.append(register)
         return self.__data
 

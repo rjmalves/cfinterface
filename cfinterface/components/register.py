@@ -5,7 +5,7 @@ from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.line import Line
 
 
-from cfinterface.adapters.components.register.repository import factory
+from cfinterface.adapters.components.repository import factory
 
 
 class Register:
@@ -83,12 +83,14 @@ class Register:
         :return: The success, or not, in the writing
         :rtype: bool
         """
-        line = Line(
-            [self.__identifier_field] + self.__class__.LINE.fields,
-            delimiter=self.__class__.LINE.delimiter,
-            storage=storage,
-        ).write([self.__class__.IDENTIFIER] + self.data)
-        factory(storage).write(file, line)
+        if not self.empty:
+            line = Line(
+                [self.__identifier_field] + self.__class__.LINE.fields,
+                delimiter=self.__class__.LINE.delimiter,
+                storage=storage,
+            )
+            linedata = line.write([self.__class__.IDENTIFIER] + self.data)
+            factory(storage).write(file, linedata)
         return True
 
     def read_register(self, file: IO, storage: str = ""):

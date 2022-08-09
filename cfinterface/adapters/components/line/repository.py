@@ -168,7 +168,7 @@ class BinaryRepository(Repository):
         :rtype: List[Any]
         """
         for field in self._fields:
-            field.read(line)
+            field.read(line)  # type: ignore
         return self.values
 
     # Override

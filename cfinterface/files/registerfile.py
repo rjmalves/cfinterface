@@ -19,7 +19,7 @@ class RegisterFile:
 
     def __init__(
         self,
-        data=RegisterData(DefaultRegister()),
+        data=RegisterData(DefaultRegister(data="")),
     ) -> None:
         self.__data = data
         self.__storage = self.__class__.STORAGE
