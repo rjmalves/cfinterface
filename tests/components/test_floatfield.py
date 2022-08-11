@@ -1,5 +1,7 @@
 from cfinterface.components.floatfield import FloatField
 
+import numpy as np
+
 
 def test_floatfield_read():
     data = 12345
@@ -46,15 +48,34 @@ def test_floatfield_write_short_line():
     assert data == float(line_after[6:])
 
 
-# import numpy as np
+def test_floatfield_read_binary():
+    data = 105.40
+    field = FloatField(4, 0)
+    line = np.array([data], dtype=np.float32).tobytes()
+    field.read(line)
+    assert round(field.value, 1) == data
 
 
-# with open("teste.dat", "wb") as arq:
-#     arq.write(np.array([1.0], dtype=np.float32).tobytes())
-#     arq.write(np.array([5], dtype=np.int32).tobytes())
-#     arq.write(np.array([2.0], dtype=np.float32).tobytes())
-#     arq.write(np.array([6], dtype=np.int32).tobytes())
-#     arq.write(np.array([3.0], dtype=np.float32).tobytes())
-#     arq.write(np.array([7], dtype=np.int32).tobytes())
-#     arq.write(np.array([4.0], dtype=np.float32).tobytes())
-#     arq.write(np.array([8], dtype=np.int32).tobytes())
+def test_floatfield_write_binary():
+    floatdata = 105.40
+    line_before = (
+        b"field-"
+        + np.array([floatdata], dtype=np.float32).tobytes()
+        + b"-else"
+    )
+    field = FloatField(4, 6, value=floatdata)
+    line_after = field.write(line_before)
+    assert line_before == line_after
+
+
+def test_floatfield_write_empty_binary():
+    field = FloatField(4, 0)
+    assert len(field.write(b"")) == 4
+
+
+def test_floatfield_write_short_line_binary():
+    floatdata = 105.40
+    bytedata = np.array([floatdata], dtype=np.float32).tobytes()
+    field = FloatField(4, 6, value=floatdata)
+    line_after = field.write(b"   ")
+    assert bytedata == line_after[6:]

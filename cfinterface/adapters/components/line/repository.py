@@ -66,16 +66,6 @@ class Repository(ABC):
 
 
 class TextualRepository(Repository):
-    def __init__(
-        self,
-        fields: List[Field],
-        values: Optional[List[Any]] = None,
-    ) -> None:
-        self._fields = fields
-        if values is not None:
-            for f, v in zip(self._fields, values):
-                f.value = v
-
     def __positional_to_delimited_field(self, f: Field) -> Field:
         f.ending_position = f.size
         f.starting_position = 0
