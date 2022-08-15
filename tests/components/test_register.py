@@ -18,6 +18,10 @@ class DummyDelimitedRegister(Register):
     LINE = Line([LiteralField(13, 4)], delimiter=";")
 
 
+class DummyBinaryRegister(Register):
+    LINE = Line([LiteralField(13)], storage="BINARY")
+
+
 def test_single_register_properties():
     r1 = Register()
     assert r1.is_first
@@ -97,4 +101,28 @@ def test_dummy_delimiterregister_write():
             b = DummyDelimitedRegister()
             b.data = [data]
             b.write_register(fp)
+    m().write.assert_called_once_with(write_data)
+
+
+def test_dummy_binaryregister_read():
+    data = "Hello, world!"
+    filedata = data.encode("utf-8")
+    m: MagicMock = mock_open(read_data=filedata)
+    with patch("builtins.open", m):
+        with open("", "rb") as fp:
+            b = DummyBinaryRegister()
+            b.read_register(fp, storage="BINARY")
+            assert b.data[0] == data
+
+
+def test_dummy_binaryregister_write():
+    data = "Hello, world!"
+    write_data = data.encode("utf-8")
+    filedata = b""
+    m = mock_open(read_data=filedata)
+    with patch("builtins.open", m):
+        with open("", "wb") as fp:
+            b = DummyBinaryRegister()
+            b.data = [data]
+            b.write_register(fp, storage="BINARY")
     m().write.assert_called_once_with(write_data)

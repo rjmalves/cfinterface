@@ -3,6 +3,7 @@ from typing import IO
 import pytest
 
 from cfinterface.components.block import Block
+from cfinterface.components.literalfield import LiteralField
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -24,6 +25,33 @@ class DummyBlock(Block):
 
     def write(self, file: IO) -> bool:
         file.write(self.data)
+        return True
+
+
+class DummyBinaryBlock(Block):
+    BEGIN_PATTERN = b"0"
+    END_PATTERN = b"1"
+
+    def __init__(self, previous=None, next=None, data=None) -> None:
+        super().__init__(previous, next, data)
+        self._field = LiteralField(5)
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+        else:
+            return o.data == self.data
+
+    def read(self, file: IO) -> bool:
+        self._field.read(file.read(self._field.size))
+        self.data = self._field.value
+        return True
+
+    def write(self, file: IO) -> bool:
+        self._field.value = self.data
+        file.write(DummyBinaryBlock.BEGIN_PATTERN)
+        file.write(self._field.write(b""))
+        file.write(DummyBinaryBlock.END_PATTERN)
         return True
 
 
@@ -112,3 +140,28 @@ def test_dummy_block_write():
             b.data = data
             b.write_block(fp)
     m().write.assert_called_once_with(data)
+
+
+def test_dummy_binary_block_read():
+    data = "hello"
+    filedata = b"0hello1"
+    m: MagicMock = mock_open(read_data=filedata)
+    with patch("builtins.open", m):
+        with open("", "rb") as fp:
+            b = DummyBinaryBlock()
+            assert DummyBinaryBlock.begins(fp.read(1), storage="BINARY")
+            b.read_block(fp)
+            assert b.data == data
+            assert DummyBinaryBlock.ends(fp.read(1), storage="BINARY")
+
+
+def test_dummy_binary_block_write():
+    data = "hello"
+    filedata = ""
+    m = mock_open(read_data=filedata)
+    with patch("builtins.open", m):
+        with open("", "wb") as fp:
+            b = DummyBinaryBlock()
+            b.data = data
+            b.write_block(fp)
+    m().write.assert_any_call(b"hello")

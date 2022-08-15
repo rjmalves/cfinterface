@@ -1,6 +1,7 @@
 from typing import IO
 
 import pytest
+from cfinterface.components.literalfield import LiteralField
 
 from cfinterface.components.section import Section
 from tests.mocks.mock_open import mock_open
@@ -21,6 +22,28 @@ class DummySection(Section):
 
     def write(self, file: IO) -> bool:
         file.write(self.data)
+        return True
+
+
+class DummyBinarySection(Section):
+    def __init__(self, previous=None, next=None, data=None) -> None:
+        super().__init__(previous, next, data)
+        self._field = LiteralField(5)
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+        else:
+            return o.data == self.data
+
+    def read(self, file: IO) -> bool:
+        self._field.read(file.read(self._field.size))
+        self.data = self._field.value
+        return True
+
+    def write(self, file: IO) -> bool:
+        self._field.value = self.data
+        file.write(self._field.write(b""))
         return True
 
 
@@ -93,7 +116,7 @@ def test_dummy_section_read():
             assert s.data == data
 
 
-def test_dummy_block_write():
+def test_dummy_section_write():
     data = "Hello, world!"
     filedata = ""
     m = mock_open(read_data=filedata)
@@ -103,3 +126,26 @@ def test_dummy_block_write():
             b.data = data
             b.write_section(fp)
     m().write.assert_called_once_with(data)
+
+
+def test_dummy_binarysection_read():
+    data = "hello"
+    filedata = b"hello"
+    m: MagicMock = mock_open(read_data=filedata)
+    with patch("builtins.open", m):
+        with open("", "rb") as fp:
+            s = DummyBinarySection()
+            s.read_section(fp)
+            assert s.data == data
+
+
+def test_dummy_binarysection_write():
+    data = "hello"
+    filedata = ""
+    m = mock_open(read_data=filedata)
+    with patch("builtins.open", m):
+        with open("", "wb") as fp:
+            b = DummyBinarySection()
+            b.data = data
+            b.write_section(fp)
+    m().write.assert_called_once_with(b"hello")
