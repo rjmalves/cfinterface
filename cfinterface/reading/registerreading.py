@@ -20,7 +20,7 @@ class RegisterReading:
         linesize: int = 1,
     ) -> None:
         self.__allowed_registers = allowed_registers
-        self.__data = RegisterData(DefaultRegister())
+        self.__data = RegisterData(DefaultRegister(data=""))
         self.__last_position_filepointer = 0
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
