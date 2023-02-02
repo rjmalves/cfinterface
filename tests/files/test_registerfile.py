@@ -4,6 +4,7 @@ from cfinterface.components.register import Register
 from cfinterface.data.registerdata import RegisterData
 from cfinterface.files.registerfile import RegisterFile
 
+import pandas as pd  # type: ignore
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -13,6 +14,10 @@ class DummyRegister(Register):
     IDENTIFIER = "reg"
     IDENTIFIER_DIGITS = 4
     LINE = Line([LiteralField(13, 4)])
+
+    @property
+    def my_prop(self) -> str:
+        return self.data
 
 
 def test_registerfile_eq():
@@ -33,6 +38,13 @@ def test_registerfile_not_eq_different_length():
     rf1 = RegisterFile(data=bd)
     rf2 = RegisterFile(data=RegisterData(DummyRegister(data=-1)))
     assert rf1 != rf2
+
+
+def test_registerfile_as_df():
+    rf = RegisterFile(data=RegisterData(DummyRegister(data="testing")))
+    df = rf._as_df(DummyRegister)
+    assert isinstance(df, pd.DataFrame)
+    assert df.at[0, "my_prop"] == "testing"
 
 
 def test_registerfile_not_eq_valid():
