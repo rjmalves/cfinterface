@@ -11,6 +11,10 @@ class DummyRegister(Register):
     IDENTIFIER_DIGITS = 4
     LINE = Line([LiteralField(13, 4)])
 
+    @property
+    def custom_property(self) -> str:
+        return "Custom!"
+
 
 class DummyDelimitedRegister(Register):
     IDENTIFIER = "reg"
@@ -54,6 +58,14 @@ def test_dummy_register_equal():
     b1 = DummyRegister()
     b2 = DummyRegister()
     assert b1 == b2
+
+
+def test_dummy_register_custom_properties():
+    assert DummyRegister().custom_properties == ["custom_property"]
+
+
+def test_dummy_delimitedregister_custom_properties():
+    assert DummyDelimitedRegister().custom_properties == []
 
 
 def test_dummy_register_read():

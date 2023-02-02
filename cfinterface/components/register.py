@@ -1,6 +1,6 @@
-from typing import Any, IO, Union
+from typing import Any, IO, Union, List
 from cfinterface.components.field import Field
-
+import inspect
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.line import Line
 
@@ -17,6 +17,15 @@ class Register:
     IDENTIFIER: Union[str, bytes] = ""
     IDENTIFIER_DIGITS = 0
     LINE = Line([])
+    _REGISTER_PROPERTIES = [
+        "data",
+        "empty",
+        "is_first",
+        "is_last",
+        "next",
+        "previous",
+        "custom_properties",
+    ]
 
     def __init__(
         self,
@@ -146,3 +155,13 @@ class Register:
     @property
     def empty(self) -> bool:
         return len([d for d in self.__data if d is not None]) == 0
+
+    @property
+    def custom_properties(self) -> List[str]:
+        return [
+            nome
+            for (nome, _) in inspect.getmembers(
+                self.__class__, lambda p: isinstance(p, property)
+            )
+            if nome not in Register._REGISTER_PROPERTIES
+        ]
