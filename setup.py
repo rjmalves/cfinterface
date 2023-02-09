@@ -22,9 +22,9 @@ setup(
     package_data={"cfinterface": ["py.typed"]},
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU Affero General Public License v3",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 4 - Beta",
     ],
     python_requires=">=3.8",
     install_requires=requirements,

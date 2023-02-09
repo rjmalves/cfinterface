@@ -16,6 +16,7 @@ Documentation
 .. toctree::
    :maxdepth: 3
 
+   examples/index.rst
 
 Index and Tables
 ==================
