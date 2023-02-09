@@ -16,10 +16,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Installing the module requirements
       run: |
-        python -m pip install -r deploy-requirements.txt
+        pip install -r deploy-requirements.txt
     - name: Runs tests
       run: |
-        python -m pytest --cov-report=xml --cov=cfinterface tests/
+        pytest --cov-report=xml --cov=cfinterface tests/
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }} 
@@ -31,7 +31,7 @@ jobs:
         verbose: true 
     - name: Verification of statically typed code
       run: |
-        python -m mypy ./cfinterface
+        mypy ./cfinterface
     - name: Verification of PEP8 linting
       run: |
-        python -m pylama --ignore E203 ./cfinterface
+        pylama --ignore E203 ./cfinterface
