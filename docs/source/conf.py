@@ -30,7 +30,7 @@ author = "Rogerio Alves"
 
 # The full version, including alpha/beta/rc tags
 release = __version__
-today = date.today().strftime("%d/%m/%Y")
+today = date.today().strftime("%m/%d/%Y")
 
 # -- General configuration ---------------------------------------------------
 
