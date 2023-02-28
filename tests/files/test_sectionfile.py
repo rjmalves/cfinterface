@@ -28,6 +28,30 @@ class DummySection(Section):
         return True
 
 
+class DummySectionV2(Section):
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+        else:
+            return o.data == self.data
+
+    def read(self, file: IO) -> bool:
+        self.data: List[str] = []
+        line: str = file.readline()
+        self.data.append(line)
+        return True
+
+    def write(self, file: IO) -> bool:
+        for line in self.data:
+            file.write(line)
+        return True
+
+
+class VersionedSectionFile(SectionFile):
+    SECTIONS = [DummySectionV2]
+    VERSIONS = {"v1": [DummySection], "v2": [DummySectionV2]}
+
+
 def test_sectionfile_eq():
     bf1 = SectionFile(data=SectionData(DummySection(data=-1)))
     bf2 = SectionFile(data=SectionData(DummySection(data=-1)))
@@ -74,3 +98,17 @@ def test_sectionfile_write():
     with patch("builtins.open", m):
         f.write("", "")
     m().write.assert_called_once_with(data)
+
+
+def test_sectionfile_set_version():
+    assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
+    VersionedSectionFile.set_version("v1")
+    assert VersionedSectionFile.SECTIONS[0] == DummySection
+    VersionedSectionFile.set_version("v1.5")
+    assert VersionedSectionFile.SECTIONS[0] == DummySection
+    VersionedSectionFile.set_version("v2")
+    assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
+    VersionedSectionFile.set_version("v3")
+    assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
+    VersionedSectionFile.set_version("v0")
+    assert VersionedSectionFile.SECTIONS[0] == DummySectionV2

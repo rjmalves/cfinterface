@@ -1,4 +1,4 @@
-from typing import List, Type
+from typing import List, Dict, Type, Optional
 
 from cfinterface.components.block import Block
 from cfinterface.components.defaultblock import DefaultBlock
@@ -13,9 +13,11 @@ class BlockFile:
     and writing are given by a series of blocks.
     """
 
+    VERSIONS: Dict[str, List[Type[Block]]] = {}
     BLOCKS: List[Type[Block]] = []
     ENCODING = "utf-8"
     STORAGE = "TEXT"
+    __VERSION = "latest"
 
     def __init__(
         self,
@@ -59,3 +61,31 @@ class BlockFile:
     @property
     def data(self) -> BlockData:
         return self.__data
+
+    @classmethod
+    def set_version(cls, v: str):
+        """
+        Sets the file's version to be read. Different file versions
+        may contain different blocks. The version to be set is considered
+        is forced to the latest version with a new block set available.
+
+        If a BlockFile has VERSIONS with keys {"v0": ..., "v1": ...},
+        calling `set_version("v2")` will set the version to `v1`.
+
+        :param v: The file version to be read.
+        :type v: str
+        """
+
+        def __find_closest_version() -> Optional[str]:
+            available_versions = sorted(list(cls.VERSIONS.keys()))
+            recent_versions = [
+                version for version in available_versions if v >= version
+            ]
+            if len(recent_versions) > 0:
+                return recent_versions[-1]
+            return None
+
+        closest_version = __find_closest_version()
+        if closest_version is not None:
+            cls.__VERSION = v
+            cls.BLOCKS = cls.VERSIONS.get(closest_version, cls.BLOCKS)

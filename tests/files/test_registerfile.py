@@ -20,6 +20,21 @@ class DummyRegister(Register):
         return self.data
 
 
+class DummyRegisterV2(Register):
+    IDENTIFIER = "ret"
+    IDENTIFIER_DIGITS = 4
+    LINE = Line([LiteralField(13, 4)])
+
+    @property
+    def my_prop(self) -> str:
+        return self.data
+
+
+class VersionedRegisterFile(RegisterFile):
+    REGISTERS = [DummyRegisterV2]
+    VERSIONS = {"v1": [DummyRegister], "v2": [DummyRegisterV2]}
+
+
 def test_registerfile_eq():
     rf1 = RegisterFile(data=RegisterData(DummyRegister(data=-1)))
     rf2 = RegisterFile(data=RegisterData(DummyRegister(data=-1)))
@@ -75,3 +90,17 @@ def test_registerfile_write():
     m().write.assert_called_once_with(
         DummyRegister.IDENTIFIER + " " + data + "\n"
     )
+
+
+def test_registerfile_set_version():
+    assert VersionedRegisterFile.REGISTERS[0] == DummyRegisterV2
+    VersionedRegisterFile.set_version("v1")
+    assert VersionedRegisterFile.REGISTERS[0] == DummyRegister
+    VersionedRegisterFile.set_version("v1.5")
+    assert VersionedRegisterFile.REGISTERS[0] == DummyRegister
+    VersionedRegisterFile.set_version("v2")
+    assert VersionedRegisterFile.REGISTERS[0] == DummyRegisterV2
+    VersionedRegisterFile.set_version("v3")
+    assert VersionedRegisterFile.REGISTERS[0] == DummyRegisterV2
+    VersionedRegisterFile.set_version("v0")
+    assert VersionedRegisterFile.REGISTERS[0] == DummyRegisterV2

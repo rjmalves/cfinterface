@@ -34,6 +34,36 @@ class DummyBlock(Block):
         return True
 
 
+class DummyBlockV2(Block):
+    BEGIN_PATTERN = "bet"
+    END_PATTERN = "ent"
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+        else:
+            return o.data == self.data
+
+    def read(self, file: IO) -> bool:
+        self.data: List[str] = []
+        while True:
+            line: str = file.readline()
+            self.data.append(line)
+            if self.ends(line):
+                break
+        return True
+
+    def write(self, file: IO) -> bool:
+        for line in self.data:
+            file.write(line)
+        return True
+
+
+class VersionedBlockFile(BlockFile):
+    BLOCKS = [DummyBlockV2]
+    VERSIONS = {"v1": [DummyBlock], "v2": [DummyBlockV2]}
+
+
 def test_blockfile_eq():
     bf1 = BlockFile(data=BlockData(DummyBlock(data=-1)))
     bf2 = BlockFile(data=BlockData(DummyBlock(data=-1)))
@@ -84,3 +114,17 @@ def test_blockfile_write():
     with patch("builtins.open", m):
         f.write("", "")
     m().write.assert_called_once_with(data)
+
+
+def test_blockfile_set_version():
+    assert VersionedBlockFile.BLOCKS[0] == DummyBlockV2
+    VersionedBlockFile.set_version("v1")
+    assert VersionedBlockFile.BLOCKS[0] == DummyBlock
+    VersionedBlockFile.set_version("v1.5")
+    assert VersionedBlockFile.BLOCKS[0] == DummyBlock
+    VersionedBlockFile.set_version("v2")
+    assert VersionedBlockFile.BLOCKS[0] == DummyBlockV2
+    VersionedBlockFile.set_version("v3")
+    assert VersionedBlockFile.BLOCKS[0] == DummyBlockV2
+    VersionedBlockFile.set_version("v0")
+    assert VersionedBlockFile.BLOCKS[0] == DummyBlockV2

@@ -1,4 +1,4 @@
-from typing import List, Type
+from typing import List, Dict, Type, Optional
 import pandas as pd  # type: ignore
 from cfinterface.components.register import Register
 from cfinterface.components.defaultregister import DefaultRegister
@@ -13,9 +13,11 @@ class RegisterFile:
     and writing are given by a series of registers.
     """
 
+    VERSIONS: Dict[str, List[Type[Register]]] = {}
     REGISTERS: List[Type[Register]] = []
     ENCODING = "utf-8"
     STORAGE = "TEXT"
+    __VERSION = "latest"
 
     def __init__(
         self,
@@ -78,3 +80,31 @@ class RegisterFile:
     @property
     def data(self) -> RegisterData:
         return self.__data
+
+    @classmethod
+    def set_version(cls, v: str):
+        """
+        Sets the file's version to be read. Different file versions
+        may contain different registers. The version to be set is considered
+        is forced to the latest version with a new register set available.
+
+        If a RegisterFile has VERSIONS with keys {"v0": ..., "v1": ...},
+        calling `set_version("v2")` will set the version to `v1`.
+
+        :param v: The file version to be read.
+        :type v: str
+        """
+
+        def __find_closest_version() -> Optional[str]:
+            available_versions = sorted(list(cls.VERSIONS.keys()))
+            recent_versions = [
+                version for version in available_versions if v >= version
+            ]
+            if len(recent_versions) > 0:
+                return recent_versions[-1]
+            return None
+
+        closest_version = __find_closest_version()
+        if closest_version is not None:
+            cls.__VERSION = v
+            cls.REGISTERS = cls.VERSIONS.get(closest_version, cls.REGISTERS)

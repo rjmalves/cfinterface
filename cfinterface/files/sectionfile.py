@@ -1,4 +1,4 @@
-from typing import List, Type
+from typing import List, Dict, Type, Optional
 
 from cfinterface.components.section import Section
 from cfinterface.components.defaultsection import DefaultSection
@@ -13,9 +13,11 @@ class SectionFile:
     and writing are given by a series of registers.
     """
 
+    VERSIONS: Dict[str, List[Type[Section]]] = {}
     SECTIONS: List[Type[Section]] = []
     ENCODING = "utf-8"
     STORAGE = "TEXT"
+    __VERSION = "latest"
 
     def __init__(
         self,
@@ -59,3 +61,31 @@ class SectionFile:
     @property
     def data(self) -> SectionData:
         return self.__data
+
+    @classmethod
+    def set_version(cls, v: str):
+        """
+        Sets the file's version to be read. Different file versions
+        may contain different sections. The version to be set is considered
+        is forced to the latest version with a new section set available.
+
+        If a SectionFile has VERSIONS with keys {"v0": ..., "v1": ...},
+        calling `set_version("v2")` will set the version to `v1`.
+
+        :param v: The file version to be read.
+        :type v: str
+        """
+
+        def __find_closest_version() -> Optional[str]:
+            available_versions = sorted(list(cls.VERSIONS.keys()))
+            recent_versions = [
+                version for version in available_versions if v >= version
+            ]
+            if len(recent_versions) > 0:
+                return recent_versions[-1]
+            return None
+
+        closest_version = __find_closest_version()
+        if closest_version is not None:
+            cls.__VERSION = v
+            cls.SECTIONS = cls.VERSIONS.get(closest_version, cls.SECTIONS)
