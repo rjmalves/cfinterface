@@ -12,20 +12,27 @@ class IntegerField(Field):
     written to a file.
     """
 
+    TYPES = {
+        2: np.int16,
+        4: np.int32,
+        8: np.int64,
+    }
+
     def __init__(
         self,
-        size: int = 16,
+        size: int = 8,
         starting_position: int = 0,
         value: Optional[int] = None,
     ) -> None:
         super().__init__(size, starting_position, value)
+        self.__type = self.__class__.TYPES.get(size, np.int32)
 
     # Override
     def _binary_read(self, line: bytes) -> int:
         return int(
             np.frombuffer(
                 line[self._starting_position : self._ending_position],
-                dtype=np.int32,
+                dtype=self.__type,
                 count=1,
             )[0]
         )
@@ -37,9 +44,9 @@ class IntegerField(Field):
     # Override
     def _binary_write(self) -> bytes:
         if self.value is None or pd.isnull(self.value):
-            return np.array([0], dtype=np.int32).tobytes()
+            return np.array([0], dtype=self.__type).tobytes()
         else:
-            return np.array([self._value], dtype=np.int32).tobytes()
+            return np.array([self._value], dtype=self.__type).tobytes()
 
     # Override
     def _textual_write(self) -> str:
