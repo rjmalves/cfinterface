@@ -53,7 +53,7 @@ class RegisterFile:
         )
 
     @classmethod
-    def read(cls, directory: str, filename: str = ""):
+    def read(cls, directory: str, filename: str = "", *args, **kwargs):
         """
         Reads the registerfile data from a given file in disk.
 
@@ -62,10 +62,12 @@ class RegisterFile:
         :param directory: The directory where the file is
         :type directory: str
         """
-        reader = RegisterReading(cls.REGISTERS, cls.STORAGE)
-        return cls(reader.read(filename, directory, cls.ENCODING))
+        reader = RegisterReading(cls.REGISTERS, cls.STORAGE, *args, **kwargs)
+        return cls(
+            reader.read(filename, directory, cls.ENCODING, *args, **kwargs)
+        )
 
-    def write(self, directory: str, filename: str = ""):
+    def write(self, directory: str, filename: str = "", *args, **kwargs):
         """
         Write the registerfile data to a given file in disk.
 
@@ -74,8 +76,8 @@ class RegisterFile:
         :param directory: The directory where the file will be
         :type directory: str
         """
-        writer = RegisterWriting(self.__data, self.__storage)
-        writer.write(filename, directory, self.__encoding)
+        writer = RegisterWriting(self.__data, self.__storage, *args, **kwargs)
+        writer.write(filename, directory, self.__encoding, *args, **kwargs)
 
     @property
     def data(self) -> RegisterData:

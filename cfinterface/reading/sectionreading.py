@@ -46,7 +46,7 @@ class SectionReading:
         """
         self.__repository.file.seek(self.__last_position_filepointer)
 
-    def __read_file(self) -> SectionData:
+    def __read_file(self, *args, **kwargs) -> SectionData:
         """
         Reads all the sections from a file and
         returns the SectionData structure.
@@ -64,12 +64,12 @@ class SectionReading:
                 break
             self.__restore_previous_line()
             section = DefaultSection()
-            section.read(self.__repository.file)
+            section.read(self.__repository.file, *args, **kwargs)
             self.__data.append(section)
         return self.__data
 
     def read(
-        self, filename: str, directory: str, encoding: str
+        self, filename: str, directory: str, encoding: str, *args, **kwargs
     ) -> SectionData:
         """
         Reads a file with a given name in a given directory and
@@ -87,7 +87,7 @@ class SectionReading:
         filepath = join(directory, filename)
         self.__repository = factory(self.__storage)(filepath, encoding)
         with self.__repository:
-            return self.__read_file()
+            return self.__read_file(*args, **kwargs)
 
     @property
     def data(self) -> SectionData:

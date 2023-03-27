@@ -34,7 +34,7 @@ class SectionFile:
         return self.data == bf.data
 
     @classmethod
-    def read(cls, directory: str, filename: str = ""):
+    def read(cls, directory: str, filename: str = "", *args, **kwargs):
         """
         Reads the sectionfile data from a given file in disk.
 
@@ -44,9 +44,11 @@ class SectionFile:
         :type directory: str
         """
         reader = SectionReading(cls.SECTIONS, cls.STORAGE)
-        return cls(reader.read(filename, directory, cls.ENCODING))
+        return cls(
+            reader.read(filename, directory, cls.ENCODING, *args, **kwargs)
+        )
 
-    def write(self, directory: str, filename: str = ""):
+    def write(self, directory: str, filename: str = "", *args, **kwargs):
         """
         Write the sectionfile data to a given file in disk.
 
@@ -56,7 +58,7 @@ class SectionFile:
         :type directory: str
         """
         writer = SectionWriting(self.__data, self.__storage)
-        writer.write(filename, directory, self.__encoding)
+        writer.write(filename, directory, self.__encoding, *args, **kwargs)
 
     @property
     def data(self) -> SectionData:

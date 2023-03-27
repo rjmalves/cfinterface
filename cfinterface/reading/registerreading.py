@@ -64,7 +64,7 @@ class RegisterReading:
                 return r
         return DefaultRegister
 
-    def __read_file(self) -> RegisterData:
+    def __read_file(self, *args, **kwargs) -> RegisterData:
         """
         Reads all the registers from the given registers in a file and
         returns the RegisterData structure.
@@ -79,12 +79,14 @@ class RegisterReading:
             self.__restore_previous_line()
             registertype = self.__find_starting_register(line)
             register = registertype()
-            register.read(self.__repository.file, self.__storage)
+            register.read(
+                self.__repository.file, self.__storage, *args, **kwargs
+            )
             self.__data.append(register)
         return self.__data
 
     def read(
-        self, filename: str, directory: str, encoding: str
+        self, filename: str, directory: str, encoding: str, *args, **kwargs
     ) -> RegisterData:
         """
         Reads a file with a given name in a given directory and
@@ -102,7 +104,7 @@ class RegisterReading:
         filepath = join(directory, filename)
         self.__repository = factory(self.__storage)(filepath, encoding)
         with self.__repository:
-            return self.__read_file()
+            return self.__read_file(*args, **kwargs)
 
     @property
     def data(self) -> RegisterData:

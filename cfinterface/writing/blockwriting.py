@@ -26,7 +26,9 @@ class BlockWriting:
         for b in self.__data:
             b.write(self.__repository.file)
 
-    def write(self, filename: str, directory: str, encoding: str):
+    def write(
+        self, filename: str, directory: str, encoding: str, *args, **kwargs
+    ):
         """
         Writes a file with a given name in a given directory with
         the data from the BlockData structure.
@@ -41,7 +43,7 @@ class BlockWriting:
         filepath = join(directory, filename)
         self.__repository = factory(self.__storage)(filepath, encoding)
         with self.__repository:
-            return self.__write_file()
+            return self.__write_file(*args, **kwargs)
 
     @property
     def data(self) -> BlockData:

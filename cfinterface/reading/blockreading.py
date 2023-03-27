@@ -62,7 +62,7 @@ class BlockReading:
                 return b
         return DefaultBlock
 
-    def __read_file(self) -> BlockData:
+    def __read_file(self, *args, **kwargs) -> BlockData:
         """
         Reads all the blocks from the given blocks in a file and
         returns the BlockData structure.
@@ -77,11 +77,13 @@ class BlockReading:
             self.__restore_previous_line()
             blocktype = self.__find_starting_block(line)
             block = blocktype()
-            block.read(self.__repository.file)
+            block.read(self.__repository.file, *args, **kwargs)
             self.__data.append(block)
         return self.__data
 
-    def read(self, filename: str, directory: str, encoding: str) -> BlockData:
+    def read(
+        self, filename: str, directory: str, encoding: str, *args, **kwargs
+    ) -> BlockData:
         """
         Reads a file with a given name in a given directory and
         extracts the data from the specified blocks.
@@ -98,7 +100,7 @@ class BlockReading:
         filepath = join(directory, filename)
         self.__repository = factory(self.__storage)(filepath, encoding)
         with self.__repository:
-            return self.__read_file()
+            return self.__read_file(*args, **kwargs)
 
     @property
     def data(self) -> BlockData:
