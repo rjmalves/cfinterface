@@ -13,10 +13,10 @@ class DefaultBlock(Block):
             return False
         return self.data == o.data
 
-    def read(self, file: IO) -> bool:
+    def read(self, file: IO, *args, **kwargs) -> bool:
         self.data = file.readline()
         return True
 
-    def write(self, file: IO) -> bool:
+    def write(self, file: IO, *args, **kwargs) -> bool:
         file.write(self.data)
         return True

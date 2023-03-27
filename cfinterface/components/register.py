@@ -62,7 +62,7 @@ class Register:
             cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS]
         )
 
-    def read(self, file: IO, storage: str = "") -> bool:
+    def read(self, file: IO, storage: str = "", *args, **kwargs) -> bool:
         """
         Generic function to perform the reading of the register using
         a filepointer.
@@ -82,7 +82,7 @@ class Register:
         )[1:]
         return True
 
-    def write(self, file: IO, storage: str = "") -> bool:
+    def write(self, file: IO, storage: str = "", *args, **kwargs) -> bool:
         """
         Generic function to perform the writing of the register using
         a filepointer.
@@ -102,23 +102,23 @@ class Register:
             factory(storage).write(file, linedata)
         return True
 
-    def read_register(self, file: IO, storage: str = ""):
+    def read_register(self, file: IO, storage: str = "", *args, **kwargs):
         """
         Function that reads the register and evaluates the result.
 
         :param file: The filepointer
         :type file: IO
         """
-        self.read(file, storage)
+        self.read(file, storage, *args, **kwargs)
 
-    def write_register(self, file: IO, storage: str = ""):
+    def write_register(self, file: IO, storage: str = "", *args, **kwargs):
         """
         Function that writes the register, if it was succesfully read.
 
         :param file: The filepointer
         :type file: IO
         """
-        self.write(file, storage)
+        self.write(file, storage, *args, **kwargs)
 
     @property
     def previous(self) -> "Register":

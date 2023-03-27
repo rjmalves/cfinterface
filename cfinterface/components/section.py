@@ -22,7 +22,7 @@ class Section:
     def __eq__(self, o: object) -> bool:
         raise NotImplementedError()
 
-    def read(self, file: IO) -> bool:
+    def read(self, file: IO, *args, **kwargs) -> bool:
         """
         Generic function to perform the reading of the section using
         a filepointer.
@@ -34,7 +34,7 @@ class Section:
         """
         raise NotImplementedError
 
-    def write(self, file: IO) -> bool:
+    def write(self, file: IO, *args, **kwargs) -> bool:
         """
         Generic function to perform the writing of the section using
         a filepointer.
@@ -46,23 +46,23 @@ class Section:
         """
         raise NotImplementedError
 
-    def read_section(self, file: IO):
+    def read_section(self, file: IO, *args, **kwargs):
         """
         Function that reads the section and evaluates the result.
 
         :param file: The filepointer
         :type file: IO
         """
-        self.read(file)
+        self.read(file, *args, **kwargs)
 
-    def write_section(self, file: IO):
+    def write_section(self, file: IO, *args, **kwargs):
         """
         Function that writes the section, if it was succesfully read.
 
         :param file: The filepointer
         :type file: IO
         """
-        self.write(file)
+        self.write(file, *args, **kwargs)
 
     @property
     def previous(self) -> "Section":

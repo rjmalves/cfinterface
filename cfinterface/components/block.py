@@ -47,7 +47,7 @@ class Block:
         """
         return factory(storage).ends(cls.END_PATTERN, line)
 
-    def read(self, file: IO) -> bool:
+    def read(self, file: IO, *args, **kwargs) -> bool:
         """
         Generic function to perform the reading of the block using
         a filepointer.
@@ -59,7 +59,7 @@ class Block:
         """
         raise NotImplementedError
 
-    def write(self, file: IO) -> bool:
+    def write(self, file: IO, *args, **kwargs) -> bool:
         """
         Generic function to perform the writing of the block using
         a filepointer.
@@ -71,23 +71,23 @@ class Block:
         """
         raise NotImplementedError
 
-    def read_block(self, file: IO):
+    def read_block(self, file: IO, *args, **kwargs):
         """
         Function that reads the block and evaluates the result.
 
         :param file: The filepointer
         :type file: IO
         """
-        self.read(file)
+        self.read(file, *args, **kwargs)
 
-    def write_block(self, file: IO):
+    def write_block(self, file: IO, *args, **kwargs):
         """
         Function that writes the block, if it was succesfully read.
 
         :param file: The filepointer
         :type file: IO
         """
-        self.write(file)
+        self.write(file, *args, **kwargs)
 
     @property
     def previous(self) -> "Block":
