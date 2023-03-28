@@ -56,7 +56,7 @@ class SectionReading:
         """
         for sectiontype in self.__sections:
             section = sectiontype()
-            section.read(self.__repository.file)
+            section.read(self.__repository.file, *args, **kwargs)
             self.__data.append(section)
         while True:
             line = self.__read_line_with_backup()

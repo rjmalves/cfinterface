@@ -17,14 +17,14 @@ class BlockWriting:
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
 
-    def __write_file(self):
+    def __write_file(self, *args, **kwargs):
         """
         Writes all the blocks from the given BlockData structure
         to the specified file.
 
         """
         for b in self.__data:
-            b.write(self.__repository.file)
+            b.write(self.__repository.file, *args, **kwargs)
 
     def write(
         self, filename: str, directory: str, encoding: str, *args, **kwargs

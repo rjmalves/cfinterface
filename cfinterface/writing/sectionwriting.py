@@ -17,14 +17,14 @@ class SectionWriting:
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
 
-    def __write_file(self):
+    def __write_file(self, *args, **kwargs):
         """
         Writes all the registers from the given SectionData structure
         to the specified file.
 
         """
         for s in self.__data:
-            s.write(self.__repository.file)
+            s.write(self.__repository.file, *args, **kwargs)
 
     def write(
         self, filename: str, directory: str, encoding: str, *args, **kwargs

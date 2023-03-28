@@ -17,14 +17,14 @@ class RegisterWriting:
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
 
-    def __write_file(self):
+    def __write_file(self, *args, **kwargs):
         """
         Writes all the registers from the given RegisterData structure
         to the specified file.
 
         """
         for r in self.__data:
-            r.write(self.__repository.file, self.__storage)
+            r.write(self.__repository.file, self.__storage, *args, **kwargs)
 
     def write(
         self, filename: str, directory: str, encoding: str, *args, **kwargs
