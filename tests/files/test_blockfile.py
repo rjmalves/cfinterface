@@ -99,7 +99,7 @@ def test_blockfile_read():
     BlockFile.BLOCKS = [DummyBlock]
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        f = BlockFile.read("", "")
+        f = BlockFile.read("README.md")
         assert len(f.data) == 2
         assert len(f.data.last.data) == 3
         assert f.data.last.data[1] == data + "\n"
@@ -112,7 +112,7 @@ def test_blockfile_write():
     f = BlockFile(bd)
     m: MagicMock = mock_open(read_data="")
     with patch("builtins.open", m):
-        f.write("", "")
+        f.write("")
     m().write.assert_called_once_with(data)
 
 

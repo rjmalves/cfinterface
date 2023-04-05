@@ -3,8 +3,9 @@ from abc import ABC, abstractmethod
 
 
 class Repository(ABC):
-    def __init__(self, path: str, *args) -> None:
-        self._path = path
+    def __init__(self, to: Union[str, IO], *args) -> None:
+        self._to = to
+        self._wrap_io = isinstance(to, str)
 
     def __enter__(self) -> "Repository":
         return self
@@ -34,7 +35,7 @@ class BinaryRepository(Repository):
         self._filepointer: BinaryIO = None  # type: ignore
 
     def __enter__(self):
-        self._filepointer = open(self._path, "wb")
+        self._filepointer = open(self._to, "wb") if self._wrap_io else self._to
         return super().__enter__()
 
     def __exit__(self, *args):
@@ -63,7 +64,11 @@ class TextualRepository(Repository):
         self._encoding = encoding
 
     def __enter__(self):
-        self._filepointer = open(self._path, "w", encoding=self._encoding)
+        self._filepointer = (
+            open(self._to, "w", encoding=self._encoding)
+            if self._wrap_io
+            else self._to
+        )
         return super().__enter__()
 
     def __exit__(self, *args):

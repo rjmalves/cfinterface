@@ -1,10 +1,14 @@
 from typing import IO, BinaryIO, TextIO, Union, Type, Dict
 from abc import ABC, abstractmethod
+from io import BytesIO, StringIO
 
 
 class Repository(ABC):
-    def __init__(self, path: str, *args) -> None:
-        self._path = path
+    def __init__(
+        self, content: Union[str, bytes], wrap_io: bool = False, *args
+    ) -> None:
+        self._content = content
+        self._wrap_io = wrap_io
 
     def __enter__(self) -> "Repository":
         return self
@@ -32,12 +36,15 @@ class Repository(ABC):
 
 
 class BinaryRepository(Repository):
-    def __init__(self, path: str, *args) -> None:
-        super().__init__(path)
+    def __init__(
+        self, content: Union[str, bytes], wrap_io: bool = False, *args
+    ) -> None:
+        super().__init__(content, wrap_io)
         self._filepointer: BinaryIO = None  # type: ignore
 
     def __enter__(self):
-        self._filepointer = open(self._path, "rb")
+        io = BytesIO(self._content) if self._wrap_io else self._content
+        self._filepointer = open(io, "rb")
         return super().__enter__()
 
     def __exit__(self, *args):
@@ -62,13 +69,16 @@ class BinaryRepository(Repository):
 
 
 class TextualRepository(Repository):
-    def __init__(self, path: str, encoding: str) -> None:
-        super().__init__(path)
+    def __init__(
+        self, content: str, encoding: str, wrap_io: bool = False
+    ) -> None:
+        super().__init__(content, wrap_io)
         self._encoding = encoding
         self._filepointer: TextIO = None  # type: ignore
 
     def __enter__(self):
-        self._filepointer = open(self._path, "r", encoding=self._encoding)
+        io = StringIO(self._content) if self._wrap_io else self._content
+        self._filepointer = open(io, "r", encoding=self._encoding)
         return super().__enter__()
 
     def __exit__(self, *args):

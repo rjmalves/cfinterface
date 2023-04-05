@@ -74,7 +74,7 @@ def test_registerfile_read():
     RegisterFile.REGISTERS = [DummyRegister]
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        f = RegisterFile.read("", "")
+        f = RegisterFile.read("README.md")
         assert len(f.data) == 2
         assert f.data.last.data[0] == data
 
@@ -86,7 +86,7 @@ def test_registerfile_write():
     f = RegisterFile(bd)
     m: MagicMock = mock_open(read_data="")
     with patch("builtins.open", m):
-        f.write("", "")
+        f.write("")
     m().write.assert_called_once_with(
         DummyRegister.IDENTIFIER + " " + data + "\n"
     )

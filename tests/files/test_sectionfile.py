@@ -83,7 +83,7 @@ def test_sectionfile_read():
     SectionFile.SECTIONS = [DummySection]
     m: MagicMock = mock_open(read_data=data + "\n")
     with patch("builtins.open", m):
-        f = SectionFile.read("", "")
+        f = SectionFile.read("README.md")
         assert len(f.data) == 2
         assert len(f.data.last.data) == 1
         assert f.data.last.data[0] == data + "\n"
@@ -96,7 +96,7 @@ def test_sectionfile_write():
     f = SectionFile(bd)
     m: MagicMock = mock_open(read_data="")
     with patch("builtins.open", m):
-        f.write("", "")
+        f.write("")
     m().write.assert_called_once_with(data)
 
 

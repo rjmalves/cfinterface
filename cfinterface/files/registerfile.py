@@ -1,4 +1,4 @@
-from typing import List, Dict, Type, Optional
+from typing import List, Dict, Type, Optional, Union, IO
 import pandas as pd  # type: ignore
 from cfinterface.components.register import Register
 from cfinterface.components.defaultregister import DefaultRegister
@@ -53,31 +53,26 @@ class RegisterFile:
         )
 
     @classmethod
-    def read(cls, directory: str, filename: str = "", *args, **kwargs):
+    def read(cls, content: Union[str, bytes], *args, **kwargs):
         """
         Reads the registerfile data from a given file in disk.
 
-        :param filename: The file name in disk
-        :type filename: str
-        :param directory: The directory where the file is
-        :type directory: str
+        :param content: The file name in disk or the file contents themselves
+        :type content: str | bytes
         """
         reader = RegisterReading(cls.REGISTERS, cls.STORAGE, *args, **kwargs)
-        return cls(
-            reader.read(filename, directory, cls.ENCODING, *args, **kwargs)
-        )
+        return cls(reader.read(content, cls.ENCODING, *args, **kwargs))
 
-    def write(self, directory: str, filename: str = "", *args, **kwargs):
+    def write(self, to: Union[str, IO], *args, **kwargs):
         """
-        Write the registerfile data to a given file in disk.
+        Write the registerfile data to a given file or buffer.
 
-        :param filename: The file name in disk
-        :type filename: str
-        :param directory: The directory where the file will be
-        :type directory: str
+        :param to: The writing destination, being a string for writing
+            to a file or the IO buffer
+        :type to: str | IO
         """
         writer = RegisterWriting(self.__data, self.__storage, *args, **kwargs)
-        writer.write(filename, directory, self.__encoding, *args, **kwargs)
+        writer.write(to, self.__encoding, *args, **kwargs)
 
     @property
     def data(self) -> RegisterData:
