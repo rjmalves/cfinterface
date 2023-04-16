@@ -36,3 +36,14 @@ def test_registerreading_withdata():
         dbs = [b for b in bd.of_type(DummyRegister)]
         assert len(dbs) == 1
         assert dbs[0].data[0].strip() == data
+
+
+def test_registerreading_withdata_frombuffer():
+    data = "Hello, world!"
+    br = RegisterReading([DummyRegister])
+    m = DummyRegister.IDENTIFIER + " " + data + "\n"
+    bd = br.read(m, "utf-8")
+    assert not br.empty
+    dbs = [b for b in bd.of_type(DummyRegister)]
+    assert len(dbs) == 1
+    assert dbs[0].data[0].strip() == data

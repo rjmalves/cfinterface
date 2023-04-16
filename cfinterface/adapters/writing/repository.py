@@ -40,7 +40,8 @@ class BinaryRepository(Repository):
 
     def __exit__(self, *args):
         super().__exit__(*args)
-        self._filepointer.close()
+        if self._wrap_io:
+            self._filepointer.close()
 
     def write(self, data: Union[str, bytes]):
         """
@@ -73,7 +74,8 @@ class TextualRepository(Repository):
 
     def __exit__(self, *args):
         super().__exit__(*args)
-        self._filepointer.close()
+        if self._wrap_io:
+            self._filepointer.close()
 
     def write(self, data: Union[str, bytes]):
         """

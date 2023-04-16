@@ -5,7 +5,7 @@ from cfinterface.data.blockdata import BlockData
 from cfinterface.writing.blockwriting import BlockWriting
 
 from tests.mocks.mock_open import mock_open
-
+from io import StringIO
 from unittest.mock import MagicMock, patch
 
 
@@ -39,5 +39,14 @@ def test_blockwriting_withdata():
     bw = BlockWriting(bd)
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        bw.write("", "utf-8")
+        bw.write("./test.txt", "utf-8")
     m().write.assert_called_once_with(filedata)
+
+
+def test_blockwriting_withdata_tobuffer():
+    filedata = "Hello, World!"
+    bd = BlockData(DummyBlock(data=filedata))
+    bw = BlockWriting(bd)
+    m = StringIO("")
+    bw.write(m, "utf-8")
+    assert m.getvalue() == filedata

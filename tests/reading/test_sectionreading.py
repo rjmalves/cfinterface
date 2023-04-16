@@ -36,3 +36,14 @@ def test_sectionreading_withdata():
         dbs = [b for b in sd.of_type(DummySection)]
         assert len(dbs) == 1
         assert dbs[0].data[0].strip() == data
+
+
+def test_sectionreading_withdata_frombuffer():
+    data = "Hello, world!"
+    sr = SectionReading([DummySection])
+    m = data + "\n"
+    sd = sr.read(m, "utf-8")
+    assert not sr.empty
+    dbs = [b for b in sd.of_type(DummySection)]
+    assert len(dbs) == 1
+    assert dbs[0].data[0].strip() == data

@@ -36,7 +36,6 @@ class BlockWriting:
         :param encoding: The encoding for reading the file
         :type encoding: str
         """
-
         self.__repository = factory(self.__storage)(to, encoding)
         with self.__repository:
             return self.__write_file(*args, **kwargs)

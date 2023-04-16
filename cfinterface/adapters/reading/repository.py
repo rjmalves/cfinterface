@@ -43,8 +43,11 @@ class BinaryRepository(Repository):
         self._filepointer: BinaryIO = None  # type: ignore
 
     def __enter__(self):
-        io = BytesIO(self._content) if self._wrap_io else self._content
-        self._filepointer = open(io, "rb")
+        self._filepointer = (
+            BytesIO(self._content)
+            if self._wrap_io
+            else open(self._content, "rb")
+        )
         return super().__enter__()
 
     def __exit__(self, *args):
@@ -70,15 +73,22 @@ class BinaryRepository(Repository):
 
 class TextualRepository(Repository):
     def __init__(
-        self, content: str, encoding: str, wrap_io: bool = False
+        self,
+        content: str,
+        wrap_io: bool = False,
+        encoding: str = "utf-8",
+        *args
     ) -> None:
         super().__init__(content, wrap_io)
         self._encoding = encoding
         self._filepointer: TextIO = None  # type: ignore
 
     def __enter__(self):
-        io = StringIO(self._content) if self._wrap_io else self._content
-        self._filepointer = open(io, "r", encoding=self._encoding)
+        self._filepointer = (
+            StringIO(self._content)
+            if self._wrap_io
+            else open(self._content, "r", encoding=self._encoding)
+        )
         return super().__enter__()
 
     def __exit__(self, *args):

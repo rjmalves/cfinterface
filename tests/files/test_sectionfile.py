@@ -5,7 +5,7 @@ from cfinterface.data.sectiondata import SectionData
 from cfinterface.files.sectionfile import SectionFile
 
 from tests.mocks.mock_open import mock_open
-
+from io import StringIO
 from unittest.mock import MagicMock, patch
 
 
@@ -89,6 +89,15 @@ def test_sectionfile_read():
         assert f.data.last.data[0] == data + "\n"
 
 
+def test_sectionfile_read_frombuffer():
+    data = "Hello, world!"
+    SectionFile.SECTIONS = [DummySection]
+    f = SectionFile.read(data + "\n")
+    assert len(f.data) == 2
+    assert len(f.data.last.data) == 1
+    assert f.data.last.data[0] == data + "\n"
+
+
 def test_sectionfile_write():
     data = "Hello, world!"
     bd = SectionData(DummySection(data=[data]))
@@ -98,6 +107,16 @@ def test_sectionfile_write():
     with patch("builtins.open", m):
         f.write("")
     m().write.assert_called_once_with(data)
+
+
+def test_sectionfile_write_tobuffer():
+    data = "Hello, world!"
+    bd = SectionData(DummySection(data=[data]))
+    SectionFile.SECTIONS = [DummySection]
+    f = SectionFile(bd)
+    m = StringIO()
+    f.write(m)
+    m.getvalue() == data
 
 
 def test_sectionfile_set_version():

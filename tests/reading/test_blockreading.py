@@ -59,3 +59,19 @@ def test_blockreading_withdata():
         assert dbs[0].data[0].strip() == DummyBlock.BEGIN_PATTERN
         assert dbs[0].data[1].strip() == data
         assert dbs[0].data[2].strip() == DummyBlock.END_PATTERN
+
+
+def test_blockreading_withdata_frombuffer():
+    data = "Hello, world!"
+    filedata = (
+        "\n".join([DummyBlock.BEGIN_PATTERN, data, DummyBlock.END_PATTERN])
+        + "\n"
+    )
+    br = BlockReading([DummyBlock])
+    bd = br.read(filedata, "utf-8")
+    assert not br.empty
+    dbs = [b for b in bd.of_type(DummyBlock)]
+    assert len(dbs) == 1
+    assert dbs[0].data[0].strip() == DummyBlock.BEGIN_PATTERN
+    assert dbs[0].data[1].strip() == data
+    assert dbs[0].data[2].strip() == DummyBlock.END_PATTERN

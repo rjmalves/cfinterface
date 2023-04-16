@@ -85,7 +85,7 @@ class BlockReading:
         self, content: Union[str, bytes], encoding: str, *args, **kwargs
     ) -> BlockData:
         """
-        Reads a file with a given name in a given directory and
+        Reads a file in a given path and
         extracts the data from the specified blocks.
 
         :param content: The file name in disk or the file contents
