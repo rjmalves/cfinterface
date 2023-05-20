@@ -5,7 +5,7 @@ from cfinterface.data.sectiondata import SectionData
 from cfinterface.writing.sectionwriting import SectionWriting
 
 from tests.mocks.mock_open import mock_open
-
+from io import StringIO
 from unittest.mock import MagicMock, patch
 
 
@@ -33,5 +33,14 @@ def test_sectionwriting_withdata():
     bw = SectionWriting(bd)
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        bw.write("", "", "utf-8")
+        bw.write("", "utf-8")
     m().write.assert_called_once_with(filedata)
+
+
+def test_sectionwriting_withdata_tobuffer():
+    filedata = "Hello, World!"
+    bd = SectionData(DummySection(data=filedata))
+    bw = SectionWriting(bd)
+    m = StringIO("")
+    bw.write(m, "utf-8")
+    assert m.getvalue() == filedata

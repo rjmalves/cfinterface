@@ -31,8 +31,19 @@ def test_sectionreading_withdata():
     sr = SectionReading([DummySection])
     m: MagicMock = mock_open(read_data=data + "\n")
     with patch("builtins.open", m):
-        sd = sr.read("", "", "utf-8")
+        sd = sr.read("README.md", "utf-8")
         assert not sr.empty
         dbs = [b for b in sd.of_type(DummySection)]
         assert len(dbs) == 1
         assert dbs[0].data[0].strip() == data
+
+
+def test_sectionreading_withdata_frombuffer():
+    data = "Hello, world!"
+    sr = SectionReading([DummySection])
+    m = data + "\n"
+    sd = sr.read(m, "utf-8")
+    assert not sr.empty
+    dbs = [b for b in sd.of_type(DummySection)]
+    assert len(dbs) == 1
+    assert dbs[0].data[0].strip() == data

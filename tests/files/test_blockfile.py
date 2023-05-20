@@ -5,7 +5,7 @@ from cfinterface.data.blockdata import BlockData
 from cfinterface.files.blockfile import BlockFile
 
 from tests.mocks.mock_open import mock_open
-
+from io import StringIO
 from unittest.mock import MagicMock, patch
 
 
@@ -99,10 +99,23 @@ def test_blockfile_read():
     BlockFile.BLOCKS = [DummyBlock]
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        f = BlockFile.read("", "")
+        f = BlockFile.read("README.md")
         assert len(f.data) == 2
         assert len(f.data.last.data) == 3
         assert f.data.last.data[1] == data + "\n"
+
+
+def test_blockfile_read_frombuffer():
+    data = "Hello, world!"
+    filedata = (
+        "\n".join([DummyBlock.BEGIN_PATTERN, data, DummyBlock.END_PATTERN])
+        + "\n"
+    )
+    BlockFile.BLOCKS = [DummyBlock]
+    f = BlockFile.read(filedata)
+    assert len(f.data) == 2
+    assert len(f.data.last.data) == 3
+    assert f.data.last.data[1] == data + "\n"
 
 
 def test_blockfile_write():
@@ -112,8 +125,18 @@ def test_blockfile_write():
     f = BlockFile(bd)
     m: MagicMock = mock_open(read_data="")
     with patch("builtins.open", m):
-        f.write("", "")
+        f.write("")
     m().write.assert_called_once_with(data)
+
+
+def test_blockfile_write_tobuffer():
+    data = "Hello, world!"
+    bd = BlockData(DummyBlock(data=[data]))
+    BlockFile.BLOCKS = [DummyBlock]
+    f = BlockFile(bd)
+    m = StringIO()
+    f.write(m)
+    assert m.getvalue() == data
 
 
 def test_blockfile_set_version():

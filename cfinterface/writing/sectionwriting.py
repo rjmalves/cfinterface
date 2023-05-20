@@ -1,4 +1,4 @@
-from os.path import join
+from typing import Union, IO
 
 from cfinterface.data.sectiondata import SectionData
 from cfinterface.adapters.writing.repository import (
@@ -21,27 +21,22 @@ class SectionWriting:
         """
         Writes all the registers from the given SectionData structure
         to the specified file.
-
         """
         for s in self.__data:
             s.write(self.__repository.file, *args, **kwargs)
 
-    def write(
-        self, filename: str, directory: str, encoding: str, *args, **kwargs
-    ):
+    def write(self, to: Union[str, IO], encoding: str, *args, **kwargs):
         """
-        Writes a file with a given name in a given directory with
-        the data from the SectionData structure.
+        Writes to a file with a given name in a given directory or
+        to a buffer with the data from the SectionData structure.
 
-        :param filename: The name of the file
-        :type filename: str
-        :param directory: The directory where the file will be
-        :type directory: str
+        :param to: The writing destination, being a string for writing
+            to a file or the IO buffer
+        :type to: str | IO
         :param encoding: The encoding for reading the file
         :type encoding: str
         """
-        filepath = join(directory, filename)
-        self.__repository = factory(self.__storage)(filepath, encoding)
+        self.__repository = factory(self.__storage)(to, encoding)
         with self.__repository:
             return self.__write_file(*args, **kwargs)
 

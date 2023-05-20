@@ -6,7 +6,7 @@ from cfinterface.files.registerfile import RegisterFile
 
 import pandas as pd  # type: ignore
 from tests.mocks.mock_open import mock_open
-
+from io import StringIO
 from unittest.mock import MagicMock, patch
 
 
@@ -74,9 +74,18 @@ def test_registerfile_read():
     RegisterFile.REGISTERS = [DummyRegister]
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        f = RegisterFile.read("", "")
+        f = RegisterFile.read("README.md")
         assert len(f.data) == 2
         assert f.data.last.data[0] == data
+
+
+def test_registerfile_read_frombuffer():
+    data = "Hello, world!"
+    filedata = DummyRegister.IDENTIFIER + " " + data + "\n"
+    RegisterFile.REGISTERS = [DummyRegister]
+    f = RegisterFile.read(filedata)
+    assert len(f.data) == 2
+    assert f.data.last.data[0] == data
 
 
 def test_registerfile_write():
@@ -86,10 +95,20 @@ def test_registerfile_write():
     f = RegisterFile(bd)
     m: MagicMock = mock_open(read_data="")
     with patch("builtins.open", m):
-        f.write("", "")
+        f.write("")
     m().write.assert_called_once_with(
         DummyRegister.IDENTIFIER + " " + data + "\n"
     )
+
+
+def test_registerfile_write_tobuffer():
+    data = "Hello, world!"
+    bd = RegisterData(DummyRegister(data=[data]))
+    RegisterFile.REGISTERS = [DummyRegister]
+    f = RegisterFile(bd)
+    m = StringIO()
+    f.write(m)
+    m.getvalue() == DummyRegister.IDENTIFIER + " " + data + "\n"
 
 
 def test_registerfile_set_version():

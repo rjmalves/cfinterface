@@ -1,5 +1,5 @@
 from typing import List, Type, Union
-from os.path import join
+from os.path import isfile
 
 from cfinterface.components.section import Section
 from cfinterface.components.defaultsection import DefaultSection
@@ -69,23 +69,22 @@ class SectionReading:
         return self.__data
 
     def read(
-        self, filename: str, directory: str, encoding: str, *args, **kwargs
+        self, content: Union[str, bytes], encoding: str, *args, **kwargs
     ) -> SectionData:
         """
         Reads a file with a given name in a given directory and
         extracts the data from the specified sections.
 
-        :param filename: The name of the file
-        :type filename: str
-        :param directory: The directory where the file is
-        :type directory: str
+        :param content: The file name in disk or the file contents
+        :type content: str | bytes
         :param encoding: The encoding for reading the file
         :type encoding: str
         :return: The data from the sections found in the file
         :rtype: SectionData
         """
-        filepath = join(directory, filename)
-        self.__repository = factory(self.__storage)(filepath, encoding)
+        self.__repository = factory(self.__storage)(
+            content, not isfile(content), encoding
+        )
         with self.__repository:
             return self.__read_file(*args, **kwargs)
 
