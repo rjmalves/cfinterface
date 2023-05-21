@@ -16,7 +16,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Installing the module requirements
       run: |
-        pip install -r deploy-requirements.txt
+        pip install -r dev-requirements.txt
     - name: Runs tests
       run: |
         pytest --cov-report=xml --cov=cfinterface tests/

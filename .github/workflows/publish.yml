@@ -15,7 +15,7 @@ jobs:
         python-version: '3.10.6'
     - name: Installs requirements
       run: |
-        pip install -r deploy-requirements.txt
+        pip install -r dev-requirements.txt
     - name: Runs tests
       run: |
         pytest --cov=cfinterface tests/
