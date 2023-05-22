@@ -66,7 +66,7 @@ class TextualRepository(Repository):
 
     def __enter__(self):
         self._filepointer = (
-            open(self._to, "a", encoding=self._encoding)
+            open(self._to, "w", encoding=self._encoding)
             if self._wrap_io
             else self._to
         )
