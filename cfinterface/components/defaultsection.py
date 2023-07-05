@@ -18,5 +18,6 @@ class DefaultSection(Section):
         return True
 
     def write(self, file: IO, *args, **kwargs) -> bool:
-        file.write(self.data)
+        if len(self.data) > 0:
+            file.write(self.data)
         return True
