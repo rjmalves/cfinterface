@@ -1,7 +1,7 @@
 from typing import Optional
 import pandas as pd  # type: ignore
 import numpy as np  # type: ignore
-
+from math import floor, log10
 from cfinterface.components.field import Field
 
 
@@ -66,14 +66,26 @@ class FloatField(Field):
     def _textual_write(self) -> str:
         value = ""
         if self.value is not None and not pd.isnull(self.value):
-            for d in range(self.__decimal_digits, -1, -1):
+            if self.__format.lower() == "e":
                 value = "{:.{d}{format}}".format(
-                    round(self.value, d),
-                    d=d,
+                    round(
+                        self.value,
+                        self.__decimal_digits
+                        - int(floor(log10(abs(self.value)))),
+                    ),
+                    d=self.__decimal_digits,
                     format=self.__format,
                 )
-                if len(value) <= self._size:
-                    break
+                value = value[: self.size]
+            else:
+                for d in range(self.__decimal_digits, -1, -1):
+                    value = "{:.{d}{format}}".format(
+                        round(self.value, d),
+                        d=d,
+                        format=self.__format,
+                    )
+                    if len(value) <= self._size:
+                        break
         return value.rjust(self.size)
 
     @property
