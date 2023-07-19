@@ -48,6 +48,24 @@ def test_floatfield_write_short_line():
     assert data == float(line_after[6:])
 
 
+def test_floatfield_write_scientific_notation():
+    data_text = "1.2e+3"
+    line_before = f"field-{data_text}-else"
+    data = float(data_text)
+    field = FloatField(5, 6, 1, format="e", value=data)
+    line_after = field.write(line_before)
+    assert line_before == line_after
+
+
+def test_floatfield_write_scientific_notation_0():
+    data_text = "0e+00"
+    line_before = f"field-{data_text}-else"
+    data = float(data_text)
+    field = FloatField(5, 6, 1, format="e", value=data)
+    line_after = field.write(line_before)
+    assert line_before == line_after
+
+
 def test_floatfield_read_binary():
     data = 105.40
     field = FloatField(4, 0)
