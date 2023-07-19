@@ -66,7 +66,7 @@ class FloatField(Field):
     def _textual_write(self) -> str:
         value = ""
         if self.value is not None and not pd.isnull(self.value):
-            if self.__format.lower() == "e":
+            if self.__format.lower() == "e" and self.value != 0:
                 value = "{:.{d}{format}}".format(
                     round(
                         self.value,
