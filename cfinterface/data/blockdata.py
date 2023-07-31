@@ -17,7 +17,6 @@ class BlockData:
     def __iter__(self):
         current = self.__root
         while current:
-            print(current.data)
             yield current
             current = current.next
 
