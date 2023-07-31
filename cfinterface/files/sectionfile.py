@@ -57,6 +57,20 @@ class SectionFile:
 
     @property
     def data(self) -> SectionData:
+        """
+        Exposes the :class:`SectionData` object, which gives access
+        to the methods:
+
+        - `preppend()`
+        - `append()`
+        - `add_before()`
+        - `add_after()`
+        - `get_blocks_of_type()`
+
+
+        :return: The data internal object
+        :rtype: :class:`SectionData`
+        """
         return self.__data
 
     @classmethod

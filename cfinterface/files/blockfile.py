@@ -57,6 +57,20 @@ class BlockFile:
 
     @property
     def data(self) -> BlockData:
+        """
+        Exposes the :class:`BlockData` object, which gives access
+        to the methods:
+
+        - `preppend()`
+        - `append()`
+        - `add_before()`
+        - `add_after()`
+        - `get_blocks_of_type()`
+
+
+        :return: The data internal object
+        :rtype: :class:`BlockData`
+        """
         return self.__data
 
     @classmethod

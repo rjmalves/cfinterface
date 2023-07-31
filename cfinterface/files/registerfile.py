@@ -76,6 +76,20 @@ class RegisterFile:
 
     @property
     def data(self) -> RegisterData:
+        """
+        Exposes the :class:`RegisterData` object, which gives access
+        to the methods:
+
+        - `preppend()`
+        - `append()`
+        - `add_before()`
+        - `add_after()`
+        - `get_blocks_of_type()`
+
+
+        :return: The data internal object
+        :rtype: :class:`RegisterData`
+        """
         return self.__data
 
     @classmethod
