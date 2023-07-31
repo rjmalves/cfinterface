@@ -1,4 +1,4 @@
-from typing import TypeVar, Type, Generator
+from typing import TypeVar, Type, Generator, Optional, Union, List
 
 from cfinterface.components.register import Register
 
@@ -67,6 +67,8 @@ class RegisterData:
         """
         if before == self.__root:
             self.__root = new
+        else:
+            before.previous.next = new
         new.previous = before.previous
         before.previous = new
         new.next = before
@@ -83,6 +85,8 @@ class RegisterData:
         """
         if after == self.__head:
             self.__head = new
+        else:
+            after.next.previous = new
         new.next = after.next
         after.next = new
         new.previous = after
@@ -111,6 +115,36 @@ class RegisterData:
         for r in self:
             if isinstance(r, t):
                 yield r
+
+    def get_registers_of_type(
+        self, t: Type[T], **kwargs
+    ) -> Optional[Union[T, List[T]]]:
+        """
+        A register or register list that only returns
+        registers of type T that meet
+        given filter requirements passed as kwargs.
+
+        :param t: The register type that is desired
+        :type t: Type[T]
+        :return: Registers filtered by type T and optional properties
+        :rtype: T | list[T] | None
+        """
+
+        def __meets(r) -> bool:
+            conditions: List[bool] = []
+            for k, v in kwargs.items():
+                if v is not None:
+                    conditions.append(getattr(r, k) == v)
+            return all(conditions)
+
+        all_registers_of_type = [b for b in self.of_type(t)]
+        filtered_registers = [r for r in all_registers_of_type if __meets(r)]
+        if len(filtered_registers) == 0:
+            return None
+        elif len(filtered_registers) == 1:
+            return filtered_registers[0]
+        else:
+            return filtered_registers
 
     @property
     def first(self) -> Register:

@@ -1,4 +1,4 @@
-from typing import TypeVar, Type, Generator
+from typing import TypeVar, Type, Generator, Optional, Union, List
 
 from cfinterface.components.block import Block
 
@@ -17,6 +17,7 @@ class BlockData:
     def __iter__(self):
         current = self.__root
         while current:
+            print(current.data)
             yield current
             current = current.next
 
@@ -67,6 +68,8 @@ class BlockData:
         """
         if before == self.__root:
             self.__root = new
+        else:
+            before.previous.next = new
         new.previous = before.previous
         before.previous = new
         new.next = before
@@ -83,6 +86,8 @@ class BlockData:
         """
         if after == self.__head:
             self.__head = new
+        else:
+            after.next.previous = new
         new.next = after.next
         after.next = new
         new.previous = after
@@ -111,6 +116,36 @@ class BlockData:
         for b in self:
             if isinstance(b, t):
                 yield b
+
+    def get_blocks_of_type(
+        self, t: Type[T], **kwargs
+    ) -> Optional[Union[T, List[T]]]:
+        """
+        A block or block list that only returns
+        blocks of type T that meet
+        given filter requirements passed as kwargs.
+
+        :param t: The block type that is desired
+        :type t: Type[T]
+        :return: Blocks filtered by type T and optional properties
+        :rtype: T | list[T] | None
+        """
+
+        def __meets(r) -> bool:
+            conditions: List[bool] = []
+            for k, v in kwargs.items():
+                if v is not None:
+                    conditions.append(getattr(r, k) == v)
+            return all(conditions)
+
+        all_blocks_of_type = [b for b in self.of_type(t)]
+        filtered_blocks = [r for r in all_blocks_of_type if __meets(r)]
+        if len(filtered_blocks) == 0:
+            return None
+        elif len(filtered_blocks) == 1:
+            return filtered_blocks[0]
+        else:
+            return filtered_blocks
 
     @property
     def first(self) -> Block:

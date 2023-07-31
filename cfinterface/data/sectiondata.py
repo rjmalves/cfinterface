@@ -1,4 +1,4 @@
-from typing import TypeVar, Type, Generator
+from typing import TypeVar, Type, Generator, Optional, Union, List
 
 from cfinterface.components.section import Section
 
@@ -67,6 +67,8 @@ class SectionData:
         """
         if before == self.__root:
             self.__root = new
+        else:
+            before.previous.next = new
         new.previous = before.previous
         before.previous = new
         new.next = before
@@ -83,6 +85,8 @@ class SectionData:
         """
         if after == self.__head:
             self.__head = new
+        else:
+            after.next.previous = new
         new.next = after.next
         after.next = new
         new.previous = after
@@ -111,6 +115,36 @@ class SectionData:
         for s in self:
             if isinstance(s, t):
                 yield s
+
+    def get_sections_of_type(
+        self, t: Type[T], **kwargs
+    ) -> Optional[Union[T, List[T]]]:
+        """
+        A section or section list that only returns
+        sections of type T that meet
+        given filter requirements passed as kwargs.
+
+        :param t: The section type that is desired
+        :type t: Type[T]
+        :return: Sections filtered by type T and optional properties
+        :rtype: T | list[T] | None
+        """
+
+        def __meets(r) -> bool:
+            conditions: List[bool] = []
+            for k, v in kwargs.items():
+                if v is not None:
+                    conditions.append(getattr(r, k) == v)
+            return all(conditions)
+
+        all_sections_of_type = [b for b in self.of_type(t)]
+        filtered_sections = [r for r in all_sections_of_type if __meets(r)]
+        if len(filtered_sections) == 0:
+            return None
+        elif len(filtered_sections) == 1:
+            return filtered_sections[0]
+        else:
+            return filtered_sections
 
     @property
     def first(self) -> Section:
