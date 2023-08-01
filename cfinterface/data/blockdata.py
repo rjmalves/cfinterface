@@ -68,7 +68,8 @@ class BlockData:
         if before == self.__root:
             self.__root = new
         else:
-            before.previous.next = new
+            if before.previous:
+                before.previous.next = new
         new.previous = before.previous
         before.previous = new
         new.next = before
@@ -86,7 +87,8 @@ class BlockData:
         if after == self.__head:
             self.__head = new
         else:
-            after.next.previous = new
+            if after.next:
+                after.next.previous = new
         new.next = after.next
         after.next = new
         new.previous = after

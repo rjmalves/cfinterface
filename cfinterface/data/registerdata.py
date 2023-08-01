@@ -68,7 +68,8 @@ class RegisterData:
         if before == self.__root:
             self.__root = new
         else:
-            before.previous.next = new
+            if before.previous:
+                before.previous.next = new
         new.previous = before.previous
         before.previous = new
         new.next = before
