@@ -125,3 +125,12 @@ def test_blockdata_get_blocks_of_type_filter():
     bd.append(DummyBlock(data=11))
     assert len(bd.get_blocks_of_type(DummyBlock)) == 3
     assert bd.get_blocks_of_type(DummyBlock, my_data=10) == b1
+
+
+def test_blockdata_remove_blocks_of_type_no_filter():
+    b1 = DummyBlock(data=10)
+    bd = BlockData(b1)
+    bd.append(DummyBlock())
+    bd.append(DummyBlock(data=11))
+    bd.remove_blocks_of_type(DummyBlock)
+    assert len(bd) == 1

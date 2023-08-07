@@ -108,17 +108,26 @@ def test_registerdata_of_type():
     assert len([b for b in rd.of_type(DummyRegister)]) == 2
 
 
-def test_RegisterData_get_registers_of_type_no_filter():
+def test_registerdata_get_registers_of_type_no_filter():
     r1 = DummyRegister(data=[10])
     rd = RegisterData(r1)
     rd.append(Register())
     assert rd.get_registers_of_type(DummyRegister) == r1
 
 
-def test_RegisterData_get_registers_of_type_filter():
+def test_registerdata_get_registers_of_type_filter():
     r1 = DummyRegister(data=[10])
     rd = RegisterData(r1)
     rd.append(DummyRegister())
     rd.append(DummyRegister(data=[11]))
     assert len(rd.get_registers_of_type(DummyRegister)) == 3
     assert rd.get_registers_of_type(DummyRegister, my_data=10) == r1
+
+
+def test_registerdata_remove_registers_of_type_no_filter():
+    r1 = DummyRegister(data=[10])
+    rd = RegisterData(r1)
+    rd.append(DummyRegister())
+    rd.append(DummyRegister(data=[11]))
+    rd.remove_registers_of_type(DummyRegister)
+    assert len(rd) == 1

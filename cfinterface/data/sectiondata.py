@@ -148,6 +148,24 @@ class SectionData:
         else:
             return filtered_sections
 
+    def remove_sections_of_type(self, t: Type[T], **kwargs):
+        """
+        Removes a set of sections given a type and an optional group of
+        filters, similar to `get_sections_of_type()`
+
+        :param t: The section type that is desired
+        :type t: Type[T]
+        """
+        filtered_sections = self.get_sections_of_type(t, **kwargs)
+        if isinstance(filtered_sections, t) and isinstance(
+            filtered_sections, Section
+        ):
+            self.remove(filtered_sections)
+        elif isinstance(filtered_sections, list):
+            for s in filtered_sections:
+                if isinstance(s, Section) and s != self.__root:
+                    self.remove(s)
+
     @property
     def first(self) -> Section:
         return self.__root

@@ -148,6 +148,22 @@ class BlockData:
         else:
             return filtered_blocks
 
+    def remove_blocks_of_type(self, t: Type[T], **kwargs):
+        """
+        Removes a set of blocks given a type and an optional group of
+        filters, similar to `get_blocks_of_type()`
+
+        :param t: The block type that is desired
+        :type t: Type[T]
+        """
+        filtered_blocks = self.get_blocks_of_type(t, **kwargs)
+        if isinstance(filtered_blocks, Block):
+            self.remove(filtered_blocks)
+        elif isinstance(filtered_blocks, list):
+            for b in filtered_blocks:
+                if isinstance(b, Block) and b != self.__root:
+                    self.remove(b)
+
     @property
     def first(self) -> Block:
         return self.__root

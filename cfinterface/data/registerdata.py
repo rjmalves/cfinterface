@@ -147,6 +147,24 @@ class RegisterData:
         else:
             return filtered_registers
 
+    def remove_registers_of_type(self, t: Type[T], **kwargs):
+        """
+        Removes a set of registers given a type and an optional group of
+        filters, similar to `get_registers_of_type()`
+
+        :param t: The register type that is desired
+        :type t: Type[T]
+        """
+        filtered_registers = self.get_registers_of_type(t, **kwargs)
+        if isinstance(filtered_registers, t) and isinstance(
+            filtered_registers, Register
+        ):
+            self.remove(filtered_registers)
+        elif isinstance(filtered_registers, list):
+            for r in filtered_registers:
+                if isinstance(r, Register) and r != self.__root:
+                    self.remove(r)
+
     @property
     def first(self) -> Register:
         return self.__root
