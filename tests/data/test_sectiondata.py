@@ -122,3 +122,12 @@ def test_sectiondata_get_sections_of_type_filter():
     bd.append(DummySection(data=11))
     assert len(bd.get_sections_of_type(DummySection)) == 3
     assert bd.get_sections_of_type(DummySection, my_data=10) == b1
+
+
+def test_sectiondata_remove_sections_of_type_no_filter():
+    b1 = DummySection(data=10)
+    bd = SectionData(b1)
+    bd.append(DummySection())
+    bd.append(DummySection(data=11))
+    bd.remove_sections_of_type(DummySection)
+    assert len(bd) == 1
