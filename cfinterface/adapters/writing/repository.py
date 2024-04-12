@@ -3,6 +3,9 @@ from abc import ABC, abstractmethod
 
 
 class Repository(ABC):
+
+    __slots__ = ["_to", "_wrap_io"]
+
     def __init__(self, to: Union[str, IO], *args) -> None:
         self._to = to
         self._wrap_io = isinstance(to, str)
@@ -30,6 +33,9 @@ class Repository(ABC):
 
 
 class BinaryRepository(Repository):
+
+    __slots__ = ["_filepointer"]
+
     def __init__(self, path: str, *args) -> None:
         super().__init__(path)
         self._filepointer: BinaryIO = None  # type: ignore
@@ -59,6 +65,9 @@ class BinaryRepository(Repository):
 
 
 class TextualRepository(Repository):
+
+    __slots__ = ["_filepointer", "_encoding"]
+
     def __init__(self, path: str, encoding: str) -> None:
         super().__init__(path)
         self._filepointer: TextIO = None  # type: ignore

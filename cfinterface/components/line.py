@@ -13,6 +13,15 @@ class Line:
     of fields and can be read from or written to a file.
     """
 
+    __slots__ = [
+        "_delimiter",
+        "_fields",
+        "_values",
+        "_storage",
+        "_repository",
+        "_size",
+    ]
+
     def __init__(
         self,
         fields: List[Field],

@@ -12,6 +12,8 @@ class DatetimeField(Field):
     by an optional argument.
     """
 
+    __slots__ = ["__format"]
+
     def __init__(
         self,
         size: int = 16,

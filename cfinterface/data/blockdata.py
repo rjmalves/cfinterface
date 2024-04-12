@@ -8,6 +8,8 @@ class BlockData:
     Class for a storing, managing and accessing data for a block file.
     """
 
+    __slots__ = ["__root", "__head"]
+
     T = TypeVar("T")
 
     def __init__(self, root: Block) -> None:

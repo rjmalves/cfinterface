@@ -12,6 +12,12 @@ class RegisterWriting:
     Class for writing custom files based on a RegisterData structure.
     """
 
+    __slots__ = [
+        "__data",
+        "__storage",
+        "__repository",
+    ]
+
     def __init__(self, data: RegisterData, storage: str = "") -> None:
         self.__data = data
         self.__storage = storage

@@ -14,6 +14,8 @@ class Register:
     which is located at the beginning of the line.
     """
 
+    __slots__ = ["__previous", "__next", "__data", "__identifier_field"]
+
     IDENTIFIER: Union[str, bytes] = ""
     IDENTIFIER_DIGITS = 0
     LINE = Line([])

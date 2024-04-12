@@ -8,6 +8,8 @@ class DefaultRegister(Register):
     the data from the read line. Mainly used for comments.
     """
 
+    __slots__ = []
+
     def __init__(self, previous=None, next=None, data=None) -> None:
         super().__init__(previous, next, data)
 

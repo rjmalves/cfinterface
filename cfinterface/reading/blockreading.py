@@ -13,6 +13,15 @@ class BlockReading:
     Class for reading custom files based on a BlockData structure.
     """
 
+    __slots__ = [
+        "__allowed_blocks",
+        "__data",
+        "__last_position_filepointer",
+        "__storage",
+        "__linesize",
+        "__repository",
+    ]
+
     def __init__(
         self,
         allowed_blocks: List[Type[Block]],

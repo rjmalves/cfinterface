@@ -13,6 +13,8 @@ class BlockFile:
     and writing are given by a series of blocks.
     """
 
+    __slots__ = ["__data", "__storage", "__encoding"]
+
     VERSIONS: Dict[str, List[Type[Block]]] = {}
     BLOCKS: List[Type[Block]] = []
     ENCODING = "utf-8"

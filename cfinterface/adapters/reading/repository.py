@@ -4,6 +4,9 @@ from io import BytesIO, StringIO
 
 
 class Repository(ABC):
+
+    __slots__ = ["_content", "_wrap_io"]
+
     def __init__(
         self, content: Union[str, bytes], wrap_io: bool = False, *args
     ) -> None:
@@ -36,6 +39,9 @@ class Repository(ABC):
 
 
 class BinaryRepository(Repository):
+
+    __slots__ = ["_filepointer"]
+
     def __init__(
         self, content: Union[str, bytes], wrap_io: bool = False, *args
     ) -> None:
@@ -72,6 +78,9 @@ class BinaryRepository(Repository):
 
 
 class TextualRepository(Repository):
+
+    __slots__ = ["_filepointer", "_encoding"]
+
     def __init__(
         self,
         content: str,

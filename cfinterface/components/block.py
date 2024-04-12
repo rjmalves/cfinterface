@@ -9,6 +9,8 @@ class Block:
     for beginning and end and reading states.
     """
 
+    __slots__ = ["__previous", "__next", "__data"]
+
     BEGIN_PATTERN: Union[str, bytes] = ""
     END_PATTERN: Union[str, bytes] = ""
     MAX_LINES = 10000

@@ -7,6 +7,8 @@ class Section:
     a given order
     """
 
+    __slots__ = ["__previous", "__next", "__data"]
+
     STORAGE: str = "TEXT"
 
     def __init__(

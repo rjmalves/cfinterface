@@ -9,6 +9,8 @@ class LiteralField(Field):
     written to a file.
     """
 
+    __slots__ = []
+
     def __init__(
         self,
         size: int = 80,

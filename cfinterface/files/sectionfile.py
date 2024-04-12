@@ -13,6 +13,8 @@ class SectionFile:
     and writing are given by a series of registers.
     """
 
+    __slots__ = ["__data", "__storage", "__encoding"]
+
     VERSIONS: Dict[str, List[Type[Section]]] = {}
     SECTIONS: List[Type[Section]] = []
     ENCODING = "utf-8"
