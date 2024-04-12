@@ -8,6 +8,8 @@ class DefaultSection(Section):
     and is used for representing empty data.
     """
 
+    __slots__ = []
+
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, DefaultSection):
             return False

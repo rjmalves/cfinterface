@@ -8,6 +8,8 @@ class SectionData:
     Class for a storing, managing and accessing data for a section file.
     """
 
+    __slots__ = ["__root", "__head"]
+
     T = TypeVar("T")
 
     def __init__(self, root: Section) -> None:

@@ -11,6 +11,12 @@ class BlockWriting:
     Class for writing custom files based on a BlockData structure.
     """
 
+    __slots__ = [
+        "__data",
+        "__storage",
+        "__repository",
+    ]
+
     def __init__(self, data: BlockData, storage: str = "") -> None:
         self.__data = data
         self.__storage = storage

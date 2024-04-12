@@ -12,6 +12,8 @@ class FloatField(Field):
     by 'F' for fixed point notation and 'E' for scientific notation.
     """
 
+    __slots__ = ["__decimal_digits", "__format", "__sep", "__type"]
+
     TYPES = {
         2: np.float16,
         4: np.float32,

@@ -8,6 +8,8 @@ class Field:
     in a file.
     """
 
+    __slots__ = ["_size", "_starting_position", "_ending_position", "_value"]
+
     T = TypeVar("T", str, bytes)
 
     def __init__(

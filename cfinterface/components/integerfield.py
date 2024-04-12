@@ -12,6 +12,8 @@ class IntegerField(Field):
     written to a file.
     """
 
+    __slots__ = ["__type"]
+
     TYPES = {
         2: np.int16,
         4: np.int32,

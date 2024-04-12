@@ -12,6 +12,12 @@ class SectionWriting:
     Class for writing custom files based on a SectionData structure.
     """
 
+    __slots__ = [
+        "__data",
+        "__storage",
+        "__repository",
+    ]
+
     def __init__(self, data: SectionData, storage: str = "") -> None:
         self.__data = data
         self.__storage = storage

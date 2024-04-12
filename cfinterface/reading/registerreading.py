@@ -13,6 +13,15 @@ class RegisterReading:
     Class for reading custom files based on a RegisterData structure.
     """
 
+    __slots__ = [
+        "__allowed_registers",
+        "__data",
+        "__last_position_filepointer",
+        "__storage",
+        "__linesize",
+        "__repository",
+    ]
+
     def __init__(
         self,
         allowed_registers: List[Type[Register]],

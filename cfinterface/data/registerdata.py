@@ -8,6 +8,8 @@ class RegisterData:
     Class for a storing, managing and accessing data for a register file.
     """
 
+    __slots__ = ["__root", "__head"]
+
     T = TypeVar("T")
 
     def __init__(self, root: Register) -> None:

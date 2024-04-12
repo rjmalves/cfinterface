@@ -8,6 +8,8 @@ class DefaultBlock(Block):
     the data from the read line. Mainly used for comments.
     """
 
+    __slots__ = []
+
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, DefaultBlock):
             return False

@@ -13,6 +13,15 @@ class SectionReading:
     Class for reading custom files based on a SectionData structure.
     """
 
+    __slots__ = [
+        "__sections",
+        "__data",
+        "__last_position_filepointer",
+        "__storage",
+        "__linesize",
+        "__repository",
+    ]
+
     def __init__(
         self,
         sections: List[Type[Section]],
