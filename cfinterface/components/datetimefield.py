@@ -1,6 +1,6 @@
 from datetime import datetime
 import pandas as pd  # type: ignore
-from typing import Optional
+from typing import Optional, Union, List
 
 from cfinterface.components.field import Field
 
@@ -18,7 +18,7 @@ class DatetimeField(Field):
         self,
         size: int = 16,
         starting_position: int = 0,
-        format: str = "%Y/%m/%d",
+        format: Union[str, List[str]] = "%Y/%m/%d",
         value: Optional[datetime] = None,
     ) -> None:
         super().__init__(size, starting_position, value)
@@ -26,19 +26,39 @@ class DatetimeField(Field):
 
     # Override
     def _binary_read(self, line: bytes) -> datetime:
-        return datetime.strptime(
-            line[self._starting_position : self._ending_position]
-            .decode("utf-8")
-            .strip(),
-            self.__format,
+        formats = (
+            [self.__format]
+            if isinstance(self.__format, str)
+            else self.__format
         )
+        for fmt in formats:
+            try:
+                return datetime.strptime(
+                    line[self._starting_position : self._ending_position]
+                    .decode("utf-8")
+                    .strip(),
+                    fmt,
+                )
+            except ValueError:
+                pass
 
     # Override
     def _textual_read(self, line: str) -> datetime:
-        return datetime.strptime(
-            line[self._starting_position : self._ending_position].strip(),
-            self.__format,
+        formats = (
+            [self.__format]
+            if isinstance(self.__format, str)
+            else self.__format
         )
+        for fmt in formats:
+            try:
+                return datetime.strptime(
+                    line[
+                        self._starting_position : self._ending_position
+                    ].strip(),
+                    fmt,
+                )
+            except ValueError:
+                pass
 
     # Override
     def _binary_write(self) -> bytes:
@@ -56,7 +76,12 @@ class DatetimeField(Field):
         if self.value is None or pd.isnull(self.value):
             value = ""
         else:
-            value = self.value.strftime(self.__format)
+            format = (
+                self.__format
+                if isinstance(self.__format, str)
+                else self.__format[0]
+            )
+            value = self.value.strftime(format)
         return value.ljust(self._size)
 
     @property

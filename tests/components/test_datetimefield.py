@@ -21,6 +21,15 @@ def test_datetimefield_read():
     assert field.value == datetime.strptime(data, format)
 
 
+def test_datetimefield_read_format_list():
+    data = "2020/01/10"
+    formats = ["%Y-%m-%d", "%Y/%m/%d"]
+    field = DatetimeField(10, 0, format=formats)
+    line = f"{data}-something-else"
+    field.read(line)
+    assert field.value == datetime.strptime(data, formats[1])
+
+
 def test_datetimefield_write():
     data = "2020/01/10"
     format = "%Y/%m/%d"
@@ -29,6 +38,16 @@ def test_datetimefield_write():
     field = DatetimeField(10, 6, format=format, value=date_data)
     line_after = field.write(line_before)
     assert line_before == line_after
+
+
+def test_datetimefield_write_format_list():
+    data = "2020/01/10"
+    formats = ["%Y-%m-%d", "%Y/%m/%d"]
+    line_before = f"field-{data}-else"
+    date_data = datetime.strptime(data, formats[1])
+    field = DatetimeField(10, 6, format=formats, value=date_data)
+    line_after = field.write(line_before)
+    assert line_before.replace("/", "-") == line_after
 
 
 def test_datetimefield_write_empty():
