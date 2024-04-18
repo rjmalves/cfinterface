@@ -41,6 +41,7 @@ class DatetimeField(Field):
                 )
             except ValueError:
                 pass
+        raise ValueError("Could not read datetime")
 
     # Override
     def _textual_read(self, line: str) -> datetime:
@@ -59,17 +60,19 @@ class DatetimeField(Field):
                 )
             except ValueError:
                 pass
+        raise ValueError("Could not read datetime")
 
     # Override
     def _binary_write(self) -> bytes:
         if self.value is None or pd.isnull(self.value):
             return b"".ljust(self.size)
         else:
-            return (
-                self.value.strftime(self.__format)
-                .ljust(self.size)
-                .encode("utf-8")
+            format = (
+                self.__format
+                if isinstance(self.__format, str)
+                else self.__format[0]
             )
+            return self.value.strftime(format).ljust(self.size).encode("utf-8")
 
     # Override
     def _textual_write(self) -> str:
