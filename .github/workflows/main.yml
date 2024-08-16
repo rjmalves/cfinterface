@@ -40,4 +40,4 @@ jobs:
         mypy ./cfinterface
     - name: Verification of PEP8 linting
       run: |
-        pylama --ignore E203 ./cfinterface
+        ruff check ./cfinterface

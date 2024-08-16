@@ -46,7 +46,7 @@ class SectionFile:
         reader = SectionReading(cls.SECTIONS, cls.STORAGE)
         return cls(reader.read(content, cls.ENCODING, *args, **kwargs))
 
-    def write(self, to: Union[str, IO], filename: str = "", *args, **kwargs):
+    def write(self, to: Union[str, IO], *args, **kwargs):
         """
         Write the sectionfile data to a given file or buffer.
 

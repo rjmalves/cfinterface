@@ -29,7 +29,7 @@ jobs:
         mypy ./cfinterface
     - name: PEP8 check
       run: |
-        pylama --ignore E203 ./cfinterface
+        ruff check ./cfinterface
     - name: Installs dependencies
       if: startsWith(github.ref, 'refs/tags')
       run: |
