@@ -9,6 +9,10 @@ requirements = []
 with open("requirements.txt", "r") as fh:
     requirements = fh.readlines()
 
+with open("dev-requirements.txt", "r") as fh:
+    extras_requirements = {"dev": fh.readlines()}
+
+
 setup(
     name="cfinterface",
     version=cfinterface.__version__,
@@ -28,4 +32,5 @@ setup(
     ],
     python_requires=">=3.8",
     install_requires=requirements,
+    extras_require=extras_requirements,
 )

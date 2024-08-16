@@ -24,7 +24,7 @@ jobs:
           mypy ./cfinterface
       - name: PEP8 check
         run: |
-          pylama --ignore E203 ./cfinterface
+          ruff check ./cfinterface
       - name: Sphinx build
         run: |
           sphinx-build -M html docs/source docs/build

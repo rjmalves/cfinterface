@@ -73,7 +73,7 @@ class RegisterFile:
             to a file or the IO buffer
         :type to: str | IO
         """
-        writer = RegisterWriting(self.__data, self.__storage, *args, **kwargs)
+        writer = RegisterWriting(self.__data, self.__storage)
         writer.write(to, self.__encoding, *args, **kwargs)
 
     @property
