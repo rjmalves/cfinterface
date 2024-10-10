@@ -17,7 +17,7 @@ class RegisterFile:
 
     VERSIONS: Dict[str, List[Type[Register]]] = {}
     REGISTERS: List[Type[Register]] = []
-    ENCODING = "utf-8"
+    ENCODING = ["utf-8", "latin-1", "ascii"]
     STORAGE = "TEXT"
     __VERSION = "latest"
 
@@ -63,7 +63,11 @@ class RegisterFile:
         :type content: str | bytes
         """
         reader = RegisterReading(cls.REGISTERS, cls.STORAGE, *args, **kwargs)
-        return cls(reader.read(content, cls.ENCODING, *args, **kwargs))
+        for encoding in cls.ENCODING:
+            try:
+                return cls(reader.read(content, encoding, *args, **kwargs))
+            except UnicodeDecodeError:
+                pass
 
     def write(self, to: Union[str, IO], *args, **kwargs):
         """
