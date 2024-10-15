@@ -17,7 +17,7 @@ class BlockFile:
 
     VERSIONS: Dict[str, List[Type[Block]]] = {}
     BLOCKS: List[Type[Block]] = []
-    ENCODING = "utf-8"
+    ENCODING = ["utf-8", "latin-1", "ascii"]
     STORAGE = "TEXT"
     __VERSION = "latest"
 
@@ -44,7 +44,15 @@ class BlockFile:
         :type content: str | bytes
         """
         reader = BlockReading(cls.BLOCKS, cls.STORAGE)
-        return cls(reader.read(content, cls.ENCODING, *args, **kwargs))
+        if type(cls.ENCODING) == str:
+            return cls(reader.read(content, cls.ENCODING, *args, **kwargs))
+        else:
+            for encoding in cls.ENCODING:
+                try:
+                    return cls(reader.read(content, encoding, *args, **kwargs))
+                except UnicodeDecodeError:
+                    pass
+        raise EncodingWarning("Failed to decode content with all specified encodings.")
 
     def write(self, to: Union[str, IO], *args, **kwargs):
         """
