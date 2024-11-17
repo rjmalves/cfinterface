@@ -1,4 +1,4 @@
-from typing import List, Dict, Type, Optional, Union, IO
+from typing import IO, Dict, List, Optional, Type, Union
 
 from cfinterface.components.block import Block
 from cfinterface.components.defaultblock import DefaultBlock
@@ -17,7 +17,7 @@ class BlockFile:
 
     VERSIONS: Dict[str, List[Type[Block]]] = {}
     BLOCKS: List[Type[Block]] = []
-    ENCODING = ["utf-8", "latin-1", "ascii"]
+    ENCODING: Union[str, List[str]] = ["utf-8", "latin-1", "ascii"]
     STORAGE = "TEXT"
     __VERSION = "latest"
 
@@ -27,7 +27,11 @@ class BlockFile:
     ) -> None:
         self.__data = data
         self.__storage = self.__class__.STORAGE
-        self.__encoding = self.__class__.ENCODING
+        self.__encoding = (
+            self.__class__.ENCODING
+            if type(self.__class__.ENCODING) is str
+            else self.__class__.ENCODING[0]
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, BlockFile):
@@ -44,7 +48,7 @@ class BlockFile:
         :type content: str | bytes
         """
         reader = BlockReading(cls.BLOCKS, cls.STORAGE)
-        if type(cls.ENCODING) == str:
+        if type(cls.ENCODING) is str:
             return cls(reader.read(content, cls.ENCODING, *args, **kwargs))
         else:
             for encoding in cls.ENCODING:
@@ -52,7 +56,9 @@ class BlockFile:
                     return cls(reader.read(content, encoding, *args, **kwargs))
                 except UnicodeDecodeError:
                     pass
-        raise EncodingWarning("Failed to decode content with all specified encodings.")
+        raise EncodingWarning(
+            "Failed to decode content with all specified encodings."
+        )
 
     def write(self, to: Union[str, IO], *args, **kwargs):
         """

@@ -10,17 +10,29 @@ text or binary file parsing. It provides components for modeling lines, register
 blocks and sections in a declarative way and aggregate these blocks as components
 for defining files.
 
-Documentation
-=============
-
 .. toctree::
+   :caption: Install 
    :maxdepth: 3
 
+   apresentacao/apresentacao.rst
+
+.. toctree::
+   :caption: Geral 
+   :maxdepth: 3
+
+   geral/instalacao
+   geral/tutorial
    examples/index.rst
+   geral/contribuicao
 
-Index and Tables
-==================
+.. toctree::
+   :caption: Referência
+   :maxdepth: 2
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   referencia/newave/index.rst
+   referencia/nwlistcf/index.rst
+   referencia/nwlistop/index.rst
+   referencia/libs/index.rst
+
+
+:ref:`genindex`
