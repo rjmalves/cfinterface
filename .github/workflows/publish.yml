@@ -13,28 +13,27 @@ jobs:
     permissions:
       id-token: write
     steps:
-    - uses: actions/checkout@v3
-    - name: Python setup
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    - name: Installs requirements
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+    - name: Set up Python
+      run: uv python install
+    - name: Install the project
       run: |
-        pip install -r dev-requirements.txt
+        uv sync --all-extras --dev
     - name: Runs tests
       run: |
-        pytest --cov=cfinterface tests/
+        uv run pytest ./tests
     - name: Static typing check
       run: |
-        mypy ./cfinterface
+        uv run mypy ./cfinterface
     - name: PEP8 check
       run: |
-        ruff check ./cfinterface
-    - name: Installs dependencies
+        uv run ruff check ./cfinterface
+    - name: Builds package
       if: startsWith(github.ref, 'refs/tags')
       run: |
-        pip install --upgrade pip setuptools wheel twine
-        python setup.py sdist bdist_wheel
+        uv build
     - name: PyPI publish
       if: startsWith(github.ref, 'refs/tags')
       uses: pypa/gh-action-pypi-publish@release/v1

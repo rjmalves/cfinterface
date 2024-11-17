@@ -13,31 +13,34 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
     steps:
-    - uses: actions/checkout@v3
-    - name: Python setup ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Installing the module requirements
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+    - name: Install the project
       run: |
-        pip install -r dev-requirements.txt
+        uv sync --all-extras --dev
     - name: Runs tests
       run: |
-        pytest --cov-report=xml --cov=cfinterface tests/
-    - uses: codecov/codecov-action@v1
+        uv run pytest  --cov-report=xml --cov=cfinterface ./tests
+    - uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }} 
         files: ./coverage.xml
         flags: unittests
         env_vars: OS,PYTHON
-        name: codecov-cfi
+        name: codecov-cfinterface
         fail_ci_if_error: true 
         verbose: true 
-    - name: Verification of statically typed code
+    - name: Static type check
       run: |
-        mypy ./cfinterface
-    - name: Verification of PEP8 linting
+        uv run mypy ./cfinterface
+    - name: Linter code check
       run: |
-        ruff check ./cfinterface
+        uv run ruff check ./cfinterface
+    - name: Sphinx build
+      run: |
+        uv run sphinx-build -M html docs/source docs/build
