@@ -14,13 +14,13 @@ import os
 import sys
 from datetime import date
 from typing import List
+
 import plotly.io as pio
 
 pio.renderers.default = "sphinx_gallery"
 
 sys.path.insert(0, os.path.abspath("../../"))
 from cfinterface import __version__  # noqa: E402
-
 
 # -- Project information -----------------------------------------------------
 
@@ -87,7 +87,7 @@ modindex_common_prefix = ["cfinterface."]
 #
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {
-    "logo_only": True,
+    "logo_only": False,
     # Toc options
     "collapse_navigation": False,
     "sticky_navigation": True,

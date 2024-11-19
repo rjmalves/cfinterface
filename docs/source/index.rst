@@ -14,25 +14,23 @@ for defining files.
    :caption: Install 
    :maxdepth: 3
 
-   apresentacao/apresentacao.rst
+   install/install.rst
 
 .. toctree::
-   :caption: Geral 
+   :caption: Getting Started 
    :maxdepth: 3
 
-   geral/instalacao
-   geral/tutorial
+   getting_started/tutorial
    examples/index.rst
-   geral/contribuicao
+   getting_started/contributing
 
 .. toctree::
-   :caption: Referência
+   :caption: Module Reference
    :maxdepth: 2
 
-   referencia/newave/index.rst
-   referencia/nwlistcf/index.rst
-   referencia/nwlistop/index.rst
-   referencia/libs/index.rst
+   reference/blocks/index.rst
+   reference/sections/index.rst
+   reference/registers/index.rst
 
 
 :ref:`genindex`
