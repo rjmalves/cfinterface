@@ -28,6 +28,8 @@ for defining files.
    :caption: Module Reference
    :maxdepth: 2
 
+   reference/fields/index.rst
+   reference/line/index.rst
    reference/blocks/index.rst
    reference/sections/index.rst
    reference/registers/index.rst
