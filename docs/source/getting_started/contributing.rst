@@ -1,53 +1,50 @@
 Contributing
 =============
 
+
+
+.. note::
+   If some not-expected behavior is found, the user is invited to open an `issue <https://github.com/rjmalves/cfinterface/issues>`_ at the repository. When doing so, it is recommended that some basic information (Python version, OS) is provided, together with a code snippet that allows reproducing the possible bug. However, if one found a possible fix for an existing issue, `pull requests <https://github.com/rjmalves/cfinterface/pulls>`_ are welcome. When doing so, please pay attention to the contents of this section.
+
+
+
+
 Development dependencies
 -------------------------
 
-Para instalar as dependências de desenvolvimento, incluindo as necessárias para a geração automática do site::
-    
+In order to install the required development dependencies, one might do::
+
     $ git clone https://github.com/rjmalves/inewave.git
     $ cd inewave
-    $ pip install -r dev-requirements.txt
+    $ pip install .[dev]
 
 .. warning::
 
-    O conteúdo da documentação não deve ser movido para o repositório. Isto é feito
-    automaticamente pelos scripts de CI no caso de qualquer modificação no branch `main`.
+    The built docs content should not be moved into the repository. The assets are built and published by the `GitHub Actions <https://github.com/features/actions>`_ workflows in case of any change in the `main` branch.
 
 
 Code conventions
 ----------------
 
-O *inewave* considera critérios de qualidade de código em seus scripts de Integração Contínua (CI), além de uma bateria de testes unitários.
-Desta forma, não é possível realizar uma *release* de uma versão que não passe em todos os testes estabelecidos ou não
-atenda aos critérios de qualidade de código impostos.
+This repository considers code quality tools in the CI workflows. Currently, only simples checks that ensure *static typing* and PEP8 converage are done. For testing, simple unit tests are done with `pytest <https://docs.pytest.org/en/stable/>`_.
 
-A primeira convenção é que sejam seguidas as diretrizes de sintaxe `PEP8 <https://peps.python.org/pep-0008/>`_, provenientes do guia de estilo
-do autor da linguagem. Além disso, não é recomendado que existam funções muito complexas, com uma quantidade
-excessiva de *branches* e *loops*, o que piora e legibilidade do código. Isto pode ser garantido através de módulos
-específicos para análise de qualidade de código, como será mencionado a seguir. A única exceção é a regra `E203 <https://www.flake8rules.com/rules/E203.html>`_.
+Since these checks are in the CI workflows, for successfully publish a release, all the requirements must be met.
 
-Para garantir a formatação é recomendado utilizar o módulo `black <https://github.com/psf/black>`_, que realiza formatação automática e possui
-integração nativa com alguns editores de texto no formato de *plugins* ou extensões. 
+For ensure PEP8-compatible syntax, the `ruff <https://astral.sh/ruff>`_ module is recommended. Despite being a linter, and having a convenient `VSCode extension <https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff>`_, it is useful to ensure code quality via explicit CLI calls.
 
-A segunda convenção é que seja utilizada tipagem estática. Isto é, não deve ser uitilizada uma variável em código a qual possua
-tipo de dados que possa mudar durante a execução do mesmo. Além disso, não deve ser declarada uma variável cujo tipo não é possível de
-ser inferido em qualquer situação, permanencendo incerto para o leitor o tipo de dados da variável a menos que seja feita uma
-execução de teste do programa.
+To ensure static typing, the `mypy <https://mypy-lang.org/>`_ module is recommended. This kind of typing reduces the amount of errors that might not be caught in unit tests and allows for better linter performance while coding.
+
+To run the code quality checks that are executed in the CI environment, one might do::
+
+    $ ruff check ./cfinterface
+    $ mypy ./cfinterface
 
 
 Testing
 --------
 
-O *inewave* realiza testes utilizando o pacote de testes de Python `pytest <https://pytest.org>`_
-e controle da qualidade de código com `pylama <https://pylama.readthedocs.io/en/latest//>`_.
-A tipagem estática é garantida através do uso de `mypy <http://mypy-lang.org/>`_
-, que é sempre executado nos scripts de Integração Contínua (CI).
+The adopted framework for testing is `pytest <https://docs.pytest.org/en/stable/>`_.
 
-Antes de realizar um ``git push`` é recomendado que se realize estes três procedimentos
-descritos, que serão novamente executados pelo ambiente de CI::
+Before doing a ``git push`` it is recommended that the user checks the tests locally, since they are fast and lightweighted. One can do this through::
 
     $ pytest ./tests
-    $ mypy ./inewave
-    $ pylama ./inewave --ignore E203

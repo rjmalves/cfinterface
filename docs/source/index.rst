@@ -31,8 +31,8 @@ for defining files.
    reference/fields/index.rst
    reference/line/index.rst
    reference/blocks/index.rst
-   reference/sections/index.rst
    reference/registers/index.rst
+   reference/sections/index.rst
 
 
 :ref:`genindex`
