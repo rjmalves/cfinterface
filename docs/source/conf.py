@@ -14,13 +14,13 @@ import os
 import sys
 from datetime import date
 from typing import List
+
 import plotly.io as pio
 
 pio.renderers.default = "sphinx_gallery"
 
 sys.path.insert(0, os.path.abspath("../../"))
 from cfinterface import __version__  # noqa: E402
-
 
 # -- Project information -----------------------------------------------------
 
@@ -86,11 +86,21 @@ modindex_common_prefix = ["cfinterface."]
 # a list of builtin themes.
 #
 html_theme = "sphinx_rtd_theme"
+html_theme_options = {
+    "logo_only": False,
+    # Toc options
+    "collapse_navigation": False,
+    "sticky_navigation": True,
+    "navigation_depth": 4,
+    "includehidden": True,
+    "titles_only": False,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+html_logo = "_static/logo_cfinterface.svg"
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
