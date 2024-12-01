@@ -10,6 +10,7 @@ Python package that contains a framework for dealing with custom file formats, m
 `cfinterface` is a framework for designing low-level interfaces that depends on complex text or binary file parsing. It provides components for modeling lines, registers, blocks and sections in a declarative way and aggregate these blocks as components for defining files.
 
 Suppose that a complex text file needs to be parsed and the contents of lines with a specific identifier must be extracted and validated. For instance, the line follows the format:
+
 ```
 DATA_HIGH  ID001   sudo.user  10/20/2025  901.25
 ```
@@ -17,7 +18,7 @@ DATA_HIGH  ID001   sudo.user  10/20/2025  901.25
 If `DATA_HIGH` is the identifier that specifies the lines to be read, than one can model it with the `Register` class in the `cfinterface` framework.
 
 ```python
-class DATA_HIGH(Register):
+class DataHigh(Register):
     IDENTIFIER = "DATA_HIGH"
     IDENTIFIER_DIGITS = 9
     LINE = Line(
@@ -32,15 +33,16 @@ class DATA_HIGH(Register):
 
 A `Register` depends on the definition of a `Line` object, that is composed of `Field` objects. By modeling these elements on a declarative way, the user gains access to reading / writing functions on the fly, and the `Register` may be added to a `RegisterFile` object, so that it can be read / written together with many other registers to files.
 
-Despite the `Register` model, files can also be composed of `Blocks` and `Sections`, and their interfaces can be done to `text` or `binary` formats. For more information, the docs are available [here](https://rjmalves.github.io/cfi).
+Despite the `Register` model, files can also be composed of `Blocks` and `Sections`, and their interfaces can be done to `text` or `binary` formats. For more information, the docs are available [here](https://rjmalves.github.io/cfinterface).
 
 ## Install
 
-`cfinterface` requires python >= 3.7. It this requirement is met, than one may install the framework with
+`cfinterface` requires python >= 3.10. It this requirement is met, than one may install the framework with
+
 ```
 python -m pip install cfinterface
 ```
 
 ## Documentation
 
-Guides, tutorials and references may be found at the package's official site: https://rjmalves.github.io/cfi
+Guides, tutorials and references may be found at the package's official site: https://rjmalves.github.io/cfinterface
