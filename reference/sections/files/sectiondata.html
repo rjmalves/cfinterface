@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-US" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SectionData &mdash; cfinterface 1.8.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=a46d761c"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="SectionFile" href="sectionfile.html" />
+    <link rel="prev" title="Section" href="section.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            cfinterface
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Install</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/install.html#installation-via-pypi">Installation via PyPi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/install.html#installing-directly-from-github">Installing directly from GitHub</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started/tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/tutorial.html#fields">Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/tutorial.html#line">Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/tutorial.html#blocks-and-blockfiles">Blocks and BlockFiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/tutorial.html#registers-and-registerfiles">Registers and RegisterFiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/tutorial.html#sections-and-sectionfiles">Sections and SectionFiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/tutorial.html#file-encodings">File Encodings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/tutorial.html#modeling-binary-files">Modeling Binary Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/tutorial.html#versioning-files">Versioning Files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started/contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/contributing.html#development-dependencies">Development dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/contributing.html#code-conventions">Code conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting_started/contributing.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../fields/index.html">Fields</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../fields/components/field.html">Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../fields/components/field.html#cfinterface.components.field.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../fields/components/field.html#cfinterface.components.field.Field.read"><code class="docutils literal notranslate"><span class="pre">Field.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../fields/components/field.html#cfinterface.components.field.Field.write"><code class="docutils literal notranslate"><span class="pre">Field.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../fields/components/literalfield.html">Literal Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../fields/components/literalfield.html#cfinterface.components.literalfield.LiteralField"><code class="docutils literal notranslate"><span class="pre">LiteralField</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../fields/components/integerfield.html">Integer Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../fields/components/integerfield.html#cfinterface.components.integerfield.IntegerField"><code class="docutils literal notranslate"><span class="pre">IntegerField</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../fields/components/floatfield.html">Float Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../fields/components/floatfield.html#cfinterface.components.floatfield.FloatField"><code class="docutils literal notranslate"><span class="pre">FloatField</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../fields/components/datetimefield.html">Datetime Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../fields/components/datetimefield.html#cfinterface.components.datetimefield.DatetimeField"><code class="docutils literal notranslate"><span class="pre">DatetimeField</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../line/index.html">Line</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../line/index.html#cfinterface.components.line.Line"><code class="docutils literal notranslate"><span class="pre">Line</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../line/index.html#cfinterface.components.line.Line.read"><code class="docutils literal notranslate"><span class="pre">Line.read()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../line/index.html#cfinterface.components.line.Line.write"><code class="docutils literal notranslate"><span class="pre">Line.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../blocks/index.html">Blocks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../blocks/files/block.html">Block</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.block.Block"><code class="docutils literal notranslate"><span class="pre">Block</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.block.Block.begins"><code class="docutils literal notranslate"><span class="pre">Block.begins()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.block.Block.ends"><code class="docutils literal notranslate"><span class="pre">Block.ends()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.block.Block.read"><code class="docutils literal notranslate"><span class="pre">Block.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.block.Block.read_block"><code class="docutils literal notranslate"><span class="pre">Block.read_block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.block.Block.write"><code class="docutils literal notranslate"><span class="pre">Block.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.block.Block.write_block"><code class="docutils literal notranslate"><span class="pre">Block.write_block()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocks/files/block.html#defaultblock">DefaultBlock</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.defaultblock.DefaultBlock"><code class="docutils literal notranslate"><span class="pre">DefaultBlock</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.defaultblock.DefaultBlock.read"><code class="docutils literal notranslate"><span class="pre">DefaultBlock.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/block.html#cfinterface.components.defaultblock.DefaultBlock.write"><code class="docutils literal notranslate"><span class="pre">DefaultBlock.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocks/files/blockdata.html">BlockData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData"><code class="docutils literal notranslate"><span class="pre">BlockData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.add_after"><code class="docutils literal notranslate"><span class="pre">BlockData.add_after()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.add_before"><code class="docutils literal notranslate"><span class="pre">BlockData.add_before()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.append"><code class="docutils literal notranslate"><span class="pre">BlockData.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.get_blocks_of_type"><code class="docutils literal notranslate"><span class="pre">BlockData.get_blocks_of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.of_type"><code class="docutils literal notranslate"><span class="pre">BlockData.of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.preppend"><code class="docutils literal notranslate"><span class="pre">BlockData.preppend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.remove"><code class="docutils literal notranslate"><span class="pre">BlockData.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.remove_blocks_of_type"><code class="docutils literal notranslate"><span class="pre">BlockData.remove_blocks_of_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocks/files/blockfile.html">BlockFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile"><code class="docutils literal notranslate"><span class="pre">BlockFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile.data"><code class="docutils literal notranslate"><span class="pre">BlockFile.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile.read"><code class="docutils literal notranslate"><span class="pre">BlockFile.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile.set_version"><code class="docutils literal notranslate"><span class="pre">BlockFile.set_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile.write"><code class="docutils literal notranslate"><span class="pre">BlockFile.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../registers/index.html">Registers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../registers/files/register.html">Register</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.register.Register"><code class="docutils literal notranslate"><span class="pre">Register</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.register.Register.matches"><code class="docutils literal notranslate"><span class="pre">Register.matches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.register.Register.read"><code class="docutils literal notranslate"><span class="pre">Register.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.register.Register.read_register"><code class="docutils literal notranslate"><span class="pre">Register.read_register()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.register.Register.write"><code class="docutils literal notranslate"><span class="pre">Register.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.register.Register.write_register"><code class="docutils literal notranslate"><span class="pre">Register.write_register()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../registers/files/register.html#defaultregister">DefaultRegister</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.defaultregister.DefaultRegister"><code class="docutils literal notranslate"><span class="pre">DefaultRegister</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.defaultregister.DefaultRegister.read"><code class="docutils literal notranslate"><span class="pre">DefaultRegister.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/register.html#cfinterface.components.defaultregister.DefaultRegister.write"><code class="docutils literal notranslate"><span class="pre">DefaultRegister.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../registers/files/registerdata.html">RegisterData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData"><code class="docutils literal notranslate"><span class="pre">RegisterData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.add_after"><code class="docutils literal notranslate"><span class="pre">RegisterData.add_after()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.add_before"><code class="docutils literal notranslate"><span class="pre">RegisterData.add_before()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.append"><code class="docutils literal notranslate"><span class="pre">RegisterData.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.get_registers_of_type"><code class="docutils literal notranslate"><span class="pre">RegisterData.get_registers_of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.of_type"><code class="docutils literal notranslate"><span class="pre">RegisterData.of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.preppend"><code class="docutils literal notranslate"><span class="pre">RegisterData.preppend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.remove"><code class="docutils literal notranslate"><span class="pre">RegisterData.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.remove_registers_of_type"><code class="docutils literal notranslate"><span class="pre">RegisterData.remove_registers_of_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../registers/files/registerfile.html">RegisterFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile"><code class="docutils literal notranslate"><span class="pre">RegisterFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile.data"><code class="docutils literal notranslate"><span class="pre">RegisterFile.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile.read"><code class="docutils literal notranslate"><span class="pre">RegisterFile.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile.set_version"><code class="docutils literal notranslate"><span class="pre">RegisterFile.set_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile.write"><code class="docutils literal notranslate"><span class="pre">RegisterFile.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Sections</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="section.html">Section</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="section.html#cfinterface.components.section.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="section.html#cfinterface.components.section.Section.read"><code class="docutils literal notranslate"><span class="pre">Section.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="section.html#cfinterface.components.section.Section.read_section"><code class="docutils literal notranslate"><span class="pre">Section.read_section()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="section.html#cfinterface.components.section.Section.write"><code class="docutils literal notranslate"><span class="pre">Section.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="section.html#cfinterface.components.section.Section.write_section"><code class="docutils literal notranslate"><span class="pre">Section.write_section()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="section.html#defaultsection">DefaultSection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="section.html#cfinterface.components.defaultsection.DefaultSection"><code class="docutils literal notranslate"><span class="pre">DefaultSection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="section.html#cfinterface.components.defaultsection.DefaultSection.read"><code class="docutils literal notranslate"><span class="pre">DefaultSection.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="section.html#cfinterface.components.defaultsection.DefaultSection.write"><code class="docutils literal notranslate"><span class="pre">DefaultSection.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SectionData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData"><code class="docutils literal notranslate"><span class="pre">SectionData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.add_after"><code class="docutils literal notranslate"><span class="pre">SectionData.add_after()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.add_before"><code class="docutils literal notranslate"><span class="pre">SectionData.add_before()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.append"><code class="docutils literal notranslate"><span class="pre">SectionData.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.get_sections_of_type"><code class="docutils literal notranslate"><span class="pre">SectionData.get_sections_of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.of_type"><code class="docutils literal notranslate"><span class="pre">SectionData.of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.preppend"><code class="docutils literal notranslate"><span class="pre">SectionData.preppend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.remove"><code class="docutils literal notranslate"><span class="pre">SectionData.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.remove_sections_of_type"><code class="docutils literal notranslate"><span class="pre">SectionData.remove_sections_of_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sectionfile.html">SectionFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sectionfile.html#cfinterface.files.sectionfile.SectionFile"><code class="docutils literal notranslate"><span class="pre">SectionFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sectionfile.html#cfinterface.files.sectionfile.SectionFile.data"><code class="docutils literal notranslate"><span class="pre">SectionFile.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sectionfile.html#cfinterface.files.sectionfile.SectionFile.read"><code class="docutils literal notranslate"><span class="pre">SectionFile.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sectionfile.html#cfinterface.files.sectionfile.SectionFile.set_version"><code class="docutils literal notranslate"><span class="pre">SectionFile.set_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sectionfile.html#cfinterface.files.sectionfile.SectionFile.write"><code class="docutils literal notranslate"><span class="pre">SectionFile.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cfinterface</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Sections</a></li>
+      <li class="breadcrumb-item active">SectionData</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/reference/sections/files/sectiondata.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sectiondata">
+<span id="id1"></span><h1>SectionData<a class="headerlink" href="#sectiondata" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SectionData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><span class="pre">Section</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData" title="Link to this definition"></a></dt>
+<dd><p>Class for a storing, managing and accessing data for a section file.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData.add_after">
+<span class="sig-name descname"><span class="pre">add_after</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><span class="pre">Section</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><span class="pre">Section</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData.add_after"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData.add_after" title="Link to this definition"></a></dt>
+<dd><p>Adds a new section to the data after another
+specified section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>after</strong> (<a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><em>Section</em></a>) – The existing section which will be appended</p></li>
+<li><p><strong>new</strong> (<a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><em>Section</em></a>) – The new section to add to the data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData.add_before">
+<span class="sig-name descname"><span class="pre">add_before</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">before</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><span class="pre">Section</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><span class="pre">Section</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData.add_before"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData.add_before" title="Link to this definition"></a></dt>
+<dd><p>Adds a new section to the data before another
+specified section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>before</strong> (<a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><em>Section</em></a>) – The existing section which will be preppended</p></li>
+<li><p><strong>new</strong> (<a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><em>Section</em></a>) – The new section to add to the data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><span class="pre">Section</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData.append" title="Link to this definition"></a></dt>
+<dd><p>Appends a section to the end of the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><em>Section</em></a>) – The new section to append to the data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData.get_sections_of_type">
+<span class="sig-name descname"><span class="pre">get_sections_of_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.13)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData.get_sections_of_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData.get_sections_of_type" title="Link to this definition"></a></dt>
+<dd><p>A section or section list that only returns
+sections of type T that meet
+given filter requirements passed as kwargs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>Type</em><em>[</em><em>T</em><em>]</em>) – The section type that is desired</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sections filtered by type T and optional properties</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>T | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[T] | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData.of_type">
+<span class="sig-name descname"><span class="pre">of_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.13)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generator" title="(in Python v3.13)"><span class="pre">Generator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData.of_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData.of_type" title="Link to this definition"></a></dt>
+<dd><p>A section generator that only returns sections of type T.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>Type</em><em>[</em><em>T</em><em>]</em>) – The section type that is desired</p>
+</dd>
+<dt class="field-even">Yield<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sections filtered by type T</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[T, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData.preppend">
+<span class="sig-name descname"><span class="pre">preppend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><span class="pre">Section</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData.preppend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData.preppend" title="Link to this definition"></a></dt>
+<dd><p>Appends a section to the beginning of the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><em>Section</em></a>) – The new section to preppended to the data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><span class="pre">Section</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData.remove" title="Link to this definition"></a></dt>
+<dd><p>Removes an existing section in the chain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<a class="reference internal" href="section.html#cfinterface.components.section.Section" title="cfinterface.components.section.Section"><em>Section</em></a>) – The section to be removed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cfinterface.data.sectiondata.SectionData.remove_sections_of_type">
+<span class="sig-name descname"><span class="pre">remove_sections_of_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.13)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cfinterface/data/sectiondata.html#SectionData.remove_sections_of_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cfinterface.data.sectiondata.SectionData.remove_sections_of_type" title="Link to this definition"></a></dt>
+<dd><p>Removes a set of sections given a type and an optional group of
+filters, similar to <a class="reference internal" href="#cfinterface.data.sectiondata.SectionData.get_sections_of_type" title="cfinterface.data.sectiondata.SectionData.get_sections_of_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sections_of_type()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>Type</em><em>[</em><em>T</em><em>]</em>) – The section type that is desired</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="section.html" class="btn btn-neutral float-left" title="Section" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sectionfile.html" class="btn btn-neutral float-right" title="SectionFile" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Rogerio Alves.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

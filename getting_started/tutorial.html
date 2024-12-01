@@ -1,0 +1,878 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-US" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial &mdash; cfinterface 1.8.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a46d761c"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples" href="../examples/index.html" />
+    <link rel="prev" title="Installation" href="../install/install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            cfinterface
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Install</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/install.html#installation-via-pypi">Installation via PyPi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/install.html#installing-directly-from-github">Installing directly from GitHub</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fields">Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#line">Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blocks-and-blockfiles">Blocks and BlockFiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#registers-and-registerfiles">Registers and RegisterFiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sections-and-sectionfiles">Sections and SectionFiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-encodings">File Encodings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modeling-binary-files">Modeling Binary Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versioning-files">Versioning Files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-dependencies">Development dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-conventions">Code conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/fields/index.html">Fields</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fields/components/field.html">Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/fields/components/field.html#cfinterface.components.field.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/fields/components/field.html#cfinterface.components.field.Field.read"><code class="docutils literal notranslate"><span class="pre">Field.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/fields/components/field.html#cfinterface.components.field.Field.write"><code class="docutils literal notranslate"><span class="pre">Field.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fields/components/literalfield.html">Literal Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/fields/components/literalfield.html#cfinterface.components.literalfield.LiteralField"><code class="docutils literal notranslate"><span class="pre">LiteralField</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fields/components/integerfield.html">Integer Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/fields/components/integerfield.html#cfinterface.components.integerfield.IntegerField"><code class="docutils literal notranslate"><span class="pre">IntegerField</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fields/components/floatfield.html">Float Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/fields/components/floatfield.html#cfinterface.components.floatfield.FloatField"><code class="docutils literal notranslate"><span class="pre">FloatField</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fields/components/datetimefield.html">Datetime Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/fields/components/datetimefield.html#cfinterface.components.datetimefield.DatetimeField"><code class="docutils literal notranslate"><span class="pre">DatetimeField</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/line/index.html">Line</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/line/index.html#cfinterface.components.line.Line"><code class="docutils literal notranslate"><span class="pre">Line</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/line/index.html#cfinterface.components.line.Line.read"><code class="docutils literal notranslate"><span class="pre">Line.read()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/line/index.html#cfinterface.components.line.Line.write"><code class="docutils literal notranslate"><span class="pre">Line.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/blocks/index.html">Blocks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/blocks/files/block.html">Block</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.block.Block"><code class="docutils literal notranslate"><span class="pre">Block</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.block.Block.begins"><code class="docutils literal notranslate"><span class="pre">Block.begins()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.block.Block.ends"><code class="docutils literal notranslate"><span class="pre">Block.ends()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.block.Block.read"><code class="docutils literal notranslate"><span class="pre">Block.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.block.Block.read_block"><code class="docutils literal notranslate"><span class="pre">Block.read_block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.block.Block.write"><code class="docutils literal notranslate"><span class="pre">Block.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.block.Block.write_block"><code class="docutils literal notranslate"><span class="pre">Block.write_block()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/blocks/files/block.html#defaultblock">DefaultBlock</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.defaultblock.DefaultBlock"><code class="docutils literal notranslate"><span class="pre">DefaultBlock</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.defaultblock.DefaultBlock.read"><code class="docutils literal notranslate"><span class="pre">DefaultBlock.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/block.html#cfinterface.components.defaultblock.DefaultBlock.write"><code class="docutils literal notranslate"><span class="pre">DefaultBlock.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/blocks/files/blockdata.html">BlockData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData"><code class="docutils literal notranslate"><span class="pre">BlockData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.add_after"><code class="docutils literal notranslate"><span class="pre">BlockData.add_after()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.add_before"><code class="docutils literal notranslate"><span class="pre">BlockData.add_before()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.append"><code class="docutils literal notranslate"><span class="pre">BlockData.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.get_blocks_of_type"><code class="docutils literal notranslate"><span class="pre">BlockData.get_blocks_of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.of_type"><code class="docutils literal notranslate"><span class="pre">BlockData.of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.preppend"><code class="docutils literal notranslate"><span class="pre">BlockData.preppend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.remove"><code class="docutils literal notranslate"><span class="pre">BlockData.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockdata.html#cfinterface.data.blockdata.BlockData.remove_blocks_of_type"><code class="docutils literal notranslate"><span class="pre">BlockData.remove_blocks_of_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/blocks/files/blockfile.html">BlockFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile"><code class="docutils literal notranslate"><span class="pre">BlockFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile.data"><code class="docutils literal notranslate"><span class="pre">BlockFile.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile.read"><code class="docutils literal notranslate"><span class="pre">BlockFile.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile.set_version"><code class="docutils literal notranslate"><span class="pre">BlockFile.set_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/blocks/files/blockfile.html#cfinterface.files.blockfile.BlockFile.write"><code class="docutils literal notranslate"><span class="pre">BlockFile.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/registers/index.html">Registers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/registers/files/register.html">Register</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.register.Register"><code class="docutils literal notranslate"><span class="pre">Register</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.register.Register.matches"><code class="docutils literal notranslate"><span class="pre">Register.matches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.register.Register.read"><code class="docutils literal notranslate"><span class="pre">Register.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.register.Register.read_register"><code class="docutils literal notranslate"><span class="pre">Register.read_register()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.register.Register.write"><code class="docutils literal notranslate"><span class="pre">Register.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.register.Register.write_register"><code class="docutils literal notranslate"><span class="pre">Register.write_register()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/registers/files/register.html#defaultregister">DefaultRegister</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.defaultregister.DefaultRegister"><code class="docutils literal notranslate"><span class="pre">DefaultRegister</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.defaultregister.DefaultRegister.read"><code class="docutils literal notranslate"><span class="pre">DefaultRegister.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/register.html#cfinterface.components.defaultregister.DefaultRegister.write"><code class="docutils literal notranslate"><span class="pre">DefaultRegister.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/registers/files/registerdata.html">RegisterData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData"><code class="docutils literal notranslate"><span class="pre">RegisterData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.add_after"><code class="docutils literal notranslate"><span class="pre">RegisterData.add_after()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.add_before"><code class="docutils literal notranslate"><span class="pre">RegisterData.add_before()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.append"><code class="docutils literal notranslate"><span class="pre">RegisterData.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.get_registers_of_type"><code class="docutils literal notranslate"><span class="pre">RegisterData.get_registers_of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.of_type"><code class="docutils literal notranslate"><span class="pre">RegisterData.of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.preppend"><code class="docutils literal notranslate"><span class="pre">RegisterData.preppend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.remove"><code class="docutils literal notranslate"><span class="pre">RegisterData.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerdata.html#cfinterface.data.registerdata.RegisterData.remove_registers_of_type"><code class="docutils literal notranslate"><span class="pre">RegisterData.remove_registers_of_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/registers/files/registerfile.html">RegisterFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile"><code class="docutils literal notranslate"><span class="pre">RegisterFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile.data"><code class="docutils literal notranslate"><span class="pre">RegisterFile.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile.read"><code class="docutils literal notranslate"><span class="pre">RegisterFile.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile.set_version"><code class="docutils literal notranslate"><span class="pre">RegisterFile.set_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/registers/files/registerfile.html#cfinterface.files.registerfile.RegisterFile.write"><code class="docutils literal notranslate"><span class="pre">RegisterFile.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/sections/index.html">Sections</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/sections/files/section.html">Section</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/sections/files/section.html#cfinterface.components.section.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/section.html#cfinterface.components.section.Section.read"><code class="docutils literal notranslate"><span class="pre">Section.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/section.html#cfinterface.components.section.Section.read_section"><code class="docutils literal notranslate"><span class="pre">Section.read_section()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/section.html#cfinterface.components.section.Section.write"><code class="docutils literal notranslate"><span class="pre">Section.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/section.html#cfinterface.components.section.Section.write_section"><code class="docutils literal notranslate"><span class="pre">Section.write_section()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/sections/files/section.html#defaultsection">DefaultSection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/sections/files/section.html#cfinterface.components.defaultsection.DefaultSection"><code class="docutils literal notranslate"><span class="pre">DefaultSection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/section.html#cfinterface.components.defaultsection.DefaultSection.read"><code class="docutils literal notranslate"><span class="pre">DefaultSection.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/section.html#cfinterface.components.defaultsection.DefaultSection.write"><code class="docutils literal notranslate"><span class="pre">DefaultSection.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/sections/files/sectiondata.html">SectionData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData"><code class="docutils literal notranslate"><span class="pre">SectionData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData.add_after"><code class="docutils literal notranslate"><span class="pre">SectionData.add_after()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData.add_before"><code class="docutils literal notranslate"><span class="pre">SectionData.add_before()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData.append"><code class="docutils literal notranslate"><span class="pre">SectionData.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData.get_sections_of_type"><code class="docutils literal notranslate"><span class="pre">SectionData.get_sections_of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData.of_type"><code class="docutils literal notranslate"><span class="pre">SectionData.of_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData.preppend"><code class="docutils literal notranslate"><span class="pre">SectionData.preppend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData.remove"><code class="docutils literal notranslate"><span class="pre">SectionData.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectiondata.html#cfinterface.data.sectiondata.SectionData.remove_sections_of_type"><code class="docutils literal notranslate"><span class="pre">SectionData.remove_sections_of_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/sections/files/sectionfile.html">SectionFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/sections/files/sectionfile.html#cfinterface.files.sectionfile.SectionFile"><code class="docutils literal notranslate"><span class="pre">SectionFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectionfile.html#cfinterface.files.sectionfile.SectionFile.data"><code class="docutils literal notranslate"><span class="pre">SectionFile.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectionfile.html#cfinterface.files.sectionfile.SectionFile.read"><code class="docutils literal notranslate"><span class="pre">SectionFile.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectionfile.html#cfinterface.files.sectionfile.SectionFile.set_version"><code class="docutils literal notranslate"><span class="pre">SectionFile.set_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../reference/sections/files/sectionfile.html#cfinterface.files.sectionfile.SectionFile.write"><code class="docutils literal notranslate"><span class="pre">SectionFile.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cfinterface</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/getting_started/tutorial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading"></a></h1>
+<p>The <a class="reference external" href="https://github.com/rjmalves/cfinterface/">cinterface</a> framework is meant to be used when developing low-level interfaces to complex textual or binary files, where the explicit modeling of the file schema is a desired feature. The abstractions defined by the framework allow the user to divide the modeling of file schemas in meaningful pieces, enabling reuse of schemas and content while reading and writing files.</p>
+<p>Three main file types are provided by the framework: <a class="reference internal" href="../reference/blocks/files/blockfile.html#blockfile"><span class="std std-ref">BlockFile</span></a>, <a class="reference internal" href="../reference/sections/files/sectionfile.html#sectionfile"><span class="std std-ref">SectionFile</span></a> and <a class="reference internal" href="../reference/registers/files/registerfile.html#registerfile"><span class="std std-ref">RegisterFile</span></a>. Each of these file models are meant to use in specific situations.</p>
+<p><a class="reference internal" href="../reference/blocks/files/blockfile.html#blockfile"><span class="std std-ref">BlockFiles</span></a> are files which can be modeled as blocks of text (or bytes), which can be easily identified by a given beginning pattern and an optional ending pattern. These patterns can be given as regexes for the entity definition in the framework. The steps of reading a block are up to the user to define by overloading the <code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code> function.</p>
+<p><a class="reference internal" href="../reference/sections/files/sectionfile.html#sectionfile"><span class="std std-ref">SectionFiles</span></a> are a special case of BlockFiles that don’t follow beginning or ending patterns, but can be divided in sections, which are direct divisions of the file content in a subset of lines or bytes. These are usually the simplest files, where the content does not vary in amount or contain repeating pieces.</p>
+<p><a class="reference internal" href="../reference/registers/files/registerfile.html#registerfile"><span class="std std-ref">RegisterFiles</span></a> can be seen also as a special case of BlockFiles, where each block contain only one line. The actual implementation of the internals of a RegisterFile differ, however, from a BlockFile. Using the <a class="reference internal" href="../reference/line/index.html#line"><span class="std std-ref">Line</span></a> entity from the framework, RegisterFiles are made in a way that many registers can be defined with little overhead from the developer, allowing to model an extensive set of patterns with little code maintenance.</p>
+<p>Each of the files, together with some additional details on another abstractions provided by the framework, will be briefly shown in the following. For more details on each approach, check on the <a class="reference internal" href="../examples/index.html#examples"><span class="std std-ref">examples</span></a> page. If your use case is not actually covered, please contribute with an <a class="reference external" href="https://github.com/rjmalves/cfinterface/issues/new">Issue</a>.</p>
+<section id="fields">
+<h2>Fields<a class="headerlink" href="#fields" title="Link to this heading"></a></h2>
+<p>The most fundamental components in the <a class="reference external" href="https://github.com/rjmalves/cfinterface/">cinterface</a> framework are the <a class="reference internal" href="../reference/fields/index.html#fields"><span class="std std-ref">Fields</span></a>. Being defined for both textual and binary interfaces, fields are containers for one specific data value, with a specific formatting, located in a file. The common base <a class="reference internal" href="../reference/fields/components/field.html#field"><span class="std std-ref">Field</span></a> class is used for defining generic reading and writing functions, which implementations are given by each specific subclass.</p>
+<p>Each specific Field contain its own arguments. For instance, if the file being modeled contains a line in which a specific literal data is desired:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span> |   Username (max. 30 chars)   | ...
+<span class="linenos">2</span> |   FooBar                     | ...
+</pre></div>
+</div>
+<p>One can see that the <code class="xref py py-obj docutils literal notranslate"><span class="pre">Username</span></code> begins in the second column and will contain at most 30 characters. So, one can define a <a class="reference internal" href="../reference/fields/components/literalfield.html#literalfield"><span class="std std-ref">LiteralField</span></a> that will extract, format and store the content:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">LiteralField</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span> <span class="n">username</span> <span class="o">=</span> <span class="n">LiteralField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">4</span>
+<span class="linenos">5</span> <span class="n">value</span> <span class="o">=</span> <span class="n">username</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;|   FooBar                     | ...&quot;</span><span class="p">)</span>
+<span class="linenos">6</span> <span class="c1"># The content &quot;FooBar&quot; can be accessed by both value and username.value</span>
+<span class="linenos">7</span> <span class="k">assert</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;FooBar&quot;</span>
+<span class="linenos">8</span> <span class="k">assert</span> <span class="n">username</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;FooBar&quot;</span>
+</pre></div>
+</div>
+<p>Other fields are used for storing numeric values, such as <a class="reference internal" href="../reference/fields/components/integerfield.html#integerfield"><span class="std std-ref">IntegerField</span></a> and <a class="reference internal" href="../reference/fields/components/floatfield.html#floatfield"><span class="std std-ref">FloatField</span></a>. The <a class="reference internal" href="../reference/fields/components/datetimefield.html#datetimefield"><span class="std std-ref">DatetimeField</span></a> is used specifically for constructing an <a class="reference external" href="https://docs.python.org/3/library/datetime.html">datetime</a> object directly from the file contents following one or more format strings.</p>
+</section>
+<section id="line">
+<h2>Line<a class="headerlink" href="#line" title="Link to this heading"></a></h2>
+<p>Usually a line in a file contain more than just one piece of desired information. In this case, the <a class="reference internal" href="../reference/fields/components/field.html#field"><span class="std std-ref">Field</span></a> component is not enough for being able to model the given line for reading and writing. In these cases, the <a class="reference internal" href="../reference/line/index.html#line"><span class="std std-ref">Line</span></a> component is the one suited for the task, being defined as a simple collection of fields. In the previous example, suppose that the actual file lines contain more than just the username:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span> |   Username (max. 30 chars)   | Signup Date | Age | Balance ($) | ...
+<span class="linenos">2</span> |   FooBar                     |  2020-05-20 |  18 |       99.90 | ...
+</pre></div>
+</div>
+<p>The line contents now are modeled by a list of fields, which define a <a class="reference internal" href="../reference/line/index.html#line"><span class="std std-ref">Line</span></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">LiteralField</span><span class="p">,</span> <span class="n">DatetimeField</span><span class="p">,</span> <span class="n">IntegerField</span><span class="p">,</span> <span class="n">FloatField</span><span class="p">,</span> <span class="n">Line</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span> <span class="n">username</span> <span class="o">=</span> <span class="n">LiteralField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 6</span> <span class="n">signup_date</span> <span class="o">=</span> <span class="n">DatetimeField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos"> 7</span> <span class="n">age</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">46</span><span class="p">)</span>
+<span class="linenos"> 8</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">FloatField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">52</span><span class="p">,</span> <span class="n">decimal_digits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span> <span class="n">line</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">username</span><span class="p">,</span> <span class="n">signup_date</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">balance</span><span class="p">])</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span> <span class="n">values</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;|   FooBar                     |  2020-05-20 |  18 |       99.90 | ...&quot;</span><span class="p">)</span>
+<span class="linenos">13</span> <span class="k">assert</span> <span class="n">values</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;FooBar&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="mi">18</span><span class="p">,</span> <span class="mf">99.90</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="blocks-and-blockfiles">
+<h2>Blocks and BlockFiles<a class="headerlink" href="#blocks-and-blockfiles" title="Link to this heading"></a></h2>
+<p>Suppose there is a file which content resembles the following</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>MY_FIRST_BLOCK_BEGINNING_PATTERN
+<span class="linenos"> 2</span>I have some raw text for describing my content, because I was mean for being irectly read by someone.
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>Now I have some data. After which I will be done.
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>Date       Index     Value
+<span class="linenos"> 7</span>2020/01        1    1000.0
+<span class="linenos"> 8</span>2020/02        1    2000.0
+<span class="linenos"> 9</span>2020/01        2    3000.0
+<span class="linenos">10</span>2020/02        2    4000.0
+<span class="linenos">11</span>2020/01        3    5000.0
+<span class="linenos">12</span>2020/02        3    6000.0
+<span class="linenos">13</span>MY_FIRST_BLOCK_ENDING_PATTERN
+<span class="linenos">14</span>
+<span class="linenos">15</span>MY_SECOND_BLOCK_BEGINNING_PATTERN
+<span class="linenos">16</span>My content is completely different from the previous block...
+<span class="linenos">17</span>  Username    Last Login
+<span class="linenos">18</span>     admin    1996/01/01
+<span class="linenos">19</span>  sunshine    2000/01/01
+<span class="linenos">20</span> pineapple    1996/01/01
+<span class="linenos">21</span>     admin    1996/01/01
+<span class="linenos">22</span>MY_SECOND_BLOCK_ENDING_PATTERN
+<span class="linenos">23</span>
+<span class="linenos">24</span>MY_FIRST_BLOCK_BEGINNING_PATTERN
+<span class="linenos">25</span>...
+<span class="linenos">26</span>MY_FIRST_BLOCK_ENDING_PATTERN
+<span class="linenos">27</span>
+<span class="linenos">28</span>MY_FIRST_BLOCK_BEGINNING_PATTERN
+<span class="linenos">29</span>...
+<span class="linenos">30</span>MY_FIRST_BLOCK_ENDING_PATTERN
+<span class="linenos">31</span>
+<span class="linenos">32</span>MY_SECOND_BLOCK_BEGINNING_PATTERN
+<span class="linenos">33</span>...
+<span class="linenos">34</span>MY_SECOND_BLOCK_ENDING_PATTERN
+<span class="linenos">35</span>...
+</pre></div>
+</div>
+<p>One may notice that the file is composed of two blocks of content that have clear beginning and ending patterns, but are written without an specific order in the file. Even the number of repetitions of both blocks cannot be discovered without parsing the whole file at least once. In this case, a <a class="reference internal" href="../reference/blocks/files/blockfile.html#blockfile"><span class="std std-ref">BlockFile</span></a> is the best approach for modeling it.</p>
+<p>One possible approach for modeling the file using the <a class="reference internal" href="../reference/blocks/files/blockfile.html#blockfile"><span class="std std-ref">BlockFile</span></a> abstraction is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span>
+<span class="linenos">  2</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos">  3</span>
+<span class="linenos">  4</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">IntegerField</span><span class="p">,</span> <span class="n">FloatField</span><span class="p">,</span> <span class="n">DatetimeField</span><span class="p">,</span> <span class="n">LiteralField</span>
+<span class="linenos">  5</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Block</span><span class="p">,</span> <span class="n">BlockFile</span>
+<span class="linenos">  6</span>
+<span class="linenos">  7</span> <span class="k">class</span> <span class="nc">FirstBlock</span><span class="p">(</span><span class="n">Block</span><span class="p">):</span>
+<span class="linenos">  8</span>
+<span class="linenos">  9</span>     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos"> 10</span>         <span class="s2">&quot;__header_lines&quot;</span><span class="p">,</span>
+<span class="linenos"> 11</span>         <span class="s2">&quot;__line_model&quot;</span><span class="p">,</span>
+<span class="linenos"> 12</span>     <span class="p">]</span>
+<span class="linenos"> 13</span>
+<span class="linenos"> 14</span>     <span class="n">BEGIN_PATTERN</span> <span class="o">=</span> <span class="s2">&quot;MY_FIRST_BLOCK_BEGINNING_PATTERN&quot;</span>
+<span class="linenos"> 15</span>     <span class="n">END_PATTERN</span> <span class="o">=</span> <span class="s2">&quot;MY_FIRST_BLOCK_ENDING_PATTERN&quot;</span>
+<span class="linenos"> 16</span>
+<span class="linenos"> 17</span>     <span class="n">NUM_HEADER_LINES</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="linenos"> 18</span>
+<span class="linenos"> 19</span>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 20</span>         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="nb">next</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="linenos"> 21</span>         <span class="bp">self</span><span class="o">.</span><span class="n">__header_lines</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 22</span>         <span class="n">date_field</span> <span class="o">=</span> <span class="n">DatetimeField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%y/%m&quot;</span><span class="p">)</span>
+<span class="linenos"> 23</span>         <span class="n">index_field</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="linenos"> 24</span>         <span class="n">value_field</span> <span class="o">=</span> <span class="n">FloatField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span>
+<span class="linenos"> 25</span>         <span class="bp">self</span><span class="o">.</span><span class="n">__line_model</span> <span class="o">=</span> <span class="n">Line</span><span class="p">([</span><span class="n">date_field</span><span class="p">,</span> <span class="n">index_field</span><span class="p">,</span> <span class="n">value_field</span><span class="p">])</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span>     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="linenos"> 28</span>         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">FirstBlock</span><span class="p">):</span>
+<span class="linenos"> 29</span>             <span class="k">return</span> <span class="kc">False</span>
+<span class="linenos"> 30</span>         <span class="n">block</span><span class="p">:</span> <span class="n">FirstBlock</span> <span class="o">=</span> <span class="n">o</span>
+<span class="linenos"> 31</span>         <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+<span class="linenos"> 32</span>             <span class="p">[</span>
+<span class="linenos"> 33</span>                 <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">),</span>
+<span class="linenos"> 34</span>                 <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">),</span>
+<span class="linenos"> 35</span>             <span class="p">]</span>
+<span class="linenos"> 36</span>         <span class="p">):</span>
+<span class="linenos"> 37</span>             <span class="k">return</span> <span class="kc">False</span>
+<span class="linenos"> 38</span>         <span class="k">else</span><span class="p">:</span>
+<span class="linenos"> 39</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="linenos"> 40</span>
+<span class="linenos"> 41</span>     <span class="c1"># Override</span>
+<span class="linenos"> 42</span>     <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">IO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="linenos"> 43</span>
+<span class="linenos"> 44</span>         <span class="c1"># Discards the line with the beginning pattern</span>
+<span class="linenos"> 45</span>         <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="linenos"> 46</span>
+<span class="linenos"> 47</span>         <span class="c1"># Reads header lines for writing later</span>
+<span class="linenos"> 48</span>         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">NUM_HEADER_LINES</span><span class="p">):</span>
+<span class="linenos"> 49</span>             <span class="bp">self</span><span class="o">.</span><span class="n">__header_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+<span class="linenos"> 50</span>
+<span class="linenos"> 51</span>         <span class="c1"># Reads the data content</span>
+<span class="linenos"> 52</span>         <span class="n">dates</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 53</span>         <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 54</span>         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 55</span>
+<span class="linenos"> 56</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos"> 57</span>
+<span class="linenos"> 58</span>             <span class="n">line</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="linenos"> 59</span>             <span class="k">if</span> <span class="n">FirstBlock</span><span class="o">.</span><span class="n">ends</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+<span class="linenos"> 60</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Date&quot;</span><span class="p">:</span> <span class="n">dates</span><span class="p">,</span> <span class="s2">&quot;Index&quot;</span><span class="p">:</span> <span class="n">indices</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">:</span> <span class="n">values</span><span class="p">)</span>
+<span class="linenos"> 61</span>                 <span class="k">break</span>
+<span class="linenos"> 62</span>
+<span class="linenos"> 63</span>             <span class="n">date</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__line_model</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="linenos"> 64</span>             <span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+<span class="linenos"> 65</span>             <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+<span class="linenos"> 66</span>             <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="linenos"> 67</span>
+<span class="linenos"> 68</span>     <span class="c1"># Override</span>
+<span class="linenos"> 69</span>     <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">IO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="linenos"> 70</span>
+<span class="linenos"> 71</span>         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">BEGIN_PATTERN</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos"> 72</span>
+<span class="linenos"> 73</span>         <span class="c1"># Writes header lines</span>
+<span class="linenos"> 74</span>         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__header_lines</span><span class="p">:</span>
+<span class="linenos"> 75</span>             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span>         <span class="c1"># Writes data lines</span>
+<span class="linenos"> 78</span>         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<span class="linenos"> 79</span>             <span class="bp">self</span><span class="o">.</span><span class="n">__line_model</span><span class="o">.</span><span class="n">write</span><span class="p">([</span><span class="n">line</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="s2">&quot;Index&quot;</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]])</span>
+<span class="linenos"> 80</span>
+<span class="linenos"> 81</span>         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">END_PATTERN</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos"> 82</span>
+<span class="linenos"> 83</span>
+<span class="linenos"> 84</span> <span class="k">class</span> <span class="nc">SecondBlock</span><span class="p">(</span><span class="n">Block</span><span class="p">):</span>
+<span class="linenos"> 85</span>     <span class="c1"># Implement in a similar way for the second block specifics</span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span>
+<span class="linenos"> 88</span> <span class="k">class</span> <span class="nc">MyBlockFile</span><span class="p">(</span><span class="n">BlockFile</span><span class="p">):</span>
+<span class="linenos"> 89</span>
+<span class="linenos"> 90</span>     <span class="n">BLOCKS</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos"> 91</span>         <span class="n">FirstBlock</span><span class="p">,</span>
+<span class="linenos"> 92</span>         <span class="n">SecondBlock</span><span class="p">,</span>
+<span class="linenos"> 93</span>     <span class="p">]</span>
+<span class="linenos"> 94</span>
+<span class="linenos"> 95</span>     <span class="c1"># All the reading and writing logic is done by the framework,</span>
+<span class="linenos"> 96</span>     <span class="c1"># finding when each block begins and calling their implemetations.</span>
+<span class="linenos"> 97</span>     <span class="c1"># The user can implement some properties for better suiting its use cases:</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span>     <span class="nd">@property</span>
+<span class="linenos">100</span>     <span class="k">def</span> <span class="nf">first_block_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="linenos">101</span>         <span class="n">block_dfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get_blocks_of_type</span><span class="p">(</span><span class="n">FirstBlock</span><span class="p">)]</span>
+<span class="linenos">102</span>         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">block_dfs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">103</span>
+<span class="linenos">104</span> <span class="n">file</span> <span class="o">=</span> <span class="n">MyBlockFile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/file_describe_above.txt&quot;</span><span class="p">)</span>
+<span class="linenos">105</span> <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">first_block_data</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="linenos">106</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;/path/to/some_other_desired_file.txt&quot;</span><span class="p">)</span>
+<span class="linenos">107</span> <span class="c1"># The content of the written file should be the same</span>
+<span class="linenos">108</span> <span class="c1"># as the source file</span>
+</pre></div>
+</div>
+<p>As one can see, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code> methods are implemented in a generic way in the base <code class="xref py py-obj docutils literal notranslate"><span class="pre">BlockFile</span></code> class, and will deal with any of the block types informed in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">BLOCKS</span></code> class attribute. However, each <a class="reference internal" href="../reference/blocks/files/block.html#block"><span class="std std-ref">Block</span></a> must implement its own <code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code> methods, which will be called when the <code class="xref py py-obj docutils literal notranslate"><span class="pre">BlockFile</span></code> class successfully matches one of the BEGIN_PATTERN expressions. All the blocks that were successully read will be stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> field, accessible inside the built <code class="xref py py-obj docutils literal notranslate"><span class="pre">file</span></code> object. This is a <a class="reference internal" href="../reference/blocks/files/blockdata.html#blockdata"><span class="std std-ref">BlockData</span></a> object, which implements a double linked list of blocks that were parsed from the given file.</p>
+<p>The developer may edit any of the desired blocks or any of its fields. When calling the <code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code> function, all blocks will be written to the file, following the login of its own <code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code> function, implemented by the developer.</p>
+<p>Any content in the file that was not matched as being in any of the given blocks is stored as an instance of the <a class="reference internal" href="../reference/blocks/files/block.html#defaultblock"><span class="std std-ref">DefaultBlock</span></a> object, which is an one-line block for reproducing the entire file contents when writing it back.</p>
+</section>
+<section id="registers-and-registerfiles">
+<h2>Registers and RegisterFiles<a class="headerlink" href="#registers-and-registerfiles" title="Link to this heading"></a></h2>
+<p>A special case of blocks in a file is when the length of each block is exactly 1. In this case, each block is a single line, and defining all the requirements of the <a class="reference internal" href="../reference/blocks/files/block.html#block"><span class="std std-ref">Block</span></a> + <a class="reference internal" href="../reference/blocks/files/blockfile.html#blockfile"><span class="std std-ref">BlockFile</span></a> approach can be a little too much.</p>
+<p>For handling this special case, the developer can use another approach, which is defined by <a class="reference internal" href="../reference/registers/files/registerfile.html#registerfile"><span class="std std-ref">RegisterFile</span></a> abstraction, together with the <a class="reference internal" href="../reference/registers/files/register.html#register"><span class="std std-ref">Register</span></a> components.</p>
+<p>Suppose there is a file with the following content</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>DATA_HIGH  ID001   sudo.user  10/20/2025  901.25
+<span class="linenos">2</span>DATA_HIGH  ID002   sudo.user  10/21/2025  100.20
+<span class="linenos">3</span>DATA_HIGH  ID003   test.user  10/30/2025  100.20
+<span class="linenos">4</span>
+<span class="linenos">5</span>DATA_LOW   01/01/2024   105.23
+<span class="linenos">6</span>DATA_LOW   01/02/2024    29.15
+<span class="linenos">7</span>DATA_LOW   01/03/2024     5.05
+</pre></div>
+</div>
+<p>In this case, each line is defined by an unique beginning pattern in its first columns, together with a set of fields that are positioned on different places depending on the beginning pattern.</p>
+<p>Each pattern determines a different <a class="reference internal" href="../reference/registers/files/register.html#register"><span class="std std-ref">Register</span></a> class to be built, and the entire file can have a variable number of objects for each register.</p>
+<p>One possible approach for modeling the file using the <a class="reference internal" href="../reference/registers/files/registerfile.html#registerfile"><span class="std std-ref">RegisterFile</span></a> abstraction is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="linenos">  2</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos">  3</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos">  4</span>
+<span class="linenos">  5</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">IntegerField</span><span class="p">,</span> <span class="n">FloatField</span><span class="p">,</span> <span class="n">DatetimeField</span><span class="p">,</span> <span class="n">LiteralField</span>
+<span class="linenos">  6</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Register</span><span class="p">,</span> <span class="n">RegisterFile</span>
+<span class="linenos">  7</span>
+<span class="linenos">  8</span> <span class="k">class</span> <span class="nc">DataHigh</span><span class="p">(</span><span class="n">Register</span><span class="p">):</span>
+<span class="linenos">  9</span>     <span class="n">IDENTIFIER</span> <span class="o">=</span> <span class="s2">&quot;DATA_HIGH&quot;</span>
+<span class="linenos"> 10</span>     <span class="n">IDENTIFIER_DIGITS</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="linenos"> 11</span>     <span class="n">LINE</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span>
+<span class="linenos"> 12</span>         <span class="p">[</span>
+<span class="linenos"> 13</span>             <span class="n">LiteralField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">11</span><span class="p">),</span>
+<span class="linenos"> 14</span>             <span class="n">LiteralField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">19</span><span class="p">),</span>
+<span class="linenos"> 15</span>             <span class="n">DatetimeField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%M/$d/%Y&quot;</span><span class="p">),</span>
+<span class="linenos"> 16</span>             <span class="n">FloatField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">decimal_digits</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<span class="linenos"> 17</span>         <span class="p">]</span>
+<span class="linenos"> 18</span>     <span class="p">)</span>
+<span class="linenos"> 19</span>
+<span class="linenos"> 20</span>     <span class="nd">@property</span>
+<span class="linenos"> 21</span>     <span class="k">def</span> <span class="nf">field_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="linenos"> 22</span><span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 23</span><span class="sd">         Identifier of the DataHigh element.</span>
+<span class="linenos"> 24</span><span class="sd">         &quot;&quot;&quot;</span>
+<span class="linenos"> 25</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdata</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span>     <span class="nd">@field_id</span><span class="o">.</span><span class="n">setter</span>
+<span class="linenos"> 28</span>     <span class="k">def</span> <span class="nf">field_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="linenos"> 29</span>         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="linenos"> 30</span>
+<span class="linenos"> 31</span>     <span class="nd">@property</span>
+<span class="linenos"> 32</span>     <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="linenos"> 33</span><span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 34</span><span class="sd">         User associated with the DataHigh element.</span>
+<span class="linenos"> 35</span><span class="sd">         &quot;&quot;&quot;</span>
+<span class="linenos"> 36</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdata</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 37</span>
+<span class="linenos"> 38</span>     <span class="nd">@user</span><span class="o">.</span><span class="n">setter</span>
+<span class="linenos"> 39</span>     <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="linenos"> 40</span>         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="linenos"> 41</span>
+<span class="linenos"> 42</span>     <span class="nd">@property</span>
+<span class="linenos"> 43</span>     <span class="k">def</span> <span class="nf">date</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
+<span class="linenos"> 44</span><span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 45</span><span class="sd">         Date associated with the DataHigh element.</span>
+<span class="linenos"> 46</span><span class="sd">         &quot;&quot;&quot;</span>
+<span class="linenos"> 47</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos"> 48</span>
+<span class="linenos"> 49</span>     <span class="nd">@date</span><span class="o">.</span><span class="n">setter</span>
+<span class="linenos"> 50</span>     <span class="k">def</span> <span class="nf">date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">datetime</span><span class="p">):</span>
+<span class="linenos"> 51</span>         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="linenos"> 52</span>
+<span class="linenos"> 53</span>     <span class="nd">@property</span>
+<span class="linenos"> 54</span>     <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="linenos"> 55</span><span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 56</span><span class="sd">         Value associated with the DataHigh element.</span>
+<span class="linenos"> 57</span><span class="sd">         &quot;&quot;&quot;</span>
+<span class="linenos"> 58</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="linenos"> 59</span>
+<span class="linenos"> 60</span>     <span class="nd">@value</span><span class="o">.</span><span class="n">setter</span>
+<span class="linenos"> 61</span>     <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="linenos"> 62</span>         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span>
+<span class="linenos"> 65</span> <span class="k">class</span> <span class="nc">DataLow</span><span class="p">(</span><span class="n">Register</span><span class="p">):</span>
+<span class="linenos"> 66</span>     <span class="n">IDENTIFIER</span> <span class="o">=</span> <span class="s2">&quot;DATA_LOW&quot;</span>
+<span class="linenos"> 67</span>     <span class="n">IDENTIFIER_DIGITS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="linenos"> 68</span>     <span class="n">LINE</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span>
+<span class="linenos"> 69</span>         <span class="p">[</span>
+<span class="linenos"> 70</span>             <span class="n">DatetimeField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%M/$d/%Y&quot;</span><span class="p">),</span>
+<span class="linenos"> 71</span>             <span class="n">FloatField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">decimal_digits</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<span class="linenos"> 72</span>         <span class="p">]</span>
+<span class="linenos"> 73</span>     <span class="p">)</span>
+<span class="linenos"> 74</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span>     <span class="nd">@property</span>
+<span class="linenos"> 77</span>     <span class="k">def</span> <span class="nf">date</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
+<span class="linenos"> 78</span><span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 79</span><span class="sd">         Date associated with the DataLow element.</span>
+<span class="linenos"> 80</span><span class="sd">         &quot;&quot;&quot;</span>
+<span class="linenos"> 81</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 82</span>
+<span class="linenos"> 83</span>     <span class="nd">@date</span><span class="o">.</span><span class="n">setter</span>
+<span class="linenos"> 84</span>     <span class="k">def</span> <span class="nf">date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">datetime</span><span class="p">):</span>
+<span class="linenos"> 85</span>         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span>     <span class="nd">@property</span>
+<span class="linenos"> 88</span>     <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="linenos"> 89</span><span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 90</span><span class="sd">         Value associated with the DataLow element.</span>
+<span class="linenos"> 91</span><span class="sd">         &quot;&quot;&quot;</span>
+<span class="linenos"> 92</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span>     <span class="nd">@value</span><span class="o">.</span><span class="n">setter</span>
+<span class="linenos"> 95</span>     <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="linenos"> 96</span>         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="linenos"> 97</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span> <span class="k">class</span> <span class="nc">MyRegisterFile</span><span class="p">(</span><span class="n">RegisterFile</span><span class="p">):</span>
+<span class="linenos">100</span>
+<span class="linenos">101</span>     <span class="n">REGISTERS</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">102</span>         <span class="n">DataHigh</span><span class="p">,</span>
+<span class="linenos">103</span>         <span class="n">DataLow</span><span class="p">,</span>
+<span class="linenos">104</span>     <span class="p">]</span>
+<span class="linenos">105</span>
+<span class="linenos">106</span>     <span class="c1"># All the reading and writing logic is done by the framework,</span>
+<span class="linenos">107</span>     <span class="c1"># finding which register is in each line and calling their implemetations.</span>
+<span class="linenos">108</span>     <span class="c1"># The user can implement some properties for better suiting its use cases:</span>
+<span class="linenos">109</span>
+<span class="linenos">110</span>     <span class="nd">@property</span>
+<span class="linenos">111</span>     <span class="k">def</span> <span class="nf">data_high</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">DataHigh</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">DataHigh</span><span class="p">]]]:</span>
+<span class="linenos">112</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get_registers_of_type</span><span class="p">(</span><span class="n">DataHigh</span><span class="p">)</span>
+<span class="linenos">113</span>
+<span class="linenos">114</span>     <span class="nd">@property</span>
+<span class="linenos">115</span>     <span class="k">def</span> <span class="nf">data_low</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">DataLow</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">DataLow</span><span class="p">]]]:</span>
+<span class="linenos">116</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get_registers_of_type</span><span class="p">(</span><span class="n">DataLow</span><span class="p">)</span>
+<span class="linenos">117</span>
+<span class="linenos">118</span> <span class="n">file</span> <span class="o">=</span> <span class="n">MyRegisterFile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/file_describe_above.txt&quot;</span><span class="p">)</span>
+<span class="linenos">119</span> <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">data_high</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="linenos">120</span> <span class="k">assert</span> <span class="n">file</span><span class="o">.</span><span class="n">data_high</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">field_id</span> <span class="o">==</span> <span class="s2">&quot;ID001&quot;</span>
+<span class="linenos">121</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;/path/to/some_other_desired_file.txt&quot;</span><span class="p">)</span>
+<span class="linenos">122</span> <span class="c1"># The content of the written file should be the same</span>
+<span class="linenos">123</span> <span class="c1"># as the source file</span>
+</pre></div>
+</div>
+<p>As one can see, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code> methods are implemented in a generic way in the base <code class="xref py py-obj docutils literal notranslate"><span class="pre">RegisterFile</span></code> class, and will deal with any of the register types informed in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">REGISTER</span></code> class attribute. All the registers that were successully read will be stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> field, accessible inside the built <code class="xref py py-obj docutils literal notranslate"><span class="pre">file</span></code> object. This is a <a class="reference internal" href="../reference/registers/files/registerdata.html#registerdata"><span class="std std-ref">RegisterData</span></a> object, which implements a double linked list of registers that were parsed from the given file.</p>
+<p>The developer may edit any of the desired registers or any of its fields. When calling the <code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code> function, all registers will be written to the file, following the formatting of each of field.</p>
+<p>Any content in the file that was not matched as being in any of the given registers is stored as an instance of the <a class="reference internal" href="../reference/registers/files/register.html#defaultregister"><span class="std std-ref">DefaultRegister</span></a> object, which is an one-field register for reproducing the entire file contents when writing it back.</p>
+</section>
+<section id="sections-and-sectionfiles">
+<h2>Sections and SectionFiles<a class="headerlink" href="#sections-and-sectionfiles" title="Link to this heading"></a></h2>
+<p>Another special case of blocks in a file is when the beginning pattern of each block does not matter. In this case, the file to be modeled is usually well determined in terms of content and ordering. However, if the developer also models others files using the <a class="reference internal" href="../reference/blocks/files/blockfile.html#blockfile"><span class="std std-ref">BlockFile</span></a> and <a class="reference internal" href="../reference/registers/files/registerfile.html#registerfile"><span class="std std-ref">RegisterFile</span></a> approaches and wants to maintain all the files in the same framework, the <a class="reference internal" href="../reference/sections/files/section.html#section"><span class="std std-ref">Section</span></a> and <a class="reference internal" href="../reference/sections/files/sectionfile.html#sectionfile"><span class="std std-ref">SectionFile</span></a> can be used. Also, following the framework allows versioning each file part separately, which can be useful for schemas that change over time.</p>
+<p>Suppose there is a file with the following content</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>Date       Index     Value
+<span class="linenos"> 2</span>----------------------------
+<span class="linenos"> 3</span>2020/01        1    1000.0
+<span class="linenos"> 4</span>2020/02        1    2000.0
+<span class="linenos"> 5</span>2020/01        2    3000.0
+<span class="linenos"> 6</span>2020/02        2    4000.0
+<span class="linenos"> 7</span>2020/01        3    5000.0
+<span class="linenos"> 8</span>2020/02        3    6000.0
+<span class="linenos"> 9</span>----------------------------
+<span class="linenos">10</span>
+<span class="linenos">11</span>  Username    Last Login
+<span class="linenos">12</span>-------------------------
+<span class="linenos">13</span>     admin    1996/01/01
+<span class="linenos">14</span>  sunshine    2000/01/01
+<span class="linenos">15</span> pineapple    1996/01/01
+<span class="linenos">16</span>     admin    1996/01/01
+<span class="linenos">17</span>-------------------------
+</pre></div>
+</div>
+<p>If the file is such that always these two tables will be exhibited, in the same order, and there is no chance of repeating these information blocks, the <a class="reference internal" href="../reference/sections/files/sectionfile.html#sectionfile"><span class="std std-ref">SectionFile</span></a> approach can be used. Also, one may note that there is no such clear beginning and ending patterns like the previous <a class="reference internal" href="../reference/blocks/files/blockfile.html#blockfile"><span class="std std-ref">BlockFile</span></a> example.</p>
+<p>One possible approach for modeling the file using the <a class="reference internal" href="../reference/sections/files/sectionfile.html#sectionfile"><span class="std std-ref">SectionFile</span></a> abstraction is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="linenos"> 2</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos"> 3</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">IntegerField</span><span class="p">,</span> <span class="n">FloatField</span><span class="p">,</span> <span class="n">DatetimeField</span><span class="p">,</span> <span class="n">LiteralField</span>
+<span class="linenos"> 6</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Section</span><span class="p">,</span> <span class="n">SectionFile</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span> <span class="k">class</span> <span class="nc">FirstSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">11</span>         <span class="s2">&quot;__line_model&quot;</span><span class="p">,</span>
+<span class="linenos">12</span>     <span class="p">]</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>     <span class="n">HEADER_LINE</span> <span class="o">=</span> <span class="s2">&quot;Date       Index     Value&quot;</span>
+<span class="linenos">15</span>     <span class="n">MARGIN_LINE</span> <span class="o">=</span> <span class="s2">&quot;----------------------------&quot;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">18</span>         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="nb">next</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="linenos">19</span>         <span class="n">date_field</span> <span class="o">=</span> <span class="n">DatetimeField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%y/%m&quot;</span><span class="p">)</span>
+<span class="linenos">20</span>         <span class="n">index_field</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="linenos">21</span>         <span class="n">value_field</span> <span class="o">=</span> <span class="n">FloatField</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">starting_position</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span>
+<span class="linenos">22</span>         <span class="bp">self</span><span class="o">.</span><span class="n">__line_model</span> <span class="o">=</span> <span class="n">Line</span><span class="p">([</span><span class="n">date_field</span><span class="p">,</span> <span class="n">index_field</span><span class="p">,</span> <span class="n">value_field</span><span class="p">])</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span>     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="linenos">25</span>         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">FirstSection</span><span class="p">):</span>
+<span class="linenos">26</span>             <span class="k">return</span> <span class="kc">False</span>
+<span class="linenos">27</span>         <span class="n">block</span><span class="p">:</span> <span class="n">FirstSection</span> <span class="o">=</span> <span class="n">o</span>
+<span class="linenos">28</span>         <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+<span class="linenos">29</span>             <span class="p">[</span>
+<span class="linenos">30</span>                 <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">),</span>
+<span class="linenos">31</span>                 <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">),</span>
+<span class="linenos">32</span>             <span class="p">]</span>
+<span class="linenos">33</span>         <span class="p">):</span>
+<span class="linenos">34</span>             <span class="k">return</span> <span class="kc">False</span>
+<span class="linenos">35</span>         <span class="k">else</span><span class="p">:</span>
+<span class="linenos">36</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span>     <span class="c1"># Override</span>
+<span class="linenos">39</span>     <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">IO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span>         <span class="c1"># Discards the line with the header and margin</span>
+<span class="linenos">42</span>         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+<span class="linenos">43</span>             <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span>         <span class="c1"># Reads the data content</span>
+<span class="linenos">46</span>         <span class="n">dates</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">47</span>         <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">48</span>         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">49</span>
+<span class="linenos">50</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">51</span>
+<span class="linenos">52</span>             <span class="n">line</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="linenos">53</span>             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MARGIN_LINE</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+<span class="linenos">54</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Date&quot;</span><span class="p">:</span> <span class="n">dates</span><span class="p">,</span> <span class="s2">&quot;Index&quot;</span><span class="p">:</span> <span class="n">indices</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">:</span> <span class="n">values</span><span class="p">)</span>
+<span class="linenos">55</span>                 <span class="k">break</span>
+<span class="linenos">56</span>
+<span class="linenos">57</span>             <span class="n">date</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__line_model</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="linenos">58</span>             <span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+<span class="linenos">59</span>             <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+<span class="linenos">60</span>             <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="linenos">61</span>
+<span class="linenos">62</span>     <span class="c1"># Override</span>
+<span class="linenos">63</span>     <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">IO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="linenos">64</span>
+<span class="linenos">65</span>         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">HEADER_LINE</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">66</span>         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MARGIN_LINE</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">67</span>
+<span class="linenos">68</span>         <span class="c1"># Writes data lines</span>
+<span class="linenos">69</span>         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<span class="linenos">70</span>             <span class="bp">self</span><span class="o">.</span><span class="n">__line_model</span><span class="o">.</span><span class="n">write</span><span class="p">([</span><span class="n">line</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="s2">&quot;Index&quot;</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]])</span>
+<span class="linenos">71</span>
+<span class="linenos">72</span>         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MARGIN_LINE</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">73</span>
+<span class="linenos">74</span>
+<span class="linenos">75</span> <span class="k">class</span> <span class="nc">SecondSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+<span class="linenos">76</span>     <span class="c1"># Implement in a similar way for the second section specifics</span>
+<span class="linenos">77</span>
+<span class="linenos">78</span>
+<span class="linenos">79</span> <span class="k">class</span> <span class="nc">MySectionFile</span><span class="p">(</span><span class="n">SectionFile</span><span class="p">):</span>
+<span class="linenos">80</span>
+<span class="linenos">81</span>     <span class="n">SECTIONS</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">82</span>         <span class="n">FirstSection</span><span class="p">,</span>
+<span class="linenos">83</span>         <span class="n">SecondSection</span><span class="p">,</span>
+<span class="linenos">84</span>     <span class="p">]</span>
+<span class="linenos">85</span>
+<span class="linenos">86</span>     <span class="c1"># All the reading and writing logic is done by the framework.</span>
+<span class="linenos">87</span>     <span class="c1"># The user can implement some properties for better suiting its use cases:</span>
+<span class="linenos">88</span>
+<span class="linenos">89</span>     <span class="nd">@property</span>
+<span class="linenos">90</span>     <span class="k">def</span> <span class="nf">first_section_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="linenos">91</span>         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get_sections_of_type</span><span class="p">(</span><span class="n">FirstSection</span><span class="p">)</span>
+<span class="linenos">92</span>         <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">data</span>
+<span class="linenos">93</span>
+<span class="linenos">94</span> <span class="n">file</span> <span class="o">=</span> <span class="n">MySectionFile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/file_described_above.txt&quot;</span><span class="p">)</span>
+<span class="linenos">95</span> <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">first_section_data</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="linenos">96</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;/path/to/some_other_desired_file.txt&quot;</span><span class="p">)</span>
+<span class="linenos">97</span> <span class="c1"># The content of the written file should be the same</span>
+<span class="linenos">98</span> <span class="c1"># as the source file</span>
+</pre></div>
+</div>
+<p>As one can see, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code> methods are implemented in a generic way in the base <code class="xref py py-obj docutils literal notranslate"><span class="pre">SectionFile</span></code> class, and will call the specific section functions in the same order that they were declared in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">SECTION</span></code> class attribute. All the sections that were successully read will be stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> field, accessible inside the built <code class="xref py py-obj docutils literal notranslate"><span class="pre">file</span></code> object. This is a <a class="reference internal" href="../reference/sections/files/sectiondata.html#sectiondata"><span class="std std-ref">SectionData</span></a> object, which implements a double linked list of sections  that were parsed from the given file.</p>
+<p>The developer may edit any of the desired sections or any of its fields. When calling the <code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code> function, all sections will be written to the file, following the formatting of each of field.</p>
+<p>All data that may exist in the file after the last modeled section will be read as <a class="reference internal" href="../reference/sections/files/section.html#defaultsection"><span class="std std-ref">DefaultSection</span></a> objects. These are one-line sections used for compatibility with data not explicitly modeled by the developer.</p>
+</section>
+<section id="file-encodings">
+<h2>File Encodings<a class="headerlink" href="#file-encodings" title="Link to this heading"></a></h2>
+<p>Currently, when modeling a file through any of the aforementioned approaches, the developer can choose the preferred encoding for reading and writing. Also, instead of a single encoding, a list of encodings can be supplied, which will be used for reading an writing.</p>
+<p>Some ways for specifying encodings are:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span>
+<span class="linenos"> 2</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">BlockFile</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span> <span class="k">class</span> <span class="nc">MyBlockFileWithSingleEncoding</span><span class="p">(</span><span class="n">BlockFile</span><span class="p">):</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>     <span class="n">ENCODING</span> <span class="o">=</span> <span class="s2">&quot;utf-8&quot;</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span> <span class="k">class</span> <span class="nc">MyBlockFileWithManyEncodings</span><span class="p">(</span><span class="n">BlockFile</span><span class="p">):</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>     <span class="n">ENCODING</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="s2">&quot;latin-1&quot;</span><span class="p">,</span> <span class="s2">&quot;ascii&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>When reading, each of the supplied encodings will be used, in order. The first encoding to successfully parse the whole file will end the reading process. For writing, the file model will always use the first encoding of the list.</p>
+</section>
+<section id="modeling-binary-files">
+<h2>Modeling Binary Files<a class="headerlink" href="#modeling-binary-files" title="Link to this heading"></a></h2>
+<p>When a file contains data encoded in binary format instead of textual, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">cfinterface</span></code> framework is still applied for modeling its contents, supporting reading and writing. The same file models can be used, but with some differences in the meaning of some fundamental actions, which are better illustrated in the <a class="reference internal" href="../examples/index.html#examples"><span class="std std-ref">examples page</span></a>.</p>
+<p>For defining a file model as binary, one may set the class attribute:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span>
+<span class="linenos"> 2</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">BlockFile</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span> <span class="k">class</span> <span class="nc">MyTextualFile</span><span class="p">(</span><span class="n">BlockFile</span><span class="p">):</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>     <span class="n">STORAGE</span> <span class="o">=</span> <span class="s2">&quot;TEXT&quot;</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span> <span class="k">class</span> <span class="nc">MyBinaryFile</span><span class="p">(</span><span class="n">BlockFile</span><span class="p">):</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>     <span class="n">STORAGE</span> <span class="o">=</span> <span class="s2">&quot;BINARY&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="versioning-files">
+<h2>Versioning Files<a class="headerlink" href="#versioning-files" title="Link to this heading"></a></h2>
+<p>Files can change their schema with time, resulting in multiple versions. One approach is to define multiple file models, but this could result in large amounts of copied and pasted code, since the changes in the schemas could be minimal.</p>
+<p>The <code class="xref py py-obj docutils literal notranslate"><span class="pre">cfinterface</span></code> supports file versioning by allowing the user to define the lists of elements (<a class="reference internal" href="../reference/blocks/index.html#blocks"><span class="std std-ref">Blocks</span></a>, <a class="reference internal" href="../reference/registers/index.html#registers"><span class="std std-ref">Registers</span></a> or <a class="reference internal" href="../reference/sections/index.html#sections"><span class="std std-ref">Sections</span></a>) that exist on each version of the file.</p>
+<p>For an example, suppose there is a file that was versioned. The file always contained two blocks, but one of them had a small change on its schema when the file version evolved from version <code class="xref py py-obj docutils literal notranslate"><span class="pre">1.0</span></code> to <code class="xref py py-obj docutils literal notranslate"><span class="pre">2.0</span></code>. In this case, the developer might do:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span>
+<span class="linenos"> 2</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span> <span class="kn">from</span> <span class="nn">cfinterface</span> <span class="kn">import</span> <span class="n">Block</span><span class="p">,</span> <span class="n">BlockFile</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span> <span class="k">class</span> <span class="nc">MyConstantBlock</span><span class="p">(</span><span class="n">Block</span><span class="p">):</span>
+<span class="linenos"> 7</span>     <span class="k">pass</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span> <span class="k">class</span> <span class="nc">MyVersionedOldBlock</span><span class="p">(</span><span class="n">Block</span><span class="p">):</span>
+<span class="linenos">10</span>     <span class="k">pass</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span> <span class="k">class</span> <span class="nc">MyVersionedNewBlock</span><span class="p">(</span><span class="n">Block</span><span class="p">):</span>
+<span class="linenos">13</span>     <span class="k">pass</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span> <span class="k">class</span> <span class="nc">MyVersionedFile</span><span class="p">(</span><span class="n">BlockFile</span><span class="p">):</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>     <span class="n">VERSIONS</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos">18</span>         <span class="s2">&quot;1.0&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="linenos">19</span>             <span class="n">MyConstantBlock</span><span class="p">,</span>
+<span class="linenos">20</span>             <span class="n">MyVersionedOldBlock</span>
+<span class="linenos">21</span>         <span class="p">],</span>
+<span class="linenos">22</span>         <span class="s2">&quot;2.0&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="linenos">23</span>             <span class="n">MyConstantBlock</span><span class="p">,</span>
+<span class="linenos">24</span>             <span class="n">MyVersionedNewBlock</span>
+<span class="linenos">25</span>         <span class="p">]</span>
+<span class="linenos">26</span>     <span class="p">}</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span> <span class="n">MyVersionedFile</span><span class="o">.</span><span class="n">set_version</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+<span class="linenos">30</span> <span class="n">old_file</span> <span class="o">=</span> <span class="n">MyVersionedFile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;path/to/old/file&quot;</span><span class="p">)</span>
+<span class="linenos">31</span> <span class="n">MyVersionedFile</span><span class="o">.</span><span class="n">set_version</span><span class="p">(</span><span class="s2">&quot;2.0&quot;</span><span class="p">)</span>
+<span class="linenos">32</span> <span class="n">new_file</span> <span class="o">=</span> <span class="n">MyVersionedFile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;path/to/new/file&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, the default behavior for any file is reading on its latest version. If the user desires to read a previous version of the file, one can use the <code class="xref py py-obj docutils literal notranslate"><span class="pre">set_version</span></code> class method for changing its behavior. The version comparison in done by Python native  <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> comparison.</p>
+<p>If one chooses to set a version <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>, which is a non-existent key in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">VERSIONS</span></code> dict, the framework looks for the first version <code class="xref py py-obj docutils literal notranslate"><span class="pre">W</span></code> among the dict keys such that <code class="xref py py-obj docutils literal notranslate"><span class="pre">W</span> <span class="pre">&lt;=</span> <span class="pre">V</span></code>. If no such key is found, the latest version is used. As an example in the previous code block, setting the <code class="xref py py-obj docutils literal notranslate"><span class="pre">MyVersionedFile</span></code> version to <code class="xref py py-obj docutils literal notranslate"><span class="pre">1.5</span></code> would fallback to <code class="xref py py-obj docutils literal notranslate"><span class="pre">1.0</span></code>. However, setting it to <code class="xref py py-obj docutils literal notranslate"><span class="pre">0.5</span></code> would result in using the latest <code class="xref py py-obj docutils literal notranslate"><span class="pre">2.0</span></code> version.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../install/install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Rogerio Alves.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
