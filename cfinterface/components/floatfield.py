@@ -52,7 +52,7 @@ class FloatField(Field):
     # Override
     def _textual_read(self, line: str) -> float:
         return float(
-            line[self._starting_position : self._ending_position].replace(
+            line[self._starting_position : self._ending_position].replace(",","").replace(
                 self.__sep, "."
             )
         )
