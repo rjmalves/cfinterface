@@ -1,10 +1,9 @@
-from typing import IO, BinaryIO, TextIO, Union, Type, Dict
 from abc import ABC, abstractmethod
 from io import BytesIO, StringIO
+from typing import IO, BinaryIO, Dict, TextIO, Type, Union
 
 
 class Repository(ABC):
-
     __slots__ = ["_content", "_wrap_io"]
 
     def __init__(
@@ -39,7 +38,6 @@ class Repository(ABC):
 
 
 class BinaryRepository(Repository):
-
     __slots__ = ["_filepointer"]
 
     def __init__(
@@ -78,7 +76,6 @@ class BinaryRepository(Repository):
 
 
 class TextualRepository(Repository):
-
     __slots__ = ["_filepointer", "_encoding"]
 
     def __init__(
@@ -86,7 +83,7 @@ class TextualRepository(Repository):
         content: str,
         wrap_io: bool = False,
         encoding: str = "utf-8",
-        *args
+        *args,
     ) -> None:
         super().__init__(content, wrap_io)
         self._encoding = encoding

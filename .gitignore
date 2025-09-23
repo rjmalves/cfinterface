@@ -132,3 +132,15 @@ dmypy.json
 
 # Build system
 uv.lock
+
+# Performance test files
+tests/performance/results/
+tests/performance/temp_*/
+tests/performance/*.bin
+tests/performance/*.txt
+tests/performance/*.json
+tests/performance/*.html
+tests/performance/*.csv
+performance_results/
+benchmark_results_*.json
+performance_report_*.*

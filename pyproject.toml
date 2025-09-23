@@ -36,6 +36,8 @@ dev = [
     "numpydoc",
     "plotly",
     "matplotlib",
+    "psutil",
+    "memory-profiler",
 ]
 
 
@@ -53,3 +55,26 @@ include = [
 
 [tool.ruff]
 line-length = 80
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "performance: marks tests as performance benchmarks",
+    "slow: marks tests as slow running (typically > 10s)",
+    "memory: marks tests that stress memory usage",
+    "io: marks tests that stress I/O operations"
+]
+minversion = "6.0"
+addopts = [
+    "--strict-markers",
+    "--strict-config", 
+    "--tb=short",
+    "-ra"
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning"
+]
