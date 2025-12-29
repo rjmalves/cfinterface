@@ -87,8 +87,8 @@ class FloatField(Field):
                         - int(floor(log10(abs(self.value)))),
                     ),
                     d=self.__decimal_digits,
-                    format=self.__format,
-                )
+                    format="E",
+                ).replace("E", "D") 
                 value = value[: self.size]
             else:
                 for d in range(self.__decimal_digits, -1, -1):
