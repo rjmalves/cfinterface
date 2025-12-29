@@ -9,7 +9,7 @@ class FloatField(Field):
     """
     Class for representing an float field for being read from and
     written to a file. The format to read and write the value is given
-    by 'F' for fixed point notation and 'E' for scientific notation.
+    by 'F' for fixed point notation and 'E' or 'D' for scientific notation.
     """
 
     __slots__ = ["__decimal_digits", "__format", "__sep", "__type"]
@@ -54,7 +54,7 @@ class FloatField(Field):
         return float(
             line[self._starting_position : self._ending_position].replace(
                 self.__sep, "."
-            )
+            ).replace("D", "E").replace("d", "e")
         )
 
     # Override
@@ -69,6 +69,17 @@ class FloatField(Field):
         value = ""
         if self.value is not None and not pd.isnull(self.value):
             if self.__format.lower() == "e" and self.value != 0:
+                value = "{:.{d}{format}}".format(
+                    round(
+                        self.value,
+                        self.__decimal_digits
+                        - int(floor(log10(abs(self.value)))),
+                    ),
+                    d=self.__decimal_digits,
+                    format=self.__format,
+                )
+                value = value[: self.size]
+            elif self.__format.lower() == "d" and self.value != 0:
                 value = "{:.{d}{format}}".format(
                     round(
                         self.value,
