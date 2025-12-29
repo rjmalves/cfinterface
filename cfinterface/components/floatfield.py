@@ -92,11 +92,12 @@ class FloatField(Field):
                 value = value[: self.size]
             else:
                 for d in range(self.__decimal_digits, -1, -1):
+                    formatting_format = "E" if self.__format.lower() == "d" else self.__format
                     value = "{:.{d}{format}}".format(
                         round(self.value, d),
                         d=d,
-                        format=self.__format,
-                    )
+                        format=formatting_format,
+                    ).replace("E", self.__format)
                     if len(value) <= self._size:
                         break
         return value.rjust(self.size)
