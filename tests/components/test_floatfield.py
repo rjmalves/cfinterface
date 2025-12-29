@@ -19,6 +19,15 @@ def test_floatfield_read_scientific_notation():
     assert field.value == float(data)
 
 
+
+def test_floatfield_read_scientific_notation_d():
+    data = "1.2D3"
+    field = FloatField(5, 0, 1, format="D")
+    line = f"{data}-something-else"
+    field.read(line)
+    assert field.value == float(data.replace("D", "e"))
+
+
 def test_floatfield_comma_separator():
     data = "1,23"
     field = FloatField(4, 0, 1, sep=",")
@@ -53,6 +62,14 @@ def test_floatfield_write_scientific_notation():
     line_before = f"field-{data_text}-else"
     data = float(data_text)
     field = FloatField(5, 6, 1, format="e", value=data)
+    line_after = field.write(line_before)
+    assert line_before == line_after
+
+def test_floatfield_write_scientific_notation_d():
+    data_text = "1.2D+3"
+    line_before = f"field-{data_text}-else"
+    data = float(data_text.replace("D", "e"))
+    field = FloatField(5, 6, 1, format="D", value=data)
     line_after = field.write(line_before)
     assert line_before == line_after
 
