@@ -1,4 +1,5 @@
-from typing import IO, BinaryIO, TextIO, Union, Type, Dict
+from typing import IO, BinaryIO, TextIO, Union, Type, Dict, overload
+from typing import Literal
 from abc import ABC, abstractmethod
 from io import BytesIO, StringIO
 
@@ -22,15 +23,6 @@ class Repository(ABC):
 
     @abstractmethod
     def read(self, n: int) -> Union[str, bytes]:
-        """
-        Reads a line for extracting information following
-        the given fields.
-
-        :param n: The number of bytes to be read
-        :type n: int
-        :return: The extracted data
-        :rtype: str | bytes
-        """
         raise NotImplementedError
 
     @property
@@ -100,6 +92,18 @@ class TextualRepository(Repository):
     @property
     def file(self) -> TextIO:
         return self._filepointer
+
+
+@overload
+def factory(kind: Literal["TEXT"]) -> Type[TextualRepository]: ...
+
+
+@overload
+def factory(kind: Literal["BINARY"]) -> Type[BinaryRepository]: ...
+
+
+@overload
+def factory(kind: Union[str, StorageType]) -> Type[Repository]: ...
 
 
 def factory(kind: Union[str, "StorageType"]) -> Type[Repository]:

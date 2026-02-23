@@ -17,8 +17,8 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | 01   | Remove pandas dependency         | 4       | Detailed     | Completed |
 | 02   | Compile regex + StorageType enum | 5       | Detailed     | Completed |
 | 03   | Optimize FloatField write        | 2       | Refined      | Completed |
-| 04   | Array-backed data containers     | 5       | Refined      | Executing |
-| 05   | Type-safe text/binary dispatch   | 4       | Outline      | Outline   |
+| 04   | Array-backed data containers     | 5       | Refined      | Completed |
+| 05   | Type-safe text/binary dispatch   | 4       | Refined      | Completed |
 | 06   | Generic tabular parser           | 3       | Outline      | Outline   |
 | 07   | Schema versioning + batch ops    | 4       | Outline      | Outline   |
 
@@ -42,10 +42,10 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | ticket-014 | Implement list-backed SectionData container                     | epic-04 | completed | Refined      |
 | ticket-015 | Migrate Register/Block/Section prev/next to computed properties | epic-04 | completed | Refined      |
 | ticket-016 | Add type-indexed lookup optimization                            | epic-04 | completed | Refined      |
-| ticket-017 | Design typed Field read/write protocol                          | epic-05 | pending   | Outline      |
-| ticket-018 | Separate TextualRepository and BinaryRepository type signatures | epic-05 | pending   | Outline      |
-| ticket-019 | Update Line class for typed dispatch                            | epic-05 | pending   | Outline      |
-| ticket-020 | Update Register/Block/Section for typed IO paths                | epic-05 | pending   | Outline      |
+| ticket-017 | Design typed Field read/write protocol                          | epic-05 | completed | Refined      |
+| ticket-018 | Separate TextualRepository and BinaryRepository type signatures | epic-05 | completed | Refined      |
+| ticket-019 | Update Line class for typed dispatch                            | epic-05 | completed | Refined      |
+| ticket-020 | Update Register/Block/Section for typed IO paths                | epic-05 | completed | Refined      |
 | ticket-021 | Implement TabularParser core engine                             | epic-06 | pending   | Outline      |
 | ticket-022 | Create TabularSection convenience base class                    | epic-06 | pending   | Outline      |
 | ticket-023 | Add delimited tabular parsing support                           | epic-06 | pending   | Outline      |

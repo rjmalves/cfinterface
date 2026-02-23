@@ -1,4 +1,4 @@
-from typing import Any, IO, Union
+from typing import Any, IO, Union, overload
 
 from cfinterface.adapters.components.repository import factory
 from cfinterface.storage import StorageType
@@ -38,15 +38,37 @@ class Block:
         raise NotImplementedError
 
     @classmethod
+    @overload
+    def begins(
+        cls, line: str, storage: Union[str, StorageType] = ""
+    ) -> bool: ...
+
+    @classmethod
+    @overload
+    def begins(
+        cls, line: bytes, storage: Union[str, StorageType] = ""
+    ) -> bool: ...
+
+    @classmethod
     def begins(
         cls, line: Union[str, bytes], storage: Union[str, StorageType] = ""
-    ):
+    ) -> bool:
         return factory(storage).begins(cls.BEGIN_PATTERN, line)
+
+    @classmethod
+    @overload
+    def ends(cls, line: str, storage: Union[str, StorageType] = "") -> bool: ...
+
+    @classmethod
+    @overload
+    def ends(
+        cls, line: bytes, storage: Union[str, StorageType] = ""
+    ) -> bool: ...
 
     @classmethod
     def ends(
         cls, line: Union[str, bytes], storage: Union[str, StorageType] = ""
-    ):
+    ) -> bool:
         return factory(storage).ends(cls.END_PATTERN, line)
 
     def read(self, file: IO, *args, **kwargs) -> bool:

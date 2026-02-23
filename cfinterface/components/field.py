@@ -1,5 +1,8 @@
 from abc import abstractmethod
-from typing import Any, Optional, Union, TypeVar
+from typing import Any, Optional, TypeVar, overload
+
+
+_T = TypeVar("_T", str, bytes)
 
 
 class Field:
@@ -9,8 +12,6 @@ class Field:
     """
 
     __slots__ = ["_size", "_starting_position", "_ending_position", "_value"]
-
-    T = TypeVar("T", str, bytes)
 
     def __init__(
         self,
@@ -31,15 +32,13 @@ class Field:
     def _textual_read(self, line: str) -> Any:
         raise NotImplementedError
 
-    def read(self, line: T) -> Any:
-        """
-        Generic method for reading a field from a given line of a file.
+    @overload
+    def read(self, line: str) -> Any: ...
 
-        :param line: The line read from the file
-        :type line: Union[str, bytes]
-        :return: The value read from the field
-        :rtype: Any
-        """
+    @overload
+    def read(self, line: bytes) -> Any: ...
+
+    def read(self, line: _T) -> Any:
         try:
             if isinstance(line, bytes):
                 self._value = self._binary_read(line)
@@ -57,45 +56,31 @@ class Field:
     def _textual_write(self) -> str:
         raise NotImplementedError
 
-    def write(self, line: T) -> T:
-        """
-        Generic method for writing a field to a given line of a file.
+    @overload
+    def write(self, line: str) -> str: ...
 
-        :param line: The line read from the file
-        :type line: Union[str, bytes]
-        :return: The value written to the field
-        :rtype: Union[str, bytes]
-        """
-        value: Union[str, bytes] = ""
+    @overload
+    def write(self, line: bytes) -> bytes: ...
+
+    def write(self, line: _T) -> _T:
         if isinstance(line, bytes):
             value = self._binary_write()
         else:
             value = self._textual_write()
-
         if len(line) < self.ending_position:
             line = line.ljust(self.ending_position)
-
-        if isinstance(value, str) and isinstance(line, str):
-            return (
-                line[: self.starting_position]
-                + value
-                + line[self.ending_position :]
-            )
-        elif isinstance(value, bytes) and isinstance(line, bytes):
-            return (
-                line[: self.starting_position]
-                + value
-                + line[self.ending_position :]
-            )
-        else:
-            return line
+        return (
+            line[: self.starting_position]
+            + value
+            + line[self.ending_position :]
+        )
 
     @property
     def size(self) -> int:
         return self._size
 
     @size.setter
-    def size(self, val: int):
+    def size(self, val: int) -> None:
         self._size = val
 
     @property
@@ -103,7 +88,7 @@ class Field:
         return self._starting_position
 
     @starting_position.setter
-    def starting_position(self, val: int):
+    def starting_position(self, val: int) -> None:
         self._starting_position = val
 
     @property
@@ -111,7 +96,7 @@ class Field:
         return self._ending_position
 
     @ending_position.setter
-    def ending_position(self, val: int):
+    def ending_position(self, val: int) -> None:
         self._ending_position = val
 
     @property
@@ -119,5 +104,5 @@ class Field:
         return self._value
 
     @value.setter
-    def value(self, val: Any):
+    def value(self, val: Any) -> None:
         self._value = val

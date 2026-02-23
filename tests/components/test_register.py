@@ -1,6 +1,7 @@
 from cfinterface.components.line import Line
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.register import Register
+from cfinterface.storage import StorageType
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -33,16 +34,13 @@ def test_single_register_properties():
 
 
 def test_register_simple_chain_properties():
-    # Build a simple register chain
     r1 = Register()
     r2 = Register()
     r3 = Register()
-    # Sets relationships
     r1.next = r2
     r2.previous = r1
     r2.next = r3
     r3.previous = r2
-    # Asserts properties
     assert r1.is_first
     assert r3.is_last
     assert not r1.is_last
@@ -148,3 +146,15 @@ def test_register_orphaned_prev_next_fallback():
     r.previous = other
     assert r.previous is other
     assert r._container is None
+
+
+def test_register_matches_str_default_storage():
+    assert DummyRegister.matches("reg test", "") is True
+
+
+def test_register_matches_str_text_storage():
+    assert DummyRegister.matches("reg test", StorageType.TEXT) is True
+
+
+def test_register_matches_str_no_match():
+    assert DummyRegister.matches("xxx test", "") is False

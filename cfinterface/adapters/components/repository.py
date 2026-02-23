@@ -1,6 +1,7 @@
-from typing import Union, Dict, Type, IO, Any
+from typing import Union, Dict, Type, IO, Any, overload
 import re
 from abc import ABC, abstractmethod
+from typing import Literal
 
 from cfinterface.storage import StorageType
 
@@ -8,7 +9,6 @@ _pattern_cache: Dict[Union[str, bytes], "re.Pattern[Any]"] = {}
 
 
 def _compile(pattern: Union[str, bytes]) -> "re.Pattern[Any]":
-    """Compile and cache a regex pattern."""
     compiled = _pattern_cache.get(pattern)
     if compiled is None:
         compiled = re.compile(pattern)
@@ -20,138 +20,85 @@ class Repository(ABC):
     @staticmethod
     @abstractmethod
     def matches(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-        Checks if the current line matches the identifier of the register.
-
-        :param pattern: The pattern for matching the register
-        :type pattern: str | bytes
-        :param line: The candidate line for containing
-            the register information
-        :type line: str | bytes
-        :return: The register in the current line
-        :rtype: bool
-        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-         Checks if the current line marks the beginning of the block.
-
-        :param pattern: The pattern for matching the beginning
-        :type pattern: str | bytes
-        :param line: The candidate line for being the beginning of
-            the block.
-        :type line: str | bytes
-        :return: The beginning of the block in the current line
-        :rtype: bool
-        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-        Checks if the current line marks the end of the block.
-
-        :param pattern: The pattern for matching the ending
-        :type pattern: str | bytes
-        :param line: The candidate line for being the ending of
-            the block.
-        :type line: str | bytes
-        :return: The ending of the block in the current line
-        :rtype: bool
-        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def read(file: IO, linesize: int) -> Union[str, bytes]:
-        """
-        Generic function to perform the reading of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :param linesize: The size of the line to be read
-        :type linesize: int
-        :return: The read data
-        :rtype: str | bytes
-        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def write(file: IO, data: Union[str, bytes]) -> int:
-        """
-        Generic function to perform the writing of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :return: The number of written bytes
-        :rtype: int
-        """
         raise NotImplementedError
 
 
 class BinaryRepository(Repository):
     @staticmethod
-    def matches(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        if isinstance(pattern, bytes) and isinstance(line, bytes):
+    def matches(pattern: Union[str, bytes], line: bytes) -> bool:
+        if isinstance(pattern, bytes):
             return _compile(pattern).search(line) is not None
-        elif isinstance(pattern, str) and isinstance(line, bytes):
-            return _compile(pattern).search(line.decode("utf-8")) is not None
-        return False
+        return _compile(pattern).search(line.decode("utf-8")) is not None
 
     @staticmethod
-    def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        if isinstance(line, bytes) and isinstance(pattern, bytes):
-            return _compile(pattern).search(line) is not None
-        return False
+    def begins(pattern: bytes, line: bytes) -> bool:
+        return _compile(pattern).search(line) is not None
 
     @staticmethod
-    def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        if isinstance(line, bytes) and isinstance(pattern, bytes):
-            return _compile(pattern).search(line) is not None
-        return False
+    def ends(pattern: bytes, line: bytes) -> bool:
+        return _compile(pattern).search(line) is not None
 
     @staticmethod
-    def read(file: IO, linesize: int) -> Union[str, bytes]:
+    def read(file: IO, linesize: int) -> bytes:
         return file.read(linesize)
 
     @staticmethod
-    def write(file: IO, data: Union[str, bytes]) -> int:
+    def write(file: IO, data: bytes) -> int:
         return file.write(data)
 
 
 class TextualRepository(Repository):
     @staticmethod
-    def matches(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        if isinstance(pattern, str) and isinstance(line, str):
-            return _compile(pattern).search(line) is not None
-        return False
+    def matches(pattern: str, line: str) -> bool:
+        return _compile(pattern).search(line) is not None
 
     @staticmethod
-    def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        if isinstance(line, str) and isinstance(pattern, str):
-            return _compile(pattern).search(line) is not None
-        return False
+    def begins(pattern: str, line: str) -> bool:
+        return _compile(pattern).search(line) is not None
 
     @staticmethod
-    def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        if isinstance(line, str) and isinstance(pattern, str):
-            return _compile(pattern).search(line) is not None
-        return False
+    def ends(pattern: str, line: str) -> bool:
+        return _compile(pattern).search(line) is not None
 
     @staticmethod
-    def read(file: IO, linesize: int) -> Union[str, bytes]:
+    def read(file: IO, linesize: int) -> str:
         return file.readline()
 
     @staticmethod
-    def write(file: IO, data: Union[str, bytes]) -> int:
+    def write(file: IO, data: str) -> int:
         return file.write(data)
+
+
+@overload
+def factory(kind: Literal["TEXT"]) -> Type[TextualRepository]: ...
+
+
+@overload
+def factory(kind: Literal["BINARY"]) -> Type[BinaryRepository]: ...
+
+
+@overload
+def factory(kind: Union[str, StorageType]) -> Type[Repository]: ...
 
 
 def factory(kind: Union[str, "StorageType"]) -> Type[Repository]:

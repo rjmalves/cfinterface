@@ -1,4 +1,4 @@
-from typing import Any, IO, Union, List
+from typing import Any, IO, Union, List, overload
 from cfinterface.components.field import Field
 import inspect
 from cfinterface.components.literalfield import LiteralField
@@ -60,9 +60,21 @@ class Register:
         return o.data == self.data
 
     @classmethod
+    @overload
+    def matches(
+        cls, line: str, storage: Union[str, StorageType] = ""
+    ) -> bool: ...
+
+    @classmethod
+    @overload
+    def matches(
+        cls, line: bytes, storage: Union[str, StorageType] = ""
+    ) -> bool: ...
+
+    @classmethod
     def matches(
         cls, line: Union[str, bytes], storage: Union[str, StorageType] = ""
-    ):
+    ) -> bool:
         return factory(storage).matches(
             cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS]
         )

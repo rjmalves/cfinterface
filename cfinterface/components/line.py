@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, overload
 
 from cfinterface.components.field import Field
 
@@ -40,28 +40,16 @@ class Line:
     def __generate_repository(self):
         self._repository = factory(self._storage)(self._fields, self._values)
 
-    def read(self, line: Union[str, bytes]) -> List[Any]:
-        """
-        Reads a line for extracting information following
-        the given fields.
+    @overload
+    def read(self, line: str) -> List[Any]: ...
 
-        :param line: The line to be read
-        :type line: str | bytes
-        :return: The extracted values, in order
-        :rtype: List[Any]
-        """
+    @overload
+    def read(self, line: bytes) -> List[Any]: ...
+
+    def read(self, line: Union[str, bytes]) -> List[Any]:
         return self._repository.read(line, self._delimiter)
 
     def write(self, values: List[Any]) -> Union[str, bytes]:
-        """
-        Writes to a line with the existing information
-        in the given fields.
-
-        :param values: The value of the fields to be written
-        :type line: List[Any]
-        :return: The line with the new field information
-        :rtype: str | bytes
-        """
         return self._repository.write(values, self._delimiter)
 
     @property

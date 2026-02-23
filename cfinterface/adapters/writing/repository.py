@@ -1,4 +1,5 @@
-from typing import IO, BinaryIO, TextIO, Union, Dict, Type
+from typing import IO, BinaryIO, TextIO, Union, Dict, Type, overload
+from typing import Literal
 from abc import ABC, abstractmethod
 
 from cfinterface.storage import StorageType
@@ -19,12 +20,6 @@ class Repository(ABC):
 
     @abstractmethod
     def write(self, data: Union[str, bytes]):
-        """
-        Writes an amount of information to a file.
-
-        :param data: The number of bytes to be read
-        :type data: str | bytes
-        """
         raise NotImplementedError
 
     @property
@@ -49,7 +44,7 @@ class BinaryRepository(Repository):
         if self._wrap_io:
             self._filepointer.close()
 
-    def write(self, data: Union[str, bytes]):
+    def write(self, data: bytes):
         if isinstance(data, bytes):
             self._filepointer.write(data)
 
@@ -79,13 +74,25 @@ class TextualRepository(Repository):
         if self._wrap_io:
             self._filepointer.close()
 
-    def write(self, data: Union[str, bytes]):
+    def write(self, data: str):
         if isinstance(data, str):
             self._filepointer.write(data)
 
     @property
     def file(self) -> TextIO:
         return self._filepointer
+
+
+@overload
+def factory(kind: Literal["TEXT"]) -> Type[TextualRepository]: ...
+
+
+@overload
+def factory(kind: Literal["BINARY"]) -> Type[BinaryRepository]: ...
+
+
+@overload
+def factory(kind: Union[str, StorageType]) -> Type[Repository]: ...
 
 
 def factory(kind: Union[str, "StorageType"]) -> Type[Repository]:
