@@ -6,3 +6,4 @@ from .line import Line  # noqa
 from .block import Block  # noqa
 from .section import Section  # noqa
 from .register import Register  # noqa
+from .tabular import ColumnDef, TabularParser, TabularSection  # noqa

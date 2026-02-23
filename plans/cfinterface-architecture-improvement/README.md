@@ -19,7 +19,7 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | 03   | Optimize FloatField write        | 2       | Refined      | Completed |
 | 04   | Array-backed data containers     | 5       | Refined      | Completed |
 | 05   | Type-safe text/binary dispatch   | 4       | Refined      | Completed |
-| 06   | Generic tabular parser           | 3       | Outline      | Outline   |
+| 06   | Generic tabular parser           | 3       | Refined      | Completed |
 | 07   | Schema versioning + batch ops    | 4       | Outline      | Outline   |
 
 ## Progress
@@ -46,9 +46,9 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | ticket-018 | Separate TextualRepository and BinaryRepository type signatures | epic-05 | completed | Refined      |
 | ticket-019 | Update Line class for typed dispatch                            | epic-05 | completed | Refined      |
 | ticket-020 | Update Register/Block/Section for typed IO paths                | epic-05 | completed | Refined      |
-| ticket-021 | Implement TabularParser core engine                             | epic-06 | pending   | Outline      |
-| ticket-022 | Create TabularSection convenience base class                    | epic-06 | pending   | Outline      |
-| ticket-023 | Add delimited tabular parsing support                           | epic-06 | pending   | Outline      |
+| ticket-021 | Implement TabularParser core engine                             | epic-06 | completed | Refined      |
+| ticket-022 | Create TabularSection convenience base class                    | epic-06 | completed | Refined      |
+| ticket-023 | Add delimited tabular parsing support                           | epic-06 | completed | Refined      |
 | ticket-024 | Design SchemaVersion descriptor and registry                    | epic-07 | pending   | Outline      |
 | ticket-025 | Implement instance-level version binding                        | epic-07 | pending   | Outline      |
 | ticket-026 | Add batch read_many() API to file classes                       | epic-07 | pending   | Outline      |
