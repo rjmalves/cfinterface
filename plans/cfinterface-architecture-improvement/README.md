@@ -20,7 +20,7 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | 04   | Array-backed data containers     | 5       | Refined      | Completed |
 | 05   | Type-safe text/binary dispatch   | 4       | Refined      | Completed |
 | 06   | Generic tabular parser           | 3       | Refined      | Completed |
-| 07   | Schema versioning + batch ops    | 4       | Outline      | Outline   |
+| 07   | Schema versioning + batch ops    | 4       | Refined      | Completed |
 
 ## Progress
 
@@ -49,7 +49,7 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | ticket-021 | Implement TabularParser core engine                             | epic-06 | completed | Refined      |
 | ticket-022 | Create TabularSection convenience base class                    | epic-06 | completed | Refined      |
 | ticket-023 | Add delimited tabular parsing support                           | epic-06 | completed | Refined      |
-| ticket-024 | Design SchemaVersion descriptor and registry                    | epic-07 | pending   | Outline      |
-| ticket-025 | Implement instance-level version binding                        | epic-07 | pending   | Outline      |
-| ticket-026 | Add batch read_many() API to file classes                       | epic-07 | pending   | Outline      |
-| ticket-027 | Add version validation and mismatch detection                   | epic-07 | pending   | Outline      |
+| ticket-024 | Design SchemaVersion descriptor and version resolution utility  | epic-07 | completed | Refined      |
+| ticket-025 | Implement instance-level version binding for file classes       | epic-07 | completed | Refined      |
+| ticket-026 | Add batch read_many() API to file classes                       | epic-07 | completed | Refined      |
+| ticket-027 | Add version validation and mismatch detection                   | epic-07 | completed | Refined      |

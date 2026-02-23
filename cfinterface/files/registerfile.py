@@ -1,11 +1,16 @@
-from typing import IO, Dict, List, Type, Union
+import warnings
+from typing import IO, TYPE_CHECKING, Dict, List, Optional, Type, Union
 
 from cfinterface.components.defaultregister import DefaultRegister
 from cfinterface.components.register import Register
 from cfinterface.data.registerdata import RegisterData
 from cfinterface.reading.registerreading import RegisterReading
 from cfinterface.storage import StorageType, _ensure_storage_type
+from cfinterface.versioning import resolve_version
 from cfinterface.writing.registerwriting import RegisterWriting
+
+if TYPE_CHECKING:
+    from cfinterface.versioning import VersionMatchResult
 
 
 class RegisterFile:
@@ -40,16 +45,7 @@ class RegisterFile:
         return self.data == o.data
 
     def _as_df(self, register_type: Type[Register]):
-        """
-        Converts the registers of a given type to a dataframe for enabling
-        read-only tasks. Changing the dataframe does not affect
-        the file registers.
-
-        :param register_type: The register_type to be converted
-        :type register_type: Type[:class:`Register`]
-        :return: The converted registers
-        :rtype: pd.DataFrame
-        """
+        """Return registers of the given type as a read-only DataFrame."""
         try:
             import pandas as pd
         except ImportError:
@@ -66,14 +62,27 @@ class RegisterFile:
         )
 
     @classmethod
-    def read(cls, content: Union[str, bytes], *args, **kwargs):
-        """
-        Reads the registerfile data from a given file in disk.
-
-        :param content: The file name in disk or the file contents themselves
-        :type content: str | bytes
-        """
-        reader = RegisterReading(cls.REGISTERS, cls.STORAGE, *args, **kwargs)
+    def read(
+        cls,
+        content: Union[str, bytes],
+        *args,
+        version: Optional[str] = None,
+        **kwargs,
+    ):
+        """Read from a file path or buffer. ``version`` selects a component set
+        from VERSIONS without mutating the class."""
+        components = cls.REGISTERS
+        if version is not None and cls.VERSIONS:
+            resolved = resolve_version(version, cls.VERSIONS)
+            if resolved is not None:
+                components = resolved
+            else:
+                warnings.warn(
+                    f"No matching version for '{version}' in "
+                    f"{cls.__name__}.VERSIONS. Using default components.",
+                    stacklevel=2,
+                )
+        reader = RegisterReading(components, cls.STORAGE, *args, **kwargs)
         if type(cls.ENCODING) is str:
             return cls(reader.read(content, cls.ENCODING, *args, **kwargs))
         else:
@@ -87,50 +96,58 @@ class RegisterFile:
         )
 
     def write(self, to: Union[str, IO], *args, **kwargs):
-        """
-        Write the registerfile data to a given file or buffer.
-
-        :param to: The writing destination, being a string for writing
-            to a file or the IO buffer
-        :type to: str | IO
-        """
         writer = RegisterWriting(self.__data, self.__storage)
         writer.write(to, self.__encoding, *args, **kwargs)
 
+    @classmethod
+    def read_many(
+        cls,
+        paths: List[str],
+        *,
+        version: Optional[str] = None,
+    ) -> Dict[str, "RegisterFile"]:
+        return {path: cls.read(path, version=version) for path in paths}
+
+    def validate(
+        self,
+        version: Optional[str] = None,
+        threshold: float = 0.5,
+    ) -> "VersionMatchResult":
+        """Validate parsed data against expected component types."""
+        from cfinterface.versioning import resolve_version, validate_version
+
+        expected = self.__class__.REGISTERS
+        if version is not None and self.__class__.VERSIONS:
+            resolved = resolve_version(version, self.__class__.VERSIONS)
+            if resolved is None:
+                result = validate_version(
+                    self.data, expected, DefaultRegister, threshold
+                )
+                return result._replace(matched=False)
+            expected = resolved
+        return validate_version(self.data, expected, DefaultRegister, threshold)
+
     @property
     def data(self) -> RegisterData:
-        """
-        Exposes the :class:`RegisterData` object, which gives access
-        to the methods:
-
-        - `preppend()`
-        - `append()`
-        - `add_before()`
-        - `add_after()`
-        - `get_blocks_of_type()`
-
-
-        :return: The data internal object
-        :rtype: :class:`RegisterData`
-        """
         return self.__data
 
     @classmethod
     def set_version(cls, v: str):
         """
-        Sets the file's version to be read. Different file versions
-        may contain different registers. The version to be set is considered
-        is forced to the latest version with a new register set available.
+        Set the active register set for the given version key.
 
-        If a RegisterFile has VERSIONS with keys {"v0": ..., "v1": ...},
-        calling `set_version("v2")` will set the version to `v1`.
+        Resolves to the latest available version <= v, so an out-of-range
+        key falls back to the nearest known version.
 
-        :param v: The file version to be read.
-        :type v: str
+        .. deprecated::
+            Use ``read(content, version="...")`` instead.
         """
-
-        available_versions = sorted(cls.VERSIONS.keys())
-        recent_versions = [ver for ver in available_versions if v >= ver]
-        if recent_versions:
+        warnings.warn(
+            'set_version() is deprecated. Use read(content, version="...") instead.',
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        resolved = resolve_version(v, cls.VERSIONS)
+        if resolved is not None:
             cls.__VERSION = v
-            cls.REGISTERS = cls.VERSIONS.get(recent_versions[-1], cls.REGISTERS)
+            cls.REGISTERS = resolved

@@ -1,9 +1,11 @@
+import warnings
 from typing import IO, List
+
+import pytest
 
 from cfinterface.components.section import Section
 from cfinterface.data.sectiondata import SectionData
 from cfinterface.files.sectionfile import SectionFile
-
 from tests.mocks.mock_open import mock_open
 from io import StringIO
 from unittest.mock import MagicMock, patch
@@ -13,8 +15,7 @@ class DummySection(Section):
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, self.__class__):
             return False
-        else:
-            return o.data == self.data
+        return o.data == self.data
 
     def read(self, file: IO) -> bool:
         self.data: List[str] = []
@@ -32,8 +33,7 @@ class DummySectionV2(Section):
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, self.__class__):
             return False
-        else:
-            return o.data == self.data
+        return o.data == self.data
 
     def read(self, file: IO) -> bool:
         self.data: List[str] = []
@@ -121,13 +121,126 @@ def test_sectionfile_write_tobuffer():
 
 def test_sectionfile_set_version():
     assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
-    VersionedSectionFile.set_version("v1")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        VersionedSectionFile.set_version("v1")
+        assert VersionedSectionFile.SECTIONS[0] == DummySection
+        VersionedSectionFile.set_version("v1.5")
+        assert VersionedSectionFile.SECTIONS[0] == DummySection
+        VersionedSectionFile.set_version("v2")
+        assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
+        VersionedSectionFile.set_version("v3")
+        assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
+        VersionedSectionFile.set_version("v0")
+        assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
+
+
+def test_sectionfile_read_with_version():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySectionV2]
+    f = VersionedSectionFile.read(data + "\n", version="v1")
+    assert len(f.data.last.data) == 1
+    assert f.data.last.data[0] == data + "\n"
+    assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
+
+
+def test_sectionfile_read_version_below_all():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySectionV2]
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        VersionedSectionFile.read(data + "\n", version="v0")
+        assert len(w) == 1
+        assert "No matching version" in str(w[0].message)
+
+
+def test_sectionfile_read_version_above_all():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySectionV2]
+    f = VersionedSectionFile.read(data + "\n", version="v3")
+    assert len(f.data.last.data) == 1
+    assert f.data.last.data[0] == data + "\n"
+
+
+def test_sectionfile_read_no_version():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySectionV2]
+    f = VersionedSectionFile.read(data + "\n")
+    assert len(f.data.last.data) == 1
+    assert f.data.last.data[0] == data + "\n"
+
+
+def test_sectionfile_set_version_deprecation():
+    with pytest.warns(DeprecationWarning, match="set_version.*deprecated"):
+        VersionedSectionFile.set_version("v1")
     assert VersionedSectionFile.SECTIONS[0] == DummySection
-    VersionedSectionFile.set_version("v1.5")
+
+
+def test_sectionfile_set_version_still_mutates():
+    VersionedSectionFile.SECTIONS = [DummySectionV2]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        VersionedSectionFile.set_version("v1")
     assert VersionedSectionFile.SECTIONS[0] == DummySection
-    VersionedSectionFile.set_version("v2")
+
+
+def test_sectionfile_read_many():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySection]
+    m: MagicMock = mock_open(read_data=data + "\n")
+    with patch("builtins.open", m):
+        result = VersionedSectionFile.read_many(["README.md", "pyproject.toml"])
+    assert len(result) == 2
+    assert isinstance(result["README.md"], VersionedSectionFile)
+
+
+def test_sectionfile_read_many_empty():
+    result = VersionedSectionFile.read_many([])
+    assert result == {}
+
+
+def test_sectionfile_read_many_with_version():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySectionV2]
+    m: MagicMock = mock_open(read_data=data + "\n")
+    with patch("builtins.open", m):
+        result = VersionedSectionFile.read_many(["README.md"], version="v1")
+    assert len(result) == 1
     assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
-    VersionedSectionFile.set_version("v3")
+
+
+def test_sectionfile_read_many_no_class_mutation():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySectionV2]
+    m: MagicMock = mock_open(read_data=data + "\n")
+    with patch("builtins.open", m):
+        VersionedSectionFile.read_many(["README.md"], version="v1")
     assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
-    VersionedSectionFile.set_version("v0")
-    assert VersionedSectionFile.SECTIONS[0] == DummySectionV2
+
+
+from cfinterface.versioning import VersionMatchResult  # noqa: E402
+
+
+def test_sectionfile_validate_matched():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySection]
+    f = VersionedSectionFile.read(data + "\n", version="v1")
+    result = f.validate(version="v1")
+    assert isinstance(result, VersionMatchResult)
+    assert DummySection in result.found_types
+
+
+def test_sectionfile_validate_no_version():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySection]
+    f = VersionedSectionFile.read(data + "\n")
+    result = f.validate()
+    assert isinstance(result, VersionMatchResult)
+
+
+def test_sectionfile_validate_unknown_version():
+    data = "Hello, world!"
+    VersionedSectionFile.SECTIONS = [DummySection]
+    f = VersionedSectionFile.read(data + "\n")
+    result = f.validate(version="v0")
+    assert result.matched is False
