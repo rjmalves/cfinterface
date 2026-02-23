@@ -14,9 +14,9 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 
 | Epic | Name                             | Tickets | Detail Level | Phase     |
 | ---- | -------------------------------- | ------- | ------------ | --------- |
-| 01   | Remove pandas dependency         | 4       | Detailed     | Executing |
-| 02   | Compile regex + StorageType enum | 5       | Detailed     | Executing |
-| 03   | Optimize FloatField write        | 2       | Outline      | Outline   |
+| 01   | Remove pandas dependency         | 4       | Detailed     | Completed |
+| 02   | Compile regex + StorageType enum | 5       | Detailed     | Completed |
+| 03   | Optimize FloatField write        | 2       | Refined      | Executing |
 | 04   | Array-backed data containers     | 5       | Outline      | Outline   |
 | 05   | Type-safe text/binary dispatch   | 4       | Outline      | Outline   |
 | 06   | Generic tabular parser           | 3       | Outline      | Outline   |
@@ -35,8 +35,8 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | ticket-007 | Update all factory functions to accept StorageType              | epic-02 | completed | Detailed     |
 | ticket-008 | Migrate internal storage parameter usage to StorageType         | epic-02 | completed | Detailed     |
 | ticket-009 | Add deprecation warnings for string-based storage               | epic-02 | completed | Detailed     |
-| ticket-010 | Optimize FloatField fixed-point textual write                   | epic-03 | pending   | Outline      |
-| ticket-011 | Add FloatField write benchmark tests                            | epic-03 | pending   | Outline      |
+| ticket-010 | Optimize FloatField fixed-point textual write                   | epic-03 | completed | Refined      |
+| ticket-011 | Add FloatField write benchmark tests                            | epic-03 | completed | Refined      |
 | ticket-012 | Implement list-backed RegisterData container                    | epic-04 | pending   | Outline      |
 | ticket-013 | Implement list-backed BlockData container                       | epic-04 | pending   | Outline      |
 | ticket-014 | Implement list-backed SectionData container                     | epic-04 | pending   | Outline      |

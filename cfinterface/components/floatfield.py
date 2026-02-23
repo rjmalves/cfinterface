@@ -88,17 +88,31 @@ class FloatField(Field):
                 ).replace("E", "D")
                 value = value[: self.size]
             else:
-                for d in range(self.__decimal_digits, -1, -1):
-                    formatting_format = (
-                        "E" if self.__format.lower() == "d" else self.__format
-                    )
+                formatting_format = (
+                    "E" if self.__format.lower() == "d" else self.__format
+                )
+                value = "{:.{d}{format}}".format(
+                    round(self.value, self.__decimal_digits),
+                    d=self.__decimal_digits,
+                    format=formatting_format,
+                ).replace("E", self.__format)
+                if len(value) > self._size:
+                    excess = len(value) - self._size
+                    new_d = self.__decimal_digits - excess
+                    if new_d < 0:
+                        new_d = 0
                     value = "{:.{d}{format}}".format(
-                        round(self.value, d),
-                        d=d,
+                        round(self.value, new_d),
+                        d=new_d,
                         format=formatting_format,
                     ).replace("E", self.__format)
-                    if len(value) <= self._size:
-                        break
+                    if len(value) > self._size:
+                        new_d = max(0, new_d - 1)
+                        value = "{:.{d}{format}}".format(
+                            round(self.value, new_d),
+                            d=new_d,
+                            format=formatting_format,
+                        ).replace("E", self.__format)
         return value.rjust(self.size)
 
     @property
