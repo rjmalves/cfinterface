@@ -2,6 +2,7 @@ from typing import List, Optional, Any, Type, Union, Dict
 from abc import ABC, abstractmethod
 
 from cfinterface.components.field import Field
+from cfinterface.storage import StorageType
 
 
 class Repository(ABC):
@@ -77,29 +78,17 @@ class TextualRepository(Repository):
         return self.values
 
     def __delimted_reading(self, line: str, delimiter: str) -> List[Any]:
-        fields = [
-            self.__positional_to_delimited_field(f) for f in self._fields
-        ]
+        fields = [self.__positional_to_delimited_field(f) for f in self._fields]
         values = [v.strip() for v in line.split(delimiter)]
         for field, value in zip(fields, values):
             field.read(value)
         return self.values
 
-    # Override
     def read(
         self,
         line: Union[str, bytes],
         delimiter: Optional[Union[str, bytes]] = None,
     ) -> List[Any]:
-        """
-        Reads a line for extracting information following
-        the given fields.
-
-        :param line: The line to be read
-        :type line: Union[str, bytes]
-        :return: The extracted values, in order
-        :rtype: List[Any]
-        """
         if isinstance(line, str) and isinstance(delimiter, str):
             return self.__delimted_reading(line, delimiter)
         elif isinstance(line, str) and delimiter is None:
@@ -114,26 +103,14 @@ class TextualRepository(Repository):
         return line + "\n"
 
     def __delimted_writing(self, values: List[Any], delimiter: str) -> str:
-        fields = [
-            self.__positional_to_delimited_field(f) for f in self._fields
-        ]
+        fields = [self.__positional_to_delimited_field(f) for f in self._fields]
         self.values = values
         separated = [field.write("").strip() for field in fields]
         return delimiter.join(separated) + "\n"
 
-    # Override
     def write(
         self, values: List[Any], delimiter: Optional[Union[str, bytes]] = None
     ) -> Union[str, bytes]:
-        """
-        Writes to a line with the existing information
-        in the given fields.
-
-        :param values: The value of the fields to be written
-        :type line: List[Any]
-        :return: The line with the new field information
-        :rtype: Union[str, bytes]
-        """
         if isinstance(delimiter, str):
             return self.__delimted_writing(values, delimiter)
         else:
@@ -141,39 +118,18 @@ class TextualRepository(Repository):
 
 
 class BinaryRepository(Repository):
-
-    # Override
     def read(
         self,
         line: Union[str, bytes],
         delimiter: Optional[Union[str, bytes]] = None,
     ) -> List[Any]:
-        """
-        Reads a line for extracting information following
-        the given fields.
-
-        :param line: The line to be read
-        :type line: Union[str, bytes]
-        :return: The extracted values, in order
-        :rtype: List[Any]
-        """
         for field in self._fields:
             field.read(line)  # type: ignore
         return self.values
 
-    # Override
     def write(
         self, values: List[Any], delimiter: Optional[Union[str, bytes]] = None
     ) -> bytes:
-        """
-        Writes to a line with the existing information
-        in the given fields.
-
-        :param values: The value of the fields to be written
-        :type line: List[Any]
-        :return: The line with the new field information
-        :rtype: Union[str, bytes]
-        """
         line = b""
         self.values = values
         for field in self._fields:
@@ -181,9 +137,9 @@ class BinaryRepository(Repository):
         return line
 
 
-def factory(kind: str) -> Type[Repository]:
-    mappings: Dict[str, Type[Repository]] = {
-        "TEXT": TextualRepository,
-        "BINARY": BinaryRepository,
+def factory(kind: Union[str, "StorageType"]) -> Type[Repository]:
+    mappings: Dict[Union[str, StorageType], Type[Repository]] = {
+        StorageType.TEXT: TextualRepository,
+        StorageType.BINARY: BinaryRepository,
     }
     return mappings.get(kind, TextualRepository)

@@ -13,3 +13,4 @@ from . import data  # noqa
 from . import reading  # noqa
 from . import writing  # noqa
 from . import files  # noqa
+from .storage import StorageType  # noqa

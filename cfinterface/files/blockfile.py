@@ -1,9 +1,10 @@
-from typing import IO, Dict, List, Optional, Type, Union
+from typing import IO, Dict, List, Type, Union
 
 from cfinterface.components.block import Block
 from cfinterface.components.defaultblock import DefaultBlock
 from cfinterface.data.blockdata import BlockData
 from cfinterface.reading.blockreading import BlockReading
+from cfinterface.storage import StorageType, _ensure_storage_type
 from cfinterface.writing.blockwriting import BlockWriting
 
 
@@ -18,7 +19,7 @@ class BlockFile:
     VERSIONS: Dict[str, List[Type[Block]]] = {}
     BLOCKS: List[Type[Block]] = []
     ENCODING: Union[str, List[str]] = ["utf-8", "latin-1", "ascii"]
-    STORAGE = "TEXT"
+    STORAGE: Union[str, StorageType] = StorageType.TEXT
     __VERSION = "latest"
 
     def __init__(
@@ -26,7 +27,7 @@ class BlockFile:
         data=BlockData(DefaultBlock()),
     ) -> None:
         self.__data = data
-        self.__storage = self.__class__.STORAGE
+        self.__storage = _ensure_storage_type(self.__class__.STORAGE)
         self.__encoding = (
             self.__class__.ENCODING
             if type(self.__class__.ENCODING) is str
@@ -36,8 +37,7 @@ class BlockFile:
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, BlockFile):
             return False
-        bf: BlockFile = o
-        return self.data == bf.data
+        return self.data == o.data
 
     @classmethod
     def read(cls, content: Union[str, bytes], *args, **kwargs):
@@ -102,17 +102,8 @@ class BlockFile:
         :param v: The file version to be read.
         :type v: str
         """
-
-        def __find_closest_version() -> Optional[str]:
-            available_versions = sorted(list(cls.VERSIONS.keys()))
-            recent_versions = [
-                version for version in available_versions if v >= version
-            ]
-            if len(recent_versions) > 0:
-                return recent_versions[-1]
-            return None
-
-        closest_version = __find_closest_version()
-        if closest_version is not None:
+        available_versions = sorted(cls.VERSIONS.keys())
+        recent_versions = [ver for ver in available_versions if v >= ver]
+        if recent_versions:
             cls.__VERSION = v
-            cls.BLOCKS = cls.VERSIONS.get(closest_version, cls.BLOCKS)
+            cls.BLOCKS = cls.VERSIONS.get(recent_versions[-1], cls.BLOCKS)

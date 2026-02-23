@@ -5,6 +5,7 @@ from cfinterface.components.field import Field
 from cfinterface.adapters.components.line.repository import (
     factory,
 )
+from cfinterface.storage import StorageType
 
 
 class Line:
@@ -27,7 +28,7 @@ class Line:
         fields: List[Field],
         values: Optional[List[Any]] = None,
         delimiter: Optional[Union[str, bytes]] = None,
-        storage: str = "",
+        storage: Union[str, StorageType] = "",
     ):
         self._delimiter = delimiter
         self._fields = fields
@@ -88,11 +89,11 @@ class Line:
         self._delimiter = d
 
     @property
-    def storage(self) -> str:
+    def storage(self) -> Union[str, StorageType]:
         return self._storage
 
     @storage.setter
-    def storage(self, s: str):
+    def storage(self, s: Union[str, StorageType]):
         self._storage = s
         self.__generate_repository()
 

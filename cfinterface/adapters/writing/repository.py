@@ -1,9 +1,10 @@
 from typing import IO, BinaryIO, TextIO, Union, Dict, Type
 from abc import ABC, abstractmethod
 
+from cfinterface.storage import StorageType
+
 
 class Repository(ABC):
-
     __slots__ = ["_to", "_wrap_io"]
 
     def __init__(self, to: Union[str, IO], *args) -> None:
@@ -33,7 +34,6 @@ class Repository(ABC):
 
 
 class BinaryRepository(Repository):
-
     __slots__ = ["_filepointer"]
 
     def __init__(self, path: str, *args) -> None:
@@ -50,12 +50,6 @@ class BinaryRepository(Repository):
             self._filepointer.close()
 
     def write(self, data: Union[str, bytes]):
-        """
-        Writes an amount of information to a file.
-
-        :param data: The bytes to be written
-        :type data: str | bytes
-        """
         if isinstance(data, bytes):
             self._filepointer.write(data)
 
@@ -65,7 +59,6 @@ class BinaryRepository(Repository):
 
 
 class TextualRepository(Repository):
-
     __slots__ = ["_filepointer", "_encoding"]
 
     def __init__(self, path: str, encoding: str) -> None:
@@ -87,12 +80,6 @@ class TextualRepository(Repository):
             self._filepointer.close()
 
     def write(self, data: Union[str, bytes]):
-        """
-        Writes an amount of information to a file.
-
-        :param data: The data to be written
-        :type data: str | bytes
-        """
         if isinstance(data, str):
             self._filepointer.write(data)
 
@@ -101,9 +88,9 @@ class TextualRepository(Repository):
         return self._filepointer
 
 
-def factory(kind: str) -> Type[Repository]:
-    mappings: Dict[str, Type[Repository]] = {
-        "TEXT": TextualRepository,
-        "BINARY": BinaryRepository,
+def factory(kind: Union[str, "StorageType"]) -> Type[Repository]:
+    mappings: Dict[Union[str, StorageType], Type[Repository]] = {
+        StorageType.TEXT: TextualRepository,
+        StorageType.BINARY: BinaryRepository,
     }
     return mappings.get(kind, TextualRepository)

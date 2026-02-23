@@ -1,6 +1,7 @@
 from typing import Union, IO
 
 from cfinterface.data.sectiondata import SectionData
+from cfinterface.storage import StorageType
 from cfinterface.adapters.writing.repository import (
     Repository,
     factory,
@@ -18,16 +19,14 @@ class SectionWriting:
         "__repository",
     ]
 
-    def __init__(self, data: SectionData, storage: str = "") -> None:
+    def __init__(
+        self, data: SectionData, storage: Union[str, StorageType] = ""
+    ) -> None:
         self.__data = data
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
 
     def __write_file(self, *args, **kwargs):
-        """
-        Writes all the registers from the given SectionData structure
-        to the specified file.
-        """
         for s in self.__data:
             s.write(self.__repository.file, *args, **kwargs)
 

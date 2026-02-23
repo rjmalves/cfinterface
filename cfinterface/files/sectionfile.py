@@ -1,9 +1,10 @@
-from typing import IO, Dict, List, Optional, Type, Union
+from typing import IO, Dict, List, Type, Union
 
 from cfinterface.components.defaultsection import DefaultSection
 from cfinterface.components.section import Section
 from cfinterface.data.sectiondata import SectionData
 from cfinterface.reading.sectionreading import SectionReading
+from cfinterface.storage import StorageType, _ensure_storage_type
 from cfinterface.writing.sectionwriting import SectionWriting
 
 
@@ -18,7 +19,7 @@ class SectionFile:
     VERSIONS: Dict[str, List[Type[Section]]] = {}
     SECTIONS: List[Type[Section]] = []
     ENCODING: Union[str, List[str]] = ["utf-8", "latin-1", "ascii"]
-    STORAGE = "TEXT"
+    STORAGE: Union[str, StorageType] = StorageType.TEXT
     __VERSION = "latest"
 
     def __init__(
@@ -26,7 +27,7 @@ class SectionFile:
         data=SectionData(DefaultSection()),
     ) -> None:
         self.__data = data
-        self.__storage = self.__class__.STORAGE
+        self.__storage = _ensure_storage_type(self.__class__.STORAGE)
         self.__encoding = (
             self.__class__.ENCODING
             if type(self.__class__.ENCODING) is str
@@ -36,8 +37,7 @@ class SectionFile:
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, SectionFile):
             return False
-        bf: SectionFile = o
-        return self.data == bf.data
+        return self.data == o.data
 
     @classmethod
     def read(cls, content: Union[str, bytes], *args, **kwargs):
@@ -102,17 +102,8 @@ class SectionFile:
         :param v: The file version to be read.
         :type v: str
         """
-
-        def __find_closest_version() -> Optional[str]:
-            available_versions = sorted(list(cls.VERSIONS.keys()))
-            recent_versions = [
-                version for version in available_versions if v >= version
-            ]
-            if len(recent_versions) > 0:
-                return recent_versions[-1]
-            return None
-
-        closest_version = __find_closest_version()
-        if closest_version is not None:
+        available_versions = sorted(cls.VERSIONS.keys())
+        recent_versions = [ver for ver in available_versions if v >= ver]
+        if recent_versions:
             cls.__VERSION = v
-            cls.SECTIONS = cls.VERSIONS.get(closest_version, cls.SECTIONS)
+            cls.SECTIONS = cls.VERSIONS.get(recent_versions[-1], cls.SECTIONS)

@@ -1,5 +1,6 @@
-from typing import IO
+from typing import IO, Union
 from cfinterface.components.register import Register
+from cfinterface.storage import StorageType
 
 
 class DefaultRegister(Register):
@@ -18,32 +19,18 @@ class DefaultRegister(Register):
             return False
         return self.data == o.data
 
-    def read(self, file: IO, storage: str = "", *args, **kwargs) -> bool:
-        """
-        Generic function to perform the reading of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :return: The success, or not, in the reading
-        :rtype: bool
-        """
-        if storage not in ["BINARY"]:
+    def read(
+        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+    ) -> bool:
+        if storage != StorageType.BINARY:
             self.data = file.readline()
         else:
             self.data = None
         return True
 
-    def write(self, file: IO, storage: str = "", *args, **kwargs) -> bool:
-        """
-        Generic function to perform the writing of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :return: The success, or not, in the writing
-        :rtype: bool
-        """
-        if storage not in ["BINARY"]:
+    def write(
+        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+    ) -> bool:
+        if storage != StorageType.BINARY:
             file.write(self.data)
         return True

@@ -2,9 +2,10 @@ from typing import IO, BinaryIO, TextIO, Union, Type, Dict
 from abc import ABC, abstractmethod
 from io import BytesIO, StringIO
 
+from cfinterface.storage import StorageType
+
 
 class Repository(ABC):
-
     __slots__ = ["_content", "_wrap_io"]
 
     def __init__(
@@ -39,7 +40,6 @@ class Repository(ABC):
 
 
 class BinaryRepository(Repository):
-
     __slots__ = ["_filepointer"]
 
     def __init__(
@@ -61,15 +61,6 @@ class BinaryRepository(Repository):
         self._filepointer.close()
 
     def read(self, n: int) -> bytes:
-        """
-        Reads a line for extracting information following
-        the given fields.
-
-        :param n: The number of bytes to be read
-        :type n: int
-        :return: The extracted data
-        :rtype: bytes
-        """
         return self._filepointer.read(n)
 
     @property
@@ -78,7 +69,6 @@ class BinaryRepository(Repository):
 
 
 class TextualRepository(Repository):
-
     __slots__ = ["_filepointer", "_encoding"]
 
     def __init__(
@@ -86,7 +76,7 @@ class TextualRepository(Repository):
         content: str,
         wrap_io: bool = False,
         encoding: str = "utf-8",
-        *args
+        *args,
     ) -> None:
         super().__init__(content, wrap_io)
         self._encoding = encoding
@@ -105,15 +95,6 @@ class TextualRepository(Repository):
         self._filepointer.close()
 
     def read(self, n: int) -> str:
-        """
-        Reads a line for extracting information following
-        the given fields.
-
-        :param n: The number of bytes to be read
-        :type n: int
-        :return: The extracted data
-        :rtype: str
-        """
         return self._filepointer.readline()
 
     @property
@@ -121,9 +102,9 @@ class TextualRepository(Repository):
         return self._filepointer
 
 
-def factory(kind: str) -> Type[Repository]:
-    mappings: Dict[str, Type[Repository]] = {
-        "TEXT": TextualRepository,
-        "BINARY": BinaryRepository,
+def factory(kind: Union[str, "StorageType"]) -> Type[Repository]:
+    mappings: Dict[Union[str, StorageType], Type[Repository]] = {
+        StorageType.TEXT: TextualRepository,
+        StorageType.BINARY: BinaryRepository,
     }
     return mappings.get(kind, TextualRepository)

@@ -1,9 +1,10 @@
-from typing import IO, Dict, List, Optional, Type, Union
+from typing import IO, Dict, List, Type, Union
 
 from cfinterface.components.defaultregister import DefaultRegister
 from cfinterface.components.register import Register
 from cfinterface.data.registerdata import RegisterData
 from cfinterface.reading.registerreading import RegisterReading
+from cfinterface.storage import StorageType, _ensure_storage_type
 from cfinterface.writing.registerwriting import RegisterWriting
 
 
@@ -18,7 +19,7 @@ class RegisterFile:
     VERSIONS: Dict[str, List[Type[Register]]] = {}
     REGISTERS: List[Type[Register]] = []
     ENCODING: Union[str, List[str]] = ["utf-8", "latin-1", "ascii"]
-    STORAGE = "TEXT"
+    STORAGE: Union[str, StorageType] = StorageType.TEXT
     __VERSION = "latest"
 
     def __init__(
@@ -26,7 +27,7 @@ class RegisterFile:
         data=RegisterData(DefaultRegister(data="")),
     ) -> None:
         self.__data = data
-        self.__storage = self.__class__.STORAGE
+        self.__storage = _ensure_storage_type(self.__class__.STORAGE)
         self.__encoding = (
             self.__class__.ENCODING
             if type(self.__class__.ENCODING) is str

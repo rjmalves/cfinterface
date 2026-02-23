@@ -1,4 +1,6 @@
-from typing import Any, IO
+from typing import Any, IO, Union
+
+from cfinterface.storage import StorageType
 
 
 class Section:
@@ -9,7 +11,7 @@ class Section:
 
     __slots__ = ["__previous", "__next", "__data"]
 
-    STORAGE: str = "TEXT"
+    STORAGE: Union[str, StorageType] = StorageType.TEXT
 
     def __init__(
         self,

@@ -1,6 +1,7 @@
 from typing import Any, IO, Union
 
 from cfinterface.adapters.components.repository import factory
+from cfinterface.storage import StorageType
 
 
 class Block:
@@ -29,7 +30,9 @@ class Block:
         raise NotImplementedError
 
     @classmethod
-    def begins(cls, line: Union[str, bytes], storage: str = ""):
+    def begins(
+        cls, line: Union[str, bytes], storage: Union[str, StorageType] = ""
+    ):
         """
         Checks if the current line marks the beginning of the block.
 
@@ -40,7 +43,9 @@ class Block:
         return factory(storage).begins(cls.BEGIN_PATTERN, line)
 
     @classmethod
-    def ends(cls, line: Union[str, bytes], storage: str = ""):
+    def ends(
+        cls, line: Union[str, bytes], storage: Union[str, StorageType] = ""
+    ):
         """
         Checks if the current line marks the end of the block.
 

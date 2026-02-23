@@ -3,7 +3,7 @@ from cfinterface.components.field import Field
 import inspect
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.line import Line
-
+from cfinterface.storage import StorageType
 
 from cfinterface.adapters.components.repository import factory
 
@@ -48,11 +48,12 @@ class Register:
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, self.__class__):
             return False
-        else:
-            return o.data == self.data
+        return o.data == self.data
 
     @classmethod
-    def matches(cls, line: Union[str, bytes], storage: str = ""):
+    def matches(
+        cls, line: Union[str, bytes], storage: Union[str, StorageType] = ""
+    ):
         """
         Checks if the current line matches the identifier of the register.
 
@@ -64,7 +65,9 @@ class Register:
             cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS]
         )
 
-    def read(self, file: IO, storage: str = "", *args, **kwargs) -> bool:
+    def read(
+        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+    ) -> bool:
         """
         Generic function to perform the reading of the register using
         a filepointer.
@@ -84,7 +87,9 @@ class Register:
         )[1:]
         return True
 
-    def write(self, file: IO, storage: str = "", *args, **kwargs) -> bool:
+    def write(
+        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+    ) -> bool:
         """
         Generic function to perform the writing of the register using
         a filepointer.
@@ -104,7 +109,9 @@ class Register:
             factory(storage).write(file, linedata)
         return True
 
-    def read_register(self, file: IO, storage: str = "", *args, **kwargs):
+    def read_register(
+        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+    ):
         """
         Function that reads the register and evaluates the result.
 
@@ -113,7 +120,9 @@ class Register:
         """
         self.read(file, storage, *args, **kwargs)
 
-    def write_register(self, file: IO, storage: str = "", *args, **kwargs):
+    def write_register(
+        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+    ):
         """
         Function that writes the register, if it was succesfully read.
 

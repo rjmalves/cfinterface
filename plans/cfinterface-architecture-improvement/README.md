@@ -30,11 +30,11 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | ticket-002 | Replace pd.isnull() in all Field subclasses                     | epic-01 | completed | Detailed     |
 | ticket-003 | Convert RegisterFile.\_as_df() to lazy pandas import            | epic-01 | completed | Detailed     |
 | ticket-004 | Move pandas to optional dependency in pyproject.toml            | epic-01 | completed | Detailed     |
-| ticket-005 | Add regex pattern compilation and caching                       | epic-02 | pending   | Detailed     |
-| ticket-006 | Create StorageType enum module                                  | epic-02 | pending   | Detailed     |
-| ticket-007 | Update all factory functions to accept StorageType              | epic-02 | pending   | Detailed     |
-| ticket-008 | Migrate internal storage parameter usage to StorageType         | epic-02 | pending   | Detailed     |
-| ticket-009 | Add deprecation warnings for string-based storage               | epic-02 | pending   | Detailed     |
+| ticket-005 | Add regex pattern compilation and caching                       | epic-02 | completed | Detailed     |
+| ticket-006 | Create StorageType enum module                                  | epic-02 | completed | Detailed     |
+| ticket-007 | Update all factory functions to accept StorageType              | epic-02 | completed | Detailed     |
+| ticket-008 | Migrate internal storage parameter usage to StorageType         | epic-02 | completed | Detailed     |
+| ticket-009 | Add deprecation warnings for string-based storage               | epic-02 | completed | Detailed     |
 | ticket-010 | Optimize FloatField fixed-point textual write                   | epic-03 | pending   | Outline      |
 | ticket-011 | Add FloatField write benchmark tests                            | epic-03 | pending   | Outline      |
 | ticket-012 | Implement list-backed RegisterData container                    | epic-04 | pending   | Outline      |
