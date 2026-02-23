@@ -138,3 +138,13 @@ def test_dummy_binaryregister_write():
             b.data = [data]
             b.write_register(fp, storage="BINARY")
     m().write.assert_called_once_with(write_data)
+
+
+def test_register_orphaned_prev_next_fallback():
+    r = Register()
+    other = Register()
+    assert r.previous is None
+    assert r.next is None
+    r.previous = other
+    assert r.previous is other
+    assert r._container is None

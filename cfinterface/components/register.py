@@ -14,7 +14,14 @@ class Register:
     which is located at the beginning of the line.
     """
 
-    __slots__ = ["__previous", "__next", "__data", "__identifier_field"]
+    __slots__ = [
+        "__data",
+        "__identifier_field",
+        "_container",
+        "_index",
+        "__previous_fallback",
+        "__next_fallback",
+    ]
 
     IDENTIFIER: Union[str, bytes] = ""
     IDENTIFIER_DIGITS = 0
@@ -38,8 +45,10 @@ class Register:
         self.__identifier_field: Field = LiteralField(
             self.__class__.IDENTIFIER_DIGITS, 0
         )
-        self.__previous = previous
-        self.__next = next
+        self._container = None
+        self._index = 0
+        self.__previous_fallback = previous
+        self.__next_fallback = next
         if data is None:
             self.__data = [None] * len(self.__class__.LINE.fields)
         else:
@@ -54,13 +63,6 @@ class Register:
     def matches(
         cls, line: Union[str, bytes], storage: Union[str, StorageType] = ""
     ):
-        """
-        Checks if the current line matches the identifier of the register.
-
-        :param line: The candidate line for containing
-            the register information
-        :type line: str | bytes
-        """
         return factory(storage).matches(
             cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS]
         )
@@ -68,15 +70,6 @@ class Register:
     def read(
         self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
     ) -> bool:
-        """
-        Generic function to perform the reading of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :return: The success, or not, in the reading
-        :rtype: bool
-        """
         line = Line(
             [self.__identifier_field] + self.__class__.LINE.fields,
             delimiter=self.__class__.LINE.delimiter,
@@ -90,15 +83,6 @@ class Register:
     def write(
         self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
     ) -> bool:
-        """
-        Generic function to perform the writing of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :return: The success, or not, in the writing
-        :rtype: bool
-        """
         if not self.empty:
             line = Line(
                 [self.__identifier_field] + self.__class__.LINE.fields,
@@ -112,40 +96,36 @@ class Register:
     def read_register(
         self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
     ):
-        """
-        Function that reads the register and evaluates the result.
-
-        :param file: The filepointer
-        :type file: IO
-        """
         self.read(file, storage, *args, **kwargs)
 
     def write_register(
         self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
     ):
-        """
-        Function that writes the register, if it was succesfully read.
-
-        :param file: The filepointer
-        :type file: IO
-        """
         self.write(file, storage, *args, **kwargs)
 
     @property
     def previous(self) -> "Register":
-        return self.__previous
+        if self._container is not None:
+            if self._index == 0:
+                return None
+            return self._container._items[self._index - 1]
+        return self.__previous_fallback
 
     @previous.setter
     def previous(self, b: "Register"):
-        self.__previous = b
+        self.__previous_fallback = b
 
     @property
     def next(self) -> "Register":
-        return self.__next
+        if self._container is not None:
+            if self._index >= len(self._container._items) - 1:
+                return None
+            return self._container._items[self._index + 1]
+        return self.__next_fallback
 
     @next.setter
     def next(self, b: "Register"):
-        self.__next = b
+        self.__next_fallback = b
 
     @property
     def data(self) -> Any:
@@ -157,11 +137,15 @@ class Register:
 
     @property
     def is_first(self) -> bool:
-        return self.__previous is None
+        if self._container is not None:
+            return self._index == 0
+        return self.__previous_fallback is None
 
     @property
     def is_last(self) -> bool:
-        return self.__next is None
+        if self._container is not None:
+            return self._index == len(self._container._items) - 1
+        return self.__next_fallback is None
 
     @property
     def empty(self) -> bool:

@@ -16,8 +16,8 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | ---- | -------------------------------- | ------- | ------------ | --------- |
 | 01   | Remove pandas dependency         | 4       | Detailed     | Completed |
 | 02   | Compile regex + StorageType enum | 5       | Detailed     | Completed |
-| 03   | Optimize FloatField write        | 2       | Refined      | Executing |
-| 04   | Array-backed data containers     | 5       | Outline      | Outline   |
+| 03   | Optimize FloatField write        | 2       | Refined      | Completed |
+| 04   | Array-backed data containers     | 5       | Refined      | Executing |
 | 05   | Type-safe text/binary dispatch   | 4       | Outline      | Outline   |
 | 06   | Generic tabular parser           | 3       | Outline      | Outline   |
 | 07   | Schema versioning + batch ops    | 4       | Outline      | Outline   |
@@ -37,11 +37,11 @@ Comprehensive architectural and performance improvement for the cfinterface Pyth
 | ticket-009 | Add deprecation warnings for string-based storage               | epic-02 | completed | Detailed     |
 | ticket-010 | Optimize FloatField fixed-point textual write                   | epic-03 | completed | Refined      |
 | ticket-011 | Add FloatField write benchmark tests                            | epic-03 | completed | Refined      |
-| ticket-012 | Implement list-backed RegisterData container                    | epic-04 | pending   | Outline      |
-| ticket-013 | Implement list-backed BlockData container                       | epic-04 | pending   | Outline      |
-| ticket-014 | Implement list-backed SectionData container                     | epic-04 | pending   | Outline      |
-| ticket-015 | Migrate Register/Block/Section prev/next to computed properties | epic-04 | pending   | Outline      |
-| ticket-016 | Add type-indexed lookup optimization                            | epic-04 | pending   | Outline      |
+| ticket-012 | Implement list-backed RegisterData container                    | epic-04 | completed | Refined      |
+| ticket-013 | Implement list-backed BlockData container                       | epic-04 | completed | Refined      |
+| ticket-014 | Implement list-backed SectionData container                     | epic-04 | completed | Refined      |
+| ticket-015 | Migrate Register/Block/Section prev/next to computed properties | epic-04 | completed | Refined      |
+| ticket-016 | Add type-indexed lookup optimization                            | epic-04 | completed | Refined      |
 | ticket-017 | Design typed Field read/write protocol                          | epic-05 | pending   | Outline      |
 | ticket-018 | Separate TextualRepository and BinaryRepository type signatures | epic-05 | pending   | Outline      |
 | ticket-019 | Update Line class for typed dispatch                            | epic-05 | pending   | Outline      |
