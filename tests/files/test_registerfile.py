@@ -68,6 +68,13 @@ def test_registerfile_not_eq_valid():
     assert rf1 != rf2
 
 
+def test_registerfile_as_df_empty():
+    rf = RegisterFile()
+    result = rf._as_df(Register)
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) == 0
+
+
 def test_registerfile_read():
     data = "Hello, world!"
     filedata = DummyRegister.IDENTIFIER + " " + data + "\n"

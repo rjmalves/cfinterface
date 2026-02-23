@@ -19,7 +19,6 @@ def test_floatfield_read_scientific_notation():
     assert field.value == float(data)
 
 
-
 def test_floatfield_read_scientific_notation_d():
     data = "1.2D3"
     field = FloatField(5, 0, 1, format="D")
@@ -65,6 +64,7 @@ def test_floatfield_write_scientific_notation():
     line_after = field.write(line_before)
     assert line_before == line_after
 
+
 def test_floatfield_write_scientific_notation_d():
     data_text = "1.2D+3"
     line_before = f"field-{data_text}-else"
@@ -94,9 +94,7 @@ def test_floatfield_read_binary():
 def test_floatfield_write_binary():
     floatdata = 105.40
     line_before = (
-        b"field-"
-        + np.array([floatdata], dtype=np.float32).tobytes()
-        + b"-else"
+        b"field-" + np.array([floatdata], dtype=np.float32).tobytes() + b"-else"
     )
     field = FloatField(4, 6, value=floatdata)
     line_after = field.write(line_before)
@@ -114,3 +112,16 @@ def test_floatfield_write_short_line_binary():
     field = FloatField(4, 6, value=floatdata)
     line_after = field.write(b"   ")
     assert bytedata == line_after[6:]
+
+
+def test_floatfield_write_nan_textual():
+    field = FloatField(5, 0, 1, value=float("nan"))
+    result = field.write("")
+    assert result.strip() == ""
+    assert len(result) == 5
+
+
+def test_floatfield_write_nan_binary():
+    field = FloatField(4, 0, value=float("nan"))
+    result = field.write(b"")
+    assert len(result) == 4

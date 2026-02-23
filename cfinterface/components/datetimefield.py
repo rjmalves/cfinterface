@@ -1,8 +1,8 @@
 from datetime import datetime
-import pandas as pd  # type: ignore
 from typing import Optional, Union, List
 
 from cfinterface.components.field import Field
+from cfinterface._utils import _is_null
 
 
 class DatetimeField(Field):
@@ -24,12 +24,9 @@ class DatetimeField(Field):
         super().__init__(size, starting_position, value)
         self.__format = format
 
-    # Override
     def _binary_read(self, line: bytes) -> datetime:
         formats = (
-            [self.__format]
-            if isinstance(self.__format, str)
-            else self.__format
+            [self.__format] if isinstance(self.__format, str) else self.__format
         )
         for fmt in formats:
             try:
@@ -43,12 +40,9 @@ class DatetimeField(Field):
                 pass
         raise ValueError("Could not read datetime")
 
-    # Override
     def _textual_read(self, line: str) -> datetime:
         formats = (
-            [self.__format]
-            if isinstance(self.__format, str)
-            else self.__format
+            [self.__format] if isinstance(self.__format, str) else self.__format
         )
         for fmt in formats:
             try:
@@ -62,9 +56,8 @@ class DatetimeField(Field):
                 pass
         raise ValueError("Could not read datetime")
 
-    # Override
     def _binary_write(self) -> bytes:
-        if self.value is None or pd.isnull(self.value):
+        if self.value is None or _is_null(self.value):
             return b"".ljust(self.size)
         else:
             format = (
@@ -74,9 +67,8 @@ class DatetimeField(Field):
             )
             return self.value.strftime(format).ljust(self.size).encode("utf-8")
 
-    # Override
     def _textual_write(self) -> str:
-        if self.value is None or pd.isnull(self.value):
+        if self.value is None or _is_null(self.value):
             value = ""
         else:
             format = (

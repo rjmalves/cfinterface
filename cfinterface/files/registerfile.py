@@ -1,7 +1,5 @@
 from typing import IO, Dict, List, Optional, Type, Union
 
-import pandas as pd  # type: ignore
-
 from cfinterface.components.defaultregister import DefaultRegister
 from cfinterface.components.register import Register
 from cfinterface.data.registerdata import RegisterData
@@ -38,10 +36,9 @@ class RegisterFile:
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, RegisterFile):
             return False
-        bf: RegisterFile = o
-        return self.data == bf.data
+        return self.data == o.data
 
-    def _as_df(self, register_type: Type[Register]) -> pd.DataFrame:
+    def _as_df(self, register_type: Type[Register]):
         """
         Converts the registers of a given type to a dataframe for enabling
         read-only tasks. Changing the dataframe does not affect
@@ -52,7 +49,14 @@ class RegisterFile:
         :return: The converted registers
         :rtype: pd.DataFrame
         """
-        registers = [b for b in self.data.of_type(register_type)]
+        try:
+            import pandas as pd
+        except ImportError:
+            raise ImportError(
+                "pandas is required for _as_df(). "
+                "Install it with: pip install cfinterface[pandas]"
+            )
+        registers = list(self.data.of_type(register_type))
         if len(registers) == 0:
             return pd.DataFrame()
         cols = registers[0].custom_properties
@@ -124,16 +128,8 @@ class RegisterFile:
         :type v: str
         """
 
-        def __find_closest_version() -> Optional[str]:
-            available_versions = sorted(list(cls.VERSIONS.keys()))
-            recent_versions = [
-                version for version in available_versions if v >= version
-            ]
-            if len(recent_versions) > 0:
-                return recent_versions[-1]
-            return None
-
-        closest_version = __find_closest_version()
-        if closest_version is not None:
+        available_versions = sorted(cls.VERSIONS.keys())
+        recent_versions = [ver for ver in available_versions if v >= ver]
+        if recent_versions:
             cls.__VERSION = v
-            cls.REGISTERS = cls.VERSIONS.get(closest_version, cls.REGISTERS)
+            cls.REGISTERS = cls.VERSIONS.get(recent_versions[-1], cls.REGISTERS)

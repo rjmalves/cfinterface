@@ -1,0 +1,149 @@
+{
+  "plan": "cfinterface-architecture-improvement",
+  "last_updated": "2026-02-23T14:00:00.000000+00:00",
+  "progressive": true,
+  "tickets": {
+    "ticket-001-create-null-checking-utility.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "agent": "python-task-automation-developer"
+    },
+    "ticket-002-replace-pd-isnull-in-fields.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "agent": "python-task-automation-developer"
+    },
+    "ticket-003-lazy-pandas-import-in-registerfile.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "agent": "python-task-automation-developer"
+    },
+    "ticket-004-move-pandas-to-optional-dependency.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "agent": "python-task-automation-developer"
+    },
+    "ticket-005-compile-regex-patterns.md": {
+      "status": "pending",
+      "detail_level": "detailed"
+    },
+    "ticket-006-create-storagetype-enum.md": {
+      "status": "pending",
+      "detail_level": "detailed"
+    },
+    "ticket-007-update-factory-functions.md": {
+      "status": "pending",
+      "detail_level": "detailed"
+    },
+    "ticket-008-migrate-internal-storage-usage.md": {
+      "status": "pending",
+      "detail_level": "detailed"
+    },
+    "ticket-009-add-deprecation-warnings.md": {
+      "status": "pending",
+      "detail_level": "detailed"
+    },
+    "ticket-010-optimize-floatfield-write.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-011-add-floatfield-benchmarks.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-012-list-backed-registerdata.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-013-list-backed-blockdata.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-014-list-backed-sectiondata.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-015-computed-prev-next-properties.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-016-type-indexed-lookup.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-017-typed-field-protocol.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-018-typed-repository-signatures.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-019-typed-line-dispatch.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-020-typed-component-io.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-021-tabular-parser-engine.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-022-tabular-section-base.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-023-delimited-tabular-parsing.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-024-schema-version-descriptor.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-025-instance-level-version-binding.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-026-batch-read-api.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    },
+    "ticket-027-version-validation.md": {
+      "status": "pending",
+      "detail_level": "outline"
+    }
+  },
+  "epics": {
+    "epic-01-remove-pandas-dependency": {
+      "phase": "completed",
+      "learning_extracted": true
+    },
+    "epic-02-compile-regex-and-storage-enum": {
+      "phase": "executing",
+      "learning_extracted": false
+    },
+    "epic-03-optimize-float-field-write": {
+      "phase": "outline",
+      "learning_extracted": false
+    },
+    "epic-04-array-backed-data-containers": {
+      "phase": "outline",
+      "learning_extracted": false
+    },
+    "epic-05-type-safe-text-binary-dispatch": {
+      "phase": "outline",
+      "learning_extracted": false
+    },
+    "epic-06-generic-tabular-parser": {
+      "phase": "outline",
+      "learning_extracted": false
+    },
+    "epic-07-schema-versioning-and-batch-ops": {
+      "phase": "outline",
+      "learning_extracted": false
+    }
+  }
+}

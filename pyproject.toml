@@ -7,7 +7,6 @@ name = "cfinterface"
 dynamic = ["version"]
 dependencies = [
     "numpy>=2.0.0",
-    "pandas>=2.2.3",
 ]
 requires-python = ">= 3.10"
 authors = [
@@ -25,7 +24,11 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
+pandas = [
+    "pandas>=2.2.3",
+]
 dev = [
+    "pandas>=2.2.3",
     "pytest",
     "pytest-cov",
     "ruff",
