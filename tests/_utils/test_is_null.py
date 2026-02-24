@@ -1,5 +1,6 @@
 from datetime import datetime
 import numpy as np
+import pytest
 from cfinterface._utils import _is_null
 
 
@@ -53,3 +54,8 @@ def test_is_null_numpy_scalar():
 
 def test_is_null_numpy_int():
     assert _is_null(np.int32(10)) is False
+
+
+def test_is_null_pandas_nat():
+    pd = pytest.importorskip("pandas")
+    assert _is_null(pd.NaT) is True
