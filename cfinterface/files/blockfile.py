@@ -91,6 +91,20 @@ class BlockFile:
         *,
         version: str | None = None,
     ) -> dict[str, "BlockFile"]:
+        """Read multiple files and return a dict keyed by file path.
+
+        Parameters
+        ----------
+        paths : list[str]
+            File paths to read.
+        version : str or None, optional
+            Version key passed to :meth:`read`. Defaults to None.
+
+        Returns
+        -------
+        dict[str, BlockFile]
+            Mapping from each file path to its parsed BlockFile instance.
+        """
         return {path: cls.read(path, version=version) for path in paths}
 
     def validate(

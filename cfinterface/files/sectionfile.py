@@ -91,6 +91,20 @@ class SectionFile:
         *,
         version: str | None = None,
     ) -> dict[str, "SectionFile"]:
+        """Read multiple files and return a dict keyed by file path.
+
+        Parameters
+        ----------
+        paths : list[str]
+            File paths to read.
+        version : str or None, optional
+            Version key passed to :meth:`read`. Defaults to None.
+
+        Returns
+        -------
+        dict[str, SectionFile]
+            Mapping from each file path to its parsed SectionFile instance.
+        """
         return {path: cls.read(path, version=version) for path in paths}
 
     def validate(
