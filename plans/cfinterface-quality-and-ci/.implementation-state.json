@@ -1,6 +1,6 @@
 {
   "plan": "cfinterface-quality-and-ci",
-  "last_updated": "2026-03-02T14:37:43Z",
+  "last_updated": "2026-03-02T14:41:28Z",
   "progressive": true,
   "tickets": {
     "ticket-001-update-classifiers-and-metadata.md": {
@@ -106,7 +106,7 @@
       "agent": "direct"
     },
     "ticket-007-expand-test-matrix.md": {
-      "status": "pending",
+      "status": "completed",
       "detail_level": "detailed",
       "epic": "epic-02-ci-overhaul",
       "scores": {
@@ -118,10 +118,12 @@
           "dependency_clarity": 1.0,
           "atomicity": 1.0
         }
-      }
+      },
+      "workflow_step": null,
+      "agent": "direct"
     },
     "ticket-008-extract-lint-job.md": {
-      "status": "pending",
+      "status": "completed",
       "detail_level": "detailed",
       "epic": "epic-02-ci-overhaul",
       "scores": {
@@ -133,10 +135,12 @@
           "dependency_clarity": 1.0,
           "atomicity": 1.0
         }
-      }
+      },
+      "workflow_step": null,
+      "agent": "direct"
     },
     "ticket-009-create-benchmark-workflow.md": {
-      "status": "pending",
+      "status": "completed",
       "detail_level": "detailed",
       "epic": "epic-02-ci-overhaul",
       "scores": {
@@ -148,10 +152,12 @@
           "dependency_clarity": 1.0,
           "atomicity": 1.0
         }
-      }
+      },
+      "workflow_step": null,
+      "agent": "direct"
     },
     "ticket-010-update-docs-and-publish-workflows.md": {
-      "status": "pending",
+      "status": "completed",
       "detail_level": "detailed",
       "epic": "epic-02-ci-overhaul",
       "scores": {
@@ -163,7 +169,9 @@
           "dependency_clarity": 1.0,
           "atomicity": 1.0
         }
-      }
+      },
+      "workflow_step": null,
+      "agent": "direct"
     },
     "ticket-011-create-conftest-and-fixtures.md": {
       "status": "pending",
@@ -218,11 +226,11 @@
   },
   "epics": {
     "epic-01-pyproject-and-tool-config": {
-      "phase": "executing",
+      "phase": "completed",
       "learning_extracted": false
     },
     "epic-02-ci-overhaul": {
-      "phase": "executing",
+      "phase": "completed",
       "learning_extracted": false
     },
     "epic-03-test-infrastructure": {

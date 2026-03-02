@@ -53,10 +53,10 @@ ticket-019 (changelog) ──────── ticket-020 (release review)
 | ticket-004 | Fix mypy Strict Type Annotation Errors                     | epic-01 | completed | Detailed     | 0.92      | --      | --    |
 | ticket-005 | Add Coverage and Expanded Ruff Configuration               | epic-01 | completed | Detailed     | 0.96      | --      | --    |
 | ticket-006 | Add py.typed Marker and New Dev Dependencies               | epic-01 | completed | Detailed     | 1.00      | --      | --    |
-| ticket-007 | Expand CI Test Matrix to Python 3.10-3.14 and Windows      | epic-02 | pending   | Detailed     | 1.00      | --      | --    |
-| ticket-008 | Extract Lint/Quality Job with ty Evaluation                | epic-02 | pending   | Detailed     | 0.97      | --      | --    |
-| ticket-009 | Create Manual-Dispatch Benchmark Workflow                  | epic-02 | pending   | Detailed     | 1.00      | --      | --    |
-| ticket-010 | Update Docs and Publish Workflows                          | epic-02 | pending   | Detailed     | 1.00      | --      | --    |
+| ticket-007 | Expand CI Test Matrix to Python 3.10-3.14 and Windows      | epic-02 | completed | Detailed     | 1.00      | --      | --    |
+| ticket-008 | Extract Lint/Quality Job with ty Evaluation                | epic-02 | completed | Detailed     | 0.97      | --      | --    |
+| ticket-009 | Create Manual-Dispatch Benchmark Workflow                  | epic-02 | completed | Detailed     | 1.00      | --      | --    |
+| ticket-010 | Update Docs and Publish Workflows                          | epic-02 | completed | Detailed     | 1.00      | --      | --    |
 | ticket-011 | Create conftest.py with Shared Test Fixtures               | epic-03 | pending   | Outline      | --        | --      | --    |
 | ticket-012 | Add Hypothesis Property-Based Tests for Field Round-Trips  | epic-03 | pending   | Outline      | --        | --      | --    |
 | ticket-013 | Add Hypothesis Property-Based Tests for TabularParser      | epic-03 | pending   | Outline      | --        | --      | --    |
