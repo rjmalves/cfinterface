@@ -70,6 +70,10 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/build/
+docs/source/examples/
+docs/source/gen_modules/
+docs/source/sg_execution_times.rst
 
 # PyBuilder
 target/

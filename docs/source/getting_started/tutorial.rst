@@ -1,7 +1,7 @@
 Tutorial
 =========
 
-The `cinterface <https://github.com/rjmalves/cfinterface/>`_ framework is meant to be used when developing low-level interfaces to complex textual or binary files, where the explicit modeling of the file schema is a desired feature. The abstractions defined by the framework allow the user to divide the modeling of file schemas in meaningful pieces, enabling reuse of schemas and content while reading and writing files.
+The `cfinterface <https://github.com/rjmalves/cfinterface/>`_ framework is meant to be used when developing low-level interfaces to complex textual or binary files, where the explicit modeling of the file schema is a desired feature. The abstractions defined by the framework allow the user to divide the modeling of file schemas in meaningful pieces, enabling reuse of schemas and content while reading and writing files.
 
 Three main file types are provided by the framework: :ref:`BlockFile <blockfile>`, :ref:`SectionFile <sectionfile>` and :ref:`RegisterFile <registerfile>`. Each of these file models are meant to use in specific situations.
 
@@ -17,7 +17,7 @@ Each of the files, together with some additional details on another abstractions
 Fields
 ------
 
-The most fundamental components in the `cinterface <https://github.com/rjmalves/cfinterface/>`_ framework are the :ref:`Fields <fields>`. Being defined for both textual and binary interfaces, fields are containers for one specific data value, with a specific formatting, located in a file. The common base :ref:`Field <field>` class is used for defining generic reading and writing functions, which implementations are given by each specific subclass.
+The most fundamental components in the `cfinterface <https://github.com/rjmalves/cfinterface/>`_ framework are the :ref:`Fields <fields>`. Being defined for both textual and binary interfaces, fields are containers for one specific data value, with a specific formatting, located in a file. The common base :ref:`Field <field>` class is used for defining generic reading and writing functions, which implementations are given by each specific subclass.
 
 Each specific Field contain its own arguments. For instance, if the file being modeled contains a line in which a specific literal data is desired:
 
@@ -178,24 +178,24 @@ One possible approach for modeling the file using the :ref:`BlockFile <blockfile
             # Reads header lines for writing later
             for _ in range(self.__class__.NUM_HEADER_LINES):
                 self.__header_lines.append(file.readline())
-            
+
             # Reads the data content
             dates = []
             indices = []
             values = []
-            
+
             while True:
 
                 line = file.readline()
                 if FirstBlock.ends(line):
-                    self.data = pd.DataFrame({"Date": dates, "Index": indices, "Value": values)
+                    self.data = pd.DataFrame({"Date": dates, "Index": indices, "Value": values})
                     break
 
-                date, index, value = self.__line_model.read()
+                date, index, value = self.__line_model.read(line)
                 dates.append(date)
                 indices.append(index)
                 values.append(value)
-    
+
         # Override
         def write(self, file: IO, *args, **kwargs):
 
@@ -204,17 +204,17 @@ One possible approach for modeling the file using the :ref:`BlockFile <blockfile
             # Writes header lines
             for line in self.__header_lines:
                 file.write(line)
-            
+
             # Writes data lines
             for _, line in self.data.iterrows():
                 self.__line_model.write([line["Date"], line["Index"], line["Value"]])
-            
+
             file.write(self.__class__.END_PATTERN + "\n")
 
 
     class SecondBlock(Block):
         # Implement in a similar way for the second block specifics
-    
+
 
     class MyBlockFile(BlockFile):
 
@@ -265,7 +265,7 @@ Suppose there is a file with the following content
    DATA_LOW   01/02/2024    29.15
    DATA_LOW   01/03/2024     5.05
 
-In this case, each line is defined by an unique beginning pattern in its first columns, together with a set of fields that are positioned on different places depending on the beginning pattern. 
+In this case, each line is defined by an unique beginning pattern in its first columns, together with a set of fields that are positioned on different places depending on the beginning pattern.
 
 Each pattern determines a different :ref:`Register <register>` class to be built, and the entire file can have a variable number of objects for each register.
 
@@ -275,9 +275,7 @@ One possible approach for modeling the file using the :ref:`RegisterFile <regist
 .. code-block:: python
    :linenos:
 
-    from typing import Union, Optional, List
     from datetime import datetime
-    import pandas as pd
 
     from cfinterface import IntegerField, FloatField, DatetimeField, LiteralField
     from cfinterface import Line, Register, RegisterFile
@@ -289,7 +287,7 @@ One possible approach for modeling the file using the :ref:`RegisterFile <regist
             [
                 LiteralField(size=6, starting_position=11),
                 LiteralField(size=9, starting_position=19),
-                DatetimeField(size=10, starting_position=30, format="%M/$d/%Y"),
+                DatetimeField(size=10, starting_position=30, format="%m/%d/%Y"),
                 FloatField(size=6, starting_position=42, decimal_digits=2),
             ]
         )
@@ -299,7 +297,7 @@ One possible approach for modeling the file using the :ref:`RegisterFile <regist
             """
             Identifier of the DataHigh element.
             """
-            return self.fdata[0]
+            return self.data[0]
 
         @field_id.setter
         def field_id(self, v: str):
@@ -310,7 +308,7 @@ One possible approach for modeling the file using the :ref:`RegisterFile <regist
             """
             User associated with the DataHigh element.
             """
-            return self.fdata[1]
+            return self.data[1]
 
         @user.setter
         def user(self, v: str):
@@ -344,12 +342,12 @@ One possible approach for modeling the file using the :ref:`RegisterFile <regist
         IDENTIFIER_DIGITS = 8
         LINE = Line(
             [
-                DatetimeField(size=10, starting_position=11, format="%M/$d/%Y"),
+                DatetimeField(size=10, starting_position=11, format="%m/%d/%Y"),
                 FloatField(size=6, starting_position=24, decimal_digits=2),
             ]
         )
 
-        
+
         @property
         def date(self) -> datetime:
             """
@@ -385,11 +383,11 @@ One possible approach for modeling the file using the :ref:`RegisterFile <regist
         # The user can implement some properties for better suiting its use cases:
 
         @property
-        def data_high(self) -> Optional[Union[DataHigh, List[DataHigh]]]:
+        def data_high(self) -> DataHigh | list[DataHigh] | None:
             return self.data.get_registers_of_type(DataHigh)
 
         @property
-        def data_low(self) -> Optional[Union[DataLow, List[DataLow]]]:
+        def data_low(self) -> DataLow | list[DataLow] | None:
             return self.data.get_registers_of_type(DataLow)
 
     file = MyRegisterFile.read("/path/to/file_describe_above.txt")
@@ -443,8 +441,7 @@ One possible approach for modeling the file using the :ref:`SectionFile <section
 .. code-block:: python
    :linenos:
 
-    from typing import Union, Optional, List
-    from datetime import datetime
+    from typing import IO
     import pandas as pd
 
     from cfinterface import IntegerField, FloatField, DatetimeField, LiteralField
@@ -486,24 +483,24 @@ One possible approach for modeling the file using the :ref:`SectionFile <section
             # Discards the line with the header and margin
             for _ in range(2):
                 file.readline()
-            
+
             # Reads the data content
             dates = []
             indices = []
             values = []
-            
+
             while True:
 
                 line = file.readline()
                 if self.MARGIN_LINE in line:
-                    self.data = pd.DataFrame({"Date": dates, "Index": indices, "Value": values)
+                    self.data = pd.DataFrame({"Date": dates, "Index": indices, "Value": values})
                     break
 
-                date, index, value = self.__line_model.read()
+                date, index, value = self.__line_model.read(line)
                 dates.append(date)
                 indices.append(index)
                 values.append(value)
-    
+
         # Override
         def write(self, file: IO, *args, **kwargs):
 
@@ -513,13 +510,13 @@ One possible approach for modeling the file using the :ref:`SectionFile <section
             # Writes data lines
             for _, line in self.data.iterrows():
                 self.__line_model.write([line["Date"], line["Index"], line["Value"]])
-            
+
             file.write(self.MARGIN_LINE + "\n")
 
 
     class SecondSection(Section):
         # Implement in a similar way for the second section specifics
-    
+
 
     class MySectionFile(SectionFile):
 
@@ -542,7 +539,7 @@ One possible approach for modeling the file using the :ref:`SectionFile <section
     # The content of the written file should be the same
     # as the source file
 
-As one can see, the `read` and `write` methods are implemented in a generic way in the base `SectionFile` class, and will call the specific section functions in the same order that they were declared in the `SECTION` class attribute. All the sections that were successully read will be stored in the `data` field, accessible inside the built `file` object. This is a :ref:`SectionData <sectiondata>` object, which implements a double linked list of sections  that were parsed from the given file. 
+As one can see, the `read` and `write` methods are implemented in a generic way in the base `SectionFile` class, and will call the specific section functions in the same order that they were declared in the `SECTION` class attribute. All the sections that were successully read will be stored in the `data` field, accessible inside the built `file` object. This is a :ref:`SectionData <sectiondata>` object, which implements a double linked list of sections  that were parsed from the given file.
 
 The developer may edit any of the desired sections or any of its fields. When calling the `write` function, all sections will be written to the file, following the formatting of each of field.
 
@@ -559,15 +556,12 @@ Some ways for specifying encodings are:
 .. code-block:: python
    :linenos:
 
-    from typing import IO
-    import pandas as pd
-
     from cfinterface import BlockFile
 
     class MyBlockFileWithSingleEncoding(BlockFile):
 
         ENCODING = "utf-8"
-    
+
 
     class MyBlockFileWithManyEncodings(BlockFile):
 
@@ -579,49 +573,50 @@ When reading, each of the supplied encodings will be used, in order. The first e
 Modeling Binary Files
 ----------------------
 
-When a file contains data encoded in binary format instead of textual, the `cfinterface` framework is still applied for modeling its contents, supporting reading and writing. The same file models can be used, but with some differences in the meaning of some fundamental actions, which are better illustrated in the :ref:`examples page <examples>`.
+When a file contains data encoded in binary format instead of textual, the ``cfinterface`` framework is still applied for modeling its contents, supporting reading and writing. The same file models can be used, but with some differences in the meaning of some fundamental actions, which are better illustrated in the :ref:`examples page <examples>`.
 
-For defining a file model as binary, one may set the class attribute:
+For defining a file model as binary, use the ``StorageType`` enum:
 
 
 .. code-block:: python
    :linenos:
 
-    from typing import IO
-    import pandas as pd
-
     from cfinterface import BlockFile
+    from cfinterface.storage import StorageType
 
     class MyTextualFile(BlockFile):
 
-        STORAGE = "TEXT"
-    
+        STORAGE = StorageType.TEXT
+
     class MyBinaryFile(BlockFile):
 
-        STORAGE = "BINARY"
-    
+        STORAGE = StorageType.BINARY
+
+.. note::
+
+   Bare string values (``STORAGE = "TEXT"`` or ``STORAGE = "BINARY"``) still work
+   for backward compatibility, but emit a ``DeprecationWarning``. Prefer
+   ``StorageType.TEXT`` and ``StorageType.BINARY`` in new code.
+
 
 Versioning Files
 -----------------
 
 Files can change their schema with time, resulting in multiple versions. One approach is to define multiple file models, but this could result in large amounts of copied and pasted code, since the changes in the schemas could be minimal.
 
-The `cfinterface` supports file versioning by allowing the user to define the lists of elements (:ref:`Blocks <blocks>`, :ref:`Registers <registers>` or :ref:`Sections <sections>`) that exist on each version of the file.
+The ``cfinterface`` supports file versioning by allowing the user to define the lists of elements (:ref:`Blocks <blocks>`, :ref:`Registers <registers>` or :ref:`Sections <sections>`) that exist on each version of the file.
 
-For an example, suppose there is a file that was versioned. The file always contained two blocks, but one of them had a small change on its schema when the file version evolved from version `1.0` to `2.0`. In this case, the developer might do:
+For an example, suppose there is a file that was versioned. The file always contained two blocks, but one of them had a small change on its schema when the file version evolved from version ``1.0`` to ``2.0``. The ``VERSIONS`` dict maps version keys to their component lists:
 
 
 .. code-block:: python
    :linenos:
 
-    from typing import IO
-    import pandas as pd
-
     from cfinterface import Block, BlockFile
 
     class MyConstantBlock(Block):
         pass
-    
+
     class MyVersionedOldBlock(Block):
         pass
 
@@ -633,25 +628,150 @@ For an example, suppose there is a file that was versioned. The file always cont
         VERSIONS = {
             "1.0": [
                 MyConstantBlock,
-                MyVersionedOldBlock
+                MyVersionedOldBlock,
             ],
             "2.0": [
                 MyConstantBlock,
-                MyVersionedNewBlock
-            ]
+                MyVersionedNewBlock,
+            ],
         }
 
+To read a specific version, pass the ``version`` keyword to ``read()``:
 
-    MyVersionedFile.set_version("1.0")
-    old_file = MyVersionedFile.read("path/to/old/file")
-    MyVersionedFile.set_version("2.0")
-    new_file = MyVersionedFile.read("path/to/new/file")
+.. code-block:: python
+   :linenos:
+
+    old_file = MyVersionedFile.read("path/to/old/file", version="1.0")
+    new_file = MyVersionedFile.read("path/to/new/file", version="2.0")
+
+When no ``version`` is given, the default ``BLOCKS`` list is used (typically the latest schema). If ``version`` is given but has no exact match in ``VERSIONS``, the framework resolves it to the latest available version ``W`` such that ``W <= version`` (lexicographic comparison). For example, requesting version ``"1.5"`` would resolve to ``"1.0"`` in the example above.
+
+The same ``version`` keyword is available on ``read_many()`` for batch reading:
+
+.. code-block:: python
+   :linenos:
+
+    files = MyVersionedFile.read_many(
+        ["path/to/file1", "path/to/file2"],
+        version="2.0",
+    )
+
+You can also use ``resolve_version()`` directly for custom version logic:
+
+.. code-block:: python
+   :linenos:
+
+    from cfinterface import resolve_version
+
+    components = resolve_version("1.5", MyVersionedFile.VERSIONS)
+    # Returns the component list for version "1.0"
+
+After reading, you can validate whether the parsed data matches the expected version schema using ``validate_version()``:
+
+.. code-block:: python
+   :linenos:
+
+    from cfinterface import validate_version
+    from cfinterface.components.defaultblock import DefaultBlock
+
+    file = MyVersionedFile.read("path/to/file", version="2.0")
+    result = file.validate(version="2.0")
+
+    # result is a VersionMatchResult with fields:
+    # matched, expected_types, found_types, missing_types,
+    # unexpected_types, default_ratio
+    if not result.matched:
+        print(f"Missing types: {result.missing_types}")
+        print(f"Default ratio: {result.default_ratio:.1%}")
+
+.. deprecated::
+   The ``set_version()`` class method is deprecated and will be removed in a
+   future release. It mutates class-level state, which can cause issues in
+   concurrent or multi-version workflows. Use ``read(path, version="...")``
+   instead.
 
 
-In this case, the default behavior for any file is reading on its latest version. If the user desires to read a previous version of the file, one can use the `set_version` class method for changing its behavior. The version comparison in done by Python native  `str` comparison.
+Tabular Data
+-------------
 
-If one chooses to set a version `V`, which is a non-existent key in the `VERSIONS` dict, the framework looks for the first version `W` among the dict keys such that `W <= V`. If no such key is found, the latest version is used. As an example in the previous code block, setting the `MyVersionedFile` version to `1.5` would fallback to `1.0`. However, setting it to `0.5` would result in using the latest `2.0` version.
+For files where data is organized in a regular tabular layout — fixed-width columns or delimiter-separated fields — the ``TabularParser`` class provides a higher-level API built on top of :ref:`Line <line>` and :ref:`Field <field>`.
 
+A tabular schema is declared with a list of ``ColumnDef`` named tuples, each mapping a column name to its ``Field`` instance:
 
+.. code-block:: python
+   :linenos:
 
+    from cfinterface import IntegerField, FloatField, LiteralField
+    from cfinterface.components.tabular import ColumnDef, TabularParser
 
+    columns = [
+        ColumnDef(name="City", field=LiteralField(size=12, starting_position=0)),
+        ColumnDef(name="Population", field=IntegerField(size=10, starting_position=12)),
+        ColumnDef(name="Area", field=FloatField(size=8, starting_position=22, decimal_digits=1)),
+    ]
+
+    parser = TabularParser(columns)
+
+Once created, the parser can convert raw text lines into a dict-of-lists and back:
+
+.. code-block:: python
+   :linenos:
+
+    lines = [
+        "Springfield  1200000    115.4\n",
+        "Shelbyville   800000     98.2\n",
+    ]
+
+    data = parser.parse_lines(lines)
+    # data == {"City": ["Springfield", "Shelbyville"],
+    #          "Population": [1200000, 800000],
+    #          "Area": [115.4, 98.2]}
+
+    roundtrip = parser.format_rows(data)
+    # roundtrip produces lines with the same fixed-width layout
+
+For delimiter-separated data (CSV-style), pass the ``delimiter`` parameter:
+
+.. code-block:: python
+   :linenos:
+
+    delimited_columns = [
+        ColumnDef(name="Name", field=LiteralField(size=20, starting_position=0)),
+        ColumnDef(name="Score", field=FloatField(size=10, starting_position=0, decimal_digits=2)),
+    ]
+
+    csv_parser = TabularParser(delimited_columns, delimiter=",")
+    data = csv_parser.parse_lines(["Alice,95.50\n", "Bob,87.25\n"])
+    # data == {"Name": ["Alice", "Bob"], "Score": [95.50, 87.25]}
+
+.. note::
+
+   When using ``delimiter``, the ``starting_position`` of each field is ignored —
+   only ``size`` (maximum token width) applies.
+
+For files where a full section is tabular, the ``TabularSection`` base class combines ``TabularParser`` with the :ref:`Section <section>` read/write lifecycle:
+
+.. code-block:: python
+   :linenos:
+
+    from cfinterface import IntegerField, FloatField, LiteralField
+    from cfinterface import SectionFile
+    from cfinterface.components.tabular import ColumnDef, TabularSection
+
+    class ScoreSection(TabularSection):
+        COLUMNS = [
+            ColumnDef(name="Name", field=LiteralField(size=15, starting_position=0)),
+            ColumnDef(name="Score", field=IntegerField(size=5, starting_position=15)),
+        ]
+        HEADER_LINES = 2
+        END_PATTERN = r"^---"
+
+    class ScoreFile(SectionFile):
+        SECTIONS = [ScoreSection]
+
+If pandas is installed (``pip install cfinterface[pandas]``), you can convert the parsed dict-of-lists to a DataFrame:
+
+.. code-block:: python
+   :linenos:
+
+    df = TabularParser.to_dataframe(data)
