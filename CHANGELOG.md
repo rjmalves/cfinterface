@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `py.typed` marker file for PEP 561 compliance, enabling downstream type checking of cfinterface
 - Hypothesis property-based tests for `Field` round-trip correctness (`tests/components/test_field_hypothesis.py`)
 - Hypothesis property-based tests for `TabularParser` parsing invariants (`tests/components/test_tabular_hypothesis.py`)
-- pytest-benchmark integration for performance regression testing (`tests/benchmarks/`)
+- pytest-benchmark integration for performance regression testing (`tests/components/test_floatfield_benchmark.py`)
 - Sphinx reference documentation for `TabularParser`, versioning module, `StorageType`, and adapter classes
 - CI test matrix covering Python 3.10, 3.11, 3.12, 3.13, and 3.14 on Linux, plus Python 3.12 on Windows
 - Separated lint/quality CI job running mypy, ruff, ty (informational), and `sphinx-build -W`

@@ -28,7 +28,7 @@ def integer_parser_with_data(
     parser = TabularParser(columns)
     n_rows = draw(st.integers(min_value=1, max_value=10))
     # Maximum positive value that fits in col_size textual characters
-    max_val = 10 ** (col_size - 1) - 1
+    max_val = 10**col_size - 1
     data: dict[str, list[int]] = {}
     for col in columns:
         data[col.name] = draw(

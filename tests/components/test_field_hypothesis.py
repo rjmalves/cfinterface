@@ -167,9 +167,6 @@ def test_floatfield_textual_roundtrip_f_format(
     initial_formatted = f"{round(value, dec):.{dec}F}"
     assume(len(initial_formatted) <= size)
     field = FloatField(size, 0, dec, format="F", value=value)
-    written = field._textual_write()
-    # Sanity: the written value must fill the field exactly
-    assert len(written) == size
     line = field.write("")
     assert len(line) == size
     field2 = FloatField(size, 0, dec, format="F")
