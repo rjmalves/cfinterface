@@ -62,3 +62,16 @@ def test_integerfield_write_short_line_binary():
     field = IntegerField(4, 6, value=intdata)
     line_after = field.write(b"   ")
     assert bytedata == line_after[6:]
+
+
+def test_integerfield_write_nan_textual():
+    field = IntegerField(5, 0, value=float("nan"))
+    result = field.write("")
+    assert result.strip() == ""
+    assert len(result) == 5
+
+
+def test_integerfield_write_nan_binary():
+    field = IntegerField(4, 0, value=float("nan"))
+    result = field.write(b"")
+    assert len(result) == 4

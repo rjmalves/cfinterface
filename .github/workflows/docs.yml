@@ -4,7 +4,7 @@ on:
     branches:
       - main
   workflow_dispatch:
-  
+
 jobs:
   docs:
     runs-on: ubuntu-latest
@@ -17,14 +17,11 @@ jobs:
       - name: Install the project
         run: |
           uv sync --all-extras --dev
-      - name: Runs tests
-        run: |
-          uv run pytest ./tests
       - name: Sphinx build
         run: |
-          uv run sphinx-build -M html docs/source docs/build
+          uv run python -m sphinx -M html docs/source docs/build -W
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         with:
           publish_branch: gh-pages

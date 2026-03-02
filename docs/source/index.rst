@@ -11,13 +11,13 @@ blocks and sections in a declarative way and aggregate these blocks as component
 for defining files.
 
 .. toctree::
-   :caption: Install 
+   :caption: Install
    :maxdepth: 3
 
    install/install.rst
 
 .. toctree::
-   :caption: Getting Started 
+   :caption: Getting Started
    :maxdepth: 3
 
    getting_started/tutorial
@@ -33,6 +33,10 @@ for defining files.
    reference/blocks/index.rst
    reference/registers/index.rst
    reference/sections/index.rst
+   reference/tabular/index.rst
+   reference/versioning/index.rst
+   reference/storage/index.rst
+   reference/adapters/index.rst
 
 
 :ref:`genindex`

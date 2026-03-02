@@ -1,255 +1,129 @@
-from typing import Union, Dict, Type, IO
 import re
 from abc import ABC, abstractmethod
+from typing import IO, Any, Literal, Union, overload
+
+from cfinterface.storage import StorageType
+
+_pattern_cache: dict[str | bytes, "re.Pattern[Any]"] = {}
+
+
+def _compile(pattern: str | bytes) -> "re.Pattern[Any]":
+    compiled = _pattern_cache.get(pattern)
+    if compiled is None:
+        compiled = re.compile(pattern)
+        _pattern_cache[pattern] = compiled
+    return compiled
 
 
 class Repository(ABC):
     @staticmethod
     @abstractmethod
-    def matches(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-        Checks if the current line matches the identifier of the register.
-
-        :param pattern: The pattern for matching the register
-        :type pattern: str | bytes
-        :param line: The candidate line for containing
-            the register information
-        :type line: str | bytes
-        :return: The register in the current line
-        :rtype: bool
-        """
+    def matches(pattern: str | bytes, line: str | bytes) -> bool:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-         Checks if the current line marks the beginning of the block.
-
-        :param pattern: The pattern for matching the beginning
-        :type pattern: str | bytes
-        :param line: The candidate line for being the beginning of
-            the block.
-        :type line: str | bytes
-        :return: The beginning of the block in the current line
-        :rtype: bool
-        """
+    def begins(pattern: str | bytes, line: str | bytes) -> bool:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-        Checks if the current line marks the end of the block.
-
-        :param pattern: The pattern for matching the ending
-        :type pattern: str | bytes
-        :param line: The candidate line for being the ending of
-            the block.
-        :type line: str | bytes
-        :return: The ending of the block in the current line
-        :rtype: bool
-        """
+    def ends(pattern: str | bytes, line: str | bytes) -> bool:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def read(file: IO, linesize: int) -> Union[str, bytes]:
-        """
-        Generic function to perform the reading of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :param linesize: The size of the line to be read
-        :type linesize: int
-        :return: The read data
-        :rtype: str | bytes
-        """
+    def read(file: IO[Any], linesize: int) -> str | bytes:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def write(file: IO, data: Union[str, bytes]) -> int:
-        """
-        Generic function to perform the writing of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :return: The number of written bytes
-        :rtype: int
-        """
+    def write(file: IO[Any], data: str | bytes) -> int:
         raise NotImplementedError
 
 
 class BinaryRepository(Repository):
     @staticmethod
-    def matches(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-        Checks if the current line matches the identifier of the register.
-
-        :param pattern: The pattern for matching the register
-        :type pattern: str | bytes
-        :param line: The candidate line for containing
-            the register information
-        :type line: str | bytes
-        :return: The register in the current line
-        :rtype: bool
-        """
-        if isinstance(pattern, bytes) and isinstance(line, bytes):
-            return re.search(pattern, line) is not None
-        elif isinstance(pattern, str) and isinstance(line, bytes):
-            return re.search(pattern, line.decode("utf-8")) is not None
-        return False
+    def matches(pattern: str | bytes, line: str | bytes) -> bool:
+        line_bytes = line if isinstance(line, bytes) else line.encode("utf-8")
+        if isinstance(pattern, bytes):
+            return _compile(pattern).search(line_bytes) is not None
+        return _compile(pattern).search(line_bytes.decode("utf-8")) is not None
 
     @staticmethod
-    def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-         Checks if the current line marks the beginning of the block.
-
-        :param pattern: The pattern for matching the beginning
-        :type pattern: str | bytes
-        :param line: The candidate line for being the beginning of
-            the block.
-        :type line: str | bytes
-        :return: The beginning of the block in the current line
-        :rtype: bool
-        """
-        if isinstance(line, bytes) and isinstance(pattern, bytes):
-            return re.search(pattern, line) is not None
-        return False
+    def begins(pattern: str | bytes, line: str | bytes) -> bool:
+        line_bytes = line if isinstance(line, bytes) else line.encode("utf-8")
+        pat_bytes = (
+            pattern if isinstance(pattern, bytes) else pattern.encode("utf-8")
+        )
+        return _compile(pat_bytes).search(line_bytes) is not None
 
     @staticmethod
-    def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-        Checks if the current line marks the end of the block.
-
-        :param pattern: The pattern for matching the ending
-        :type pattern: str | bytes
-        :param line: The candidate line for being the ending of
-            the block.
-        :type line: str | bytes
-        :return: The ending of the block in the current line
-        :rtype: bool
-        """
-        if isinstance(line, bytes) and isinstance(pattern, bytes):
-            return re.search(pattern, line) is not None
-        return False
+    def ends(pattern: str | bytes, line: str | bytes) -> bool:
+        line_bytes = line if isinstance(line, bytes) else line.encode("utf-8")
+        pat_bytes = (
+            pattern if isinstance(pattern, bytes) else pattern.encode("utf-8")
+        )
+        return _compile(pat_bytes).search(line_bytes) is not None
 
     @staticmethod
-    def read(file: IO, linesize: int) -> Union[str, bytes]:
-        """
-        Generic function to perform the reading of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :param linesize: The size of the line to be read
-        :type linesize: int
-        :return: The read data
-        :rtype: str | bytes
-        """
-        return file.read(linesize)
+    def read(file: IO[Any], linesize: int) -> bytes:
+        return file.read(linesize)  # type: ignore[no-any-return]
 
     @staticmethod
-    def write(file: IO, data: Union[str, bytes]) -> int:
-        """
-        Generic function to perform the writing of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :return: The number of written bytes
-        :rtype: int
-        """
-        return file.write(data)
+    def write(file: IO[Any], data: str | bytes) -> int:
+        return file.write(data)  # type: ignore[no-any-return]
 
 
 class TextualRepository(Repository):
     @staticmethod
-    def matches(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-        Checks if the current line matches the identifier of the register.
-
-        :param pattern: The pattern for matching the register
-        :type pattern: str | bytes
-        :param line: The candidate line for containing
-            the register information
-        :type line: str | bytes
-        :return: The register in the current line
-        :rtype: bool
-        """
-        if isinstance(pattern, str) and isinstance(line, str):
-            return re.search(pattern, line) is not None
-        return False
+    def matches(pattern: str | bytes, line: str | bytes) -> bool:
+        line_str = line if isinstance(line, str) else line.decode("utf-8")
+        pat_str = (
+            pattern if isinstance(pattern, str) else pattern.decode("utf-8")
+        )
+        return _compile(pat_str).search(line_str) is not None
 
     @staticmethod
-    def begins(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-         Checks if the current line marks the beginning of the block.
-
-        :param pattern: The pattern for matching the beginning
-        :type pattern: str | bytes
-        :param line: The candidate line for being the beginning of
-            the block.
-        :type line: str | bytes
-        :return: The beginning of the block in the current line
-        :rtype: bool
-        """
-        if isinstance(line, str) and isinstance(pattern, str):
-            return re.search(pattern, line) is not None
-        return False
+    def begins(pattern: str | bytes, line: str | bytes) -> bool:
+        line_str = line if isinstance(line, str) else line.decode("utf-8")
+        pat_str = (
+            pattern if isinstance(pattern, str) else pattern.decode("utf-8")
+        )
+        return _compile(pat_str).search(line_str) is not None
 
     @staticmethod
-    def ends(pattern: Union[str, bytes], line: Union[str, bytes]) -> bool:
-        """
-        Checks if the current line marks the end of the block.
-
-        :param pattern: The pattern for matching the ending
-        :type pattern: str | bytes
-        :param line: The candidate line for being the ending of
-            the block.
-        :type line: str | bytes
-        :return: The ending of the block in the current line
-        :rtype: bool
-        """
-        if isinstance(line, str) and isinstance(pattern, str):
-            return re.search(pattern, line) is not None
-        return False
+    def ends(pattern: str | bytes, line: str | bytes) -> bool:
+        line_str = line if isinstance(line, str) else line.decode("utf-8")
+        pat_str = (
+            pattern if isinstance(pattern, str) else pattern.decode("utf-8")
+        )
+        return _compile(pat_str).search(line_str) is not None
 
     @staticmethod
-    def read(file: IO, linesize: int) -> Union[str, bytes]:
-        """
-        Generic function to perform the reading of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :param linesize: The size of the line to be read
-        :type linesize: int
-        :return: The read data
-        :rtype: str | bytes
-        """
-        return file.readline()
+    def read(file: IO[Any], linesize: int) -> str:
+        return file.readline()  # type: ignore[no-any-return]
 
     @staticmethod
-    def write(file: IO, data: Union[str, bytes]) -> int:
-        """
-        Generic function to perform the writing of the register using
-        a filepointer.
-
-        :param file: The filepointer
-        :type file: IO
-        :return: The number of written bytes
-        :rtype: int
-        """
-        return file.write(data)
+    def write(file: IO[Any], data: str | bytes) -> int:
+        return file.write(data)  # type: ignore[no-any-return]
 
 
-def factory(kind: str) -> Type[Repository]:
-    mappings: Dict[str, Type[Repository]] = {
-        "TEXT": TextualRepository,
-        "BINARY": BinaryRepository,
+@overload
+def factory(kind: Literal["TEXT"]) -> type[TextualRepository]: ...
+
+
+@overload
+def factory(kind: Literal["BINARY"]) -> type[BinaryRepository]: ...
+
+
+@overload
+def factory(kind: str | StorageType) -> type[Repository]: ...
+
+
+def factory(kind: Union[str, "StorageType"]) -> type[Repository]:
+    mappings: dict[str | StorageType, type[Repository]] = {
+        StorageType.TEXT: TextualRepository,
+        StorageType.BINARY: BinaryRepository,
     }
     return mappings.get(kind, TextualRepository)

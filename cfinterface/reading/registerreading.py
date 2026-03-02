@@ -1,11 +1,11 @@
-from typing import List, Type, Union
 from os.path import isfile
-
-from cfinterface.components.register import Register
-from cfinterface.components.defaultregister import DefaultRegister
-from cfinterface.data.registerdata import RegisterData
+from typing import Any
 
 from cfinterface.adapters.reading.repository import Repository, factory
+from cfinterface.components.defaultregister import DefaultRegister
+from cfinterface.components.register import Register
+from cfinterface.data.registerdata import RegisterData
+from cfinterface.storage import StorageType
 
 
 class RegisterReading:
@@ -24,8 +24,8 @@ class RegisterReading:
 
     def __init__(
         self,
-        allowed_registers: List[Type[Register]],
-        storage: str = "",
+        allowed_registers: list[type[Register]],
+        storage: str | StorageType = "",
         linesize: int = 1,
     ) -> None:
         self.__allowed_registers = allowed_registers
@@ -35,52 +35,22 @@ class RegisterReading:
         self.__repository: Repository = None  # type: ignore
         self.__linesize = linesize
 
-    def __read_line_with_backup(self) -> Union[str, bytes]:
-        """
-        Reads a line of the file, saving the filepointer position
-        in case one desired to return to the previous line.
-
-        :return: The read line
-        :rtype: str | bytes
-        """
+    def __read_line_with_backup(self) -> str | bytes:
         self.__last_position_filepointer = self.__repository.file.tell()
         return self.__repository.read(self.__linesize)
 
-    def __restore_previous_line(self):
-        """
-        Restores the filepointer to the beginning of the previously
-        read line.
-
-        :param file: The filepointer
-        :type file: IO
-        """
+    def __restore_previous_line(self) -> None:
         self.__repository.file.seek(self.__last_position_filepointer)
 
     def __find_starting_register(
-        self, registerdata: Union[str, bytes]
-    ) -> Type[Register]:
-        """
-        Searches among the given registers for the register that begins in
-        a line of the reading file.
-
-        :param registerdata: A portion of data in the reading file
-        :type registerdata: str | bytes
-        :return: The register type that begins on the given line
-        :rtype: Type[Register]
-        """
+        self, registerdata: str | bytes
+    ) -> "type[Register]":
         for r in self.__allowed_registers:
             if r.matches(registerdata, self.__storage):
                 return r
         return DefaultRegister
 
-    def __read_file(self, *args, **kwargs) -> RegisterData:
-        """
-        Reads all the registers from the given registers in a file and
-        returns the RegisterData structure.
-
-        :return: The register data from the file
-        :rtype: RegisterData
-        """
+    def __read_file(self, *args: Any, **kwargs: Any) -> RegisterData:
         while True:
             line = self.__read_line_with_backup()
             if len(line) == 0:
@@ -95,7 +65,11 @@ class RegisterReading:
         return self.__data
 
     def read(
-        self, content: Union[str, bytes], encoding: str, *args, **kwargs
+        self,
+        content: str | bytes,
+        encoding: str,
+        *args: Any,
+        **kwargs: Any,
     ) -> RegisterData:
         """
         Reads a file with a given name in a given directory and

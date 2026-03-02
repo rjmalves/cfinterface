@@ -4,6 +4,7 @@ import pytest
 
 from cfinterface.components.block import Block
 from cfinterface.components.literalfield import LiteralField
+from cfinterface.storage import StorageType
 from tests.mocks.mock_open import mock_open
 
 from unittest.mock import MagicMock, patch
@@ -62,16 +63,13 @@ def test_single_block_properties():
 
 
 def test_block_simple_chain_properties():
-    # Build a simple block chain
     b1 = Block()
     b2 = Block()
     b3 = Block()
-    # Sets relationships
     b1.next = b2
     b2.previous = b1
     b2.next = b3
     b3.previous = b2
-    # Asserts properties
     assert b1.is_first
     assert b3.is_last
     assert not b1.is_last
@@ -165,3 +163,23 @@ def test_dummy_binary_block_write():
             b.data = data
             b.write_block(fp)
     m().write.assert_any_call(b"hello")
+
+
+def test_block_begins_str():
+    assert DummyBlock.begins("beg something") is True
+
+
+def test_block_begins_str_no_match():
+    assert DummyBlock.begins("xxx something") is False
+
+
+def test_block_ends_str():
+    assert DummyBlock.ends("end something") is True
+
+
+def test_block_begins_bytes_binary():
+    assert DummyBinaryBlock.begins(b"0data", StorageType.BINARY) is True
+
+
+def test_block_ends_bytes_binary():
+    assert DummyBinaryBlock.ends(b"1data", StorageType.BINARY) is True

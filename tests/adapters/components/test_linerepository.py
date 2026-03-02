@@ -1,5 +1,6 @@
 from cfinterface.adapters.components.line.repository import (
     TextualRepository,
+    BinaryRepository,
 )
 from cfinterface.components.literalfield import LiteralField
 
@@ -60,3 +61,28 @@ def test_delimitedrepository_write_with_fields():
     fileline = "hello,;world!\n"
     outline = repo.write(values, delimiter=";")
     assert fileline == outline
+
+
+def test_binary_repository_read_returns_list():
+    fields = [LiteralField(6, 0), LiteralField(6, 7)]
+    repo = BinaryRepository(fields)
+    line = b"hello, world!"
+    values = repo.read(line)
+    assert isinstance(values, list)
+    assert values[0] == "hello,"
+    assert values[1] == "world!"
+
+
+def test_binary_repository_write_returns_bytes():
+    fields = [LiteralField(6, 0), LiteralField(6, 7)]
+    values = ["hello,", "world!"]
+    repo = BinaryRepository(fields, values)
+    result = repo.write(values)
+    assert isinstance(result, bytes)
+
+
+def test_binary_repository_write_no_fields_returns_bytes():
+    repo = BinaryRepository([])
+    result = repo.write([])
+    assert isinstance(result, bytes)
+    assert result == b""

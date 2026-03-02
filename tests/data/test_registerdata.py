@@ -14,6 +14,12 @@ class DummyRegister(Register):
         return self.data[0]
 
 
+class DefaultRegister(Register):
+    IDENTIFIER = "def"
+    IDENTIFIER_DIGITS = 4
+    LINE = Line([LiteralField(13, 4)])
+
+
 def test_registerdata_eq():
     rd1 = RegisterData(DummyRegister(data=-1))
     rd2 = RegisterData(DummyRegister(data=-1))
@@ -131,3 +137,166 @@ def test_registerdata_remove_registers_of_type_no_filter():
     rd.append(DummyRegister(data=[11]))
     rd.remove_registers_of_type(DummyRegister)
     assert len(rd) == 1
+
+
+def test_registerdata_getitem():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    r1 = DummyRegister(data=1)
+    r2 = DummyRegister(data=2)
+    r3 = DummyRegister(data=3)
+    rd.append(r1)
+    rd.append(r2)
+    rd.append(r3)
+    assert rd[0] is root
+    assert rd[1] is r1
+    assert rd[3] is r3
+
+
+def test_registerdata_getitem_negative():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    r1 = DummyRegister(data=1)
+    rd.append(r1)
+    assert rd[-1] is r1
+
+
+def test_registerdata_getitem_out_of_bounds():
+    rd = RegisterData(DummyRegister(data=0))
+    try:
+        _ = rd[100]
+        assert False, "Expected IndexError"
+    except IndexError:
+        pass
+
+
+def test_registerdata_len_is_o1():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    for i in range(1000):
+        rd.append(DummyRegister(data=i))
+    assert len(rd) == 1001
+
+
+def test_registerdata_remove_updates_pointers():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    r1 = DummyRegister(data=1)
+    r2 = DummyRegister(data=2)
+    r3 = DummyRegister(data=3)
+    rd.append(r1)
+    rd.append(r2)
+    rd.append(r3)
+    rd.remove(r2)
+    assert r1.next is r3
+    assert r3.previous is r1
+
+
+def test_registerdata_remove_head():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    r1 = DummyRegister(data=1)
+    rd.append(r1)
+    rd.remove(r1)
+    assert rd.last is root
+    assert root.next is None
+
+
+def test_registerdata_iteration_order():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    appended = []
+    for i in range(1, 6):
+        r = DummyRegister(data=i)
+        rd.append(r)
+        appended.append(r)
+    expected = [root] + appended
+    assert list(rd) == expected
+
+
+def test_registerdata_computed_previous_next():
+    root = DummyRegister(data=0)
+    r1 = DummyRegister(data=1)
+    r2 = DummyRegister(data=2)
+    rd = RegisterData(root)
+    rd.append(r1)
+    rd.append(r2)
+    assert r1.previous is root
+    assert r1.next is r2
+    assert root.previous is None
+    assert r2.next is None
+
+
+def test_registerdata_computed_after_remove():
+    root = DummyRegister(data=0)
+    r1 = DummyRegister(data=1)
+    r2 = DummyRegister(data=2)
+    rd = RegisterData(root)
+    rd.append(r1)
+    rd.append(r2)
+    rd.remove(r1)
+    assert root.next is r2
+    assert r2.previous is root
+    assert r1._container is None
+
+
+def test_registerdata_of_type_with_mixed_types():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    defaults = []
+    for i in range(1, 6):
+        d = DummyRegister(data=i)
+        rd.append(d)
+        rd.append(DefaultRegister(data=i))
+        defaults.append(d)
+    dummy_results = list(rd.of_type(DummyRegister))
+    assert len(dummy_results) == 6
+    assert dummy_results[0] is root
+    for expected, actual in zip(defaults, dummy_results[1:]):
+        assert actual is expected
+    default_results = list(rd.of_type(DefaultRegister))
+    assert len(default_results) == 5
+    assert all(type(r) is DefaultRegister for r in default_results)
+
+
+def test_registerdata_of_type_base_class():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    for i in range(1, 6):
+        rd.append(DummyRegister(data=i))
+        rd.append(DefaultRegister(data=i))
+    all_results = list(rd.of_type(Register))
+    assert len(all_results) == 11
+    items_from_iter = list(rd)
+    assert all_results == items_from_iter
+
+
+def test_registerdata_type_index_after_remove():
+    root = DummyRegister(data=0)
+    r1 = DummyRegister(data=1)
+    r2 = DefaultRegister(data=2)
+    rd = RegisterData(root)
+    rd.append(r1)
+    rd.append(r2)
+    rd.remove(r1)
+    dummy_results = list(rd.of_type(DummyRegister))
+    assert len(dummy_results) == 1
+    assert dummy_results[0] is root
+    default_results = list(rd.of_type(DefaultRegister))
+    assert len(default_results) == 1
+    assert default_results[0] is r2
+    assert rd._type_index[DefaultRegister] == [1]
+
+
+def test_registerdata_type_index_after_preppend():
+    root = DummyRegister(data=0)
+    rd = RegisterData(root)
+    rd.append(DefaultRegister(data=1))
+    new = DummyRegister(data=2)
+    rd.preppend(new)
+    dummy_results = list(rd.of_type(DummyRegister))
+    assert len(dummy_results) == 2
+    assert dummy_results[0] is new
+    assert dummy_results[1] is root
+    assert rd._type_index[DummyRegister] == [0, 1]
+    assert rd._type_index[DefaultRegister] == [2]

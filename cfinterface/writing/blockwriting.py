@@ -1,9 +1,11 @@
-from typing import Union, IO
-from cfinterface.data.blockdata import BlockData
+from typing import IO, Any
+
 from cfinterface.adapters.writing.repository import (
     Repository,
     factory,
 )
+from cfinterface.data.blockdata import BlockData
+from cfinterface.storage import StorageType
 
 
 class BlockWriting:
@@ -17,21 +19,24 @@ class BlockWriting:
         "__repository",
     ]
 
-    def __init__(self, data: BlockData, storage: str = "") -> None:
+    def __init__(
+        self, data: BlockData, storage: str | StorageType = ""
+    ) -> None:
         self.__data = data
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
 
-    def __write_file(self, *args, **kwargs):
-        """
-        Writes all the blocks from the given BlockData structure
-        to the specified file.
-
-        """
+    def __write_file(self, *args: Any, **kwargs: Any) -> None:
         for b in self.__data:
             b.write(self.__repository.file, *args, **kwargs)
 
-    def write(self, to: Union[str, IO], encoding: str, *args, **kwargs):
+    def write(
+        self,
+        to: str | IO[Any],
+        encoding: str,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         """
         Writes a file with a given name in a given directory with
         the data from the BlockData structure.
