@@ -1,6 +1,6 @@
-from cfinterface.components.floatfield import FloatField
-
 import numpy as np
+
+from cfinterface.components.floatfield import FloatField
 
 
 def test_floatfield_read():
@@ -178,7 +178,7 @@ def _reference_textual_write(value, size, decimal_digits, fmt):
 
 
 def test_floatfield_write_fuzz_equivalence():
-    """Fuzz test: verify optimized output matches reference for random inputs."""
+    """Fuzz: verify optimized output matches reference for random inputs."""
     import random
 
     random.seed(42)
@@ -196,17 +196,3 @@ def test_floatfield_write_fuzz_equivalence():
             f"Mismatch: fmt={fmt} size={size} dec={dec} val={val} "
             f"got={result!r} expected={expected!r}"
         )
-
-
-def test_floatfield_benchmark_smoke():
-    import sys
-    import os
-
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
-    from benchmarks.bench_floatfield_write import _bench_scenario, _make_fields
-
-    fields = _make_fields(12, 4, "F", [1.234, 5.678])
-    name, n, mn, mean, mx = _bench_scenario("smoke", fields, 100, 1)
-    assert name == "smoke"
-    assert n == 100
-    assert mn > 0

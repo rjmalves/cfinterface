@@ -1,6 +1,6 @@
 {
   "plan": "cfinterface-quality-and-ci",
-  "last_updated": "2026-03-02T14:41:28Z",
+  "last_updated": "2026-03-02T15:26:51Z",
   "progressive": true,
   "tickets": {
     "ticket-001-update-classifiers-and-metadata.md": {
@@ -174,24 +174,104 @@
       "agent": "direct"
     },
     "ticket-011-create-conftest-and-fixtures.md": {
-      "status": "pending",
-      "detail_level": "outline",
-      "epic": "epic-03-test-infrastructure"
+      "status": "completed",
+      "detail_level": "refined",
+      "epic": "epic-03-test-infrastructure",
+      "scores": {
+        "quality": 0.925,
+        "quality_breakdown": {
+          "conformance": 1.0,
+          "scope_adherence": 1.0,
+          "lint_cleanliness": 1.0,
+          "type_safety": 0.5,
+          "test_delta": 1.0
+        },
+        "readiness": 0.98,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 0.8
+        }
+      },
+      "workflow_step": null,
+      "agent": "python-task-automation-developer"
     },
     "ticket-012-add-hypothesis-field-tests.md": {
-      "status": "pending",
-      "detail_level": "outline",
-      "epic": "epic-03-test-infrastructure"
+      "status": "completed",
+      "detail_level": "refined",
+      "epic": "epic-03-test-infrastructure",
+      "scores": {
+        "quality": 0.925,
+        "quality_breakdown": {
+          "conformance": 1.0,
+          "scope_adherence": 1.0,
+          "lint_cleanliness": 1.0,
+          "type_safety": 0.5,
+          "test_delta": 1.0
+        },
+        "readiness": 0.98,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 0.8
+        }
+      },
+      "workflow_step": null,
+      "agent": "python-task-automation-developer"
     },
     "ticket-013-add-hypothesis-tabular-tests.md": {
-      "status": "pending",
-      "detail_level": "outline",
-      "epic": "epic-03-test-infrastructure"
+      "status": "completed",
+      "detail_level": "refined",
+      "epic": "epic-03-test-infrastructure",
+      "scores": {
+        "quality": 0.95,
+        "quality_breakdown": {
+          "conformance": 1.0,
+          "scope_adherence": 1.0,
+          "lint_cleanliness": 1.0,
+          "type_safety": 0.75,
+          "test_delta": 1.0
+        },
+        "readiness": 0.98,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 0.8
+        }
+      },
+      "workflow_step": null,
+      "agent": "python-task-automation-developer"
     },
     "ticket-014-migrate-to-pytest-benchmark.md": {
-      "status": "pending",
-      "detail_level": "outline",
-      "epic": "epic-03-test-infrastructure"
+      "status": "completed",
+      "detail_level": "refined",
+      "epic": "epic-03-test-infrastructure",
+      "scores": {
+        "quality": 0.9025,
+        "quality_breakdown": {
+          "conformance": 1.0,
+          "scope_adherence": 1.0,
+          "lint_cleanliness": 1.0,
+          "type_safety": 0.5,
+          "test_delta": 1.0
+        },
+        "readiness": 1.0,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      },
+      "workflow_step": null,
+      "agent": "python-task-automation-developer"
     },
     "ticket-015-add-tabular-reference-pages.md": {
       "status": "pending",
@@ -234,7 +314,7 @@
       "learning_extracted": false
     },
     "epic-03-test-infrastructure": {
-      "phase": "outline",
+      "phase": "completed",
       "learning_extracted": false
     },
     "epic-04-sphinx-docs": {
