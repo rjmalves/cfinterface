@@ -1,5 +1,5 @@
 import re
-from typing import IO, Any, Dict, List, NamedTuple, Optional, Union
+from typing import IO, Any, NamedTuple, cast
 
 from cfinterface.components.field import Field
 from cfinterface.components.line import Line
@@ -39,9 +39,9 @@ class TabularParser:
 
     def __init__(
         self,
-        columns: List[ColumnDef],
-        storage: Union[str, StorageType] = "",
-        delimiter: Optional[Union[str, bytes]] = None,
+        columns: list[ColumnDef],
+        storage: str | StorageType = "",
+        delimiter: str | bytes | None = None,
     ) -> None:
         self._columns = columns
         self._delimiter = delimiter
@@ -52,10 +52,10 @@ class TabularParser:
         )
 
     @property
-    def delimiter(self) -> Optional[Union[str, bytes]]:
+    def delimiter(self) -> str | bytes | None:
         return self._delimiter
 
-    def parse_lines(self, lines: List[str]) -> Dict[str, List[Any]]:
+    def parse_lines(self, lines: list[str]) -> dict[str, list[Any]]:
         """
         Parse raw text lines into a dict-of-lists keyed by column name.
 
@@ -64,17 +64,17 @@ class TabularParser:
         length.
         """
         names = [col.name for col in self._columns]
-        result: Dict[str, List[Any]] = {name: [] for name in names}
+        result: dict[str, list[Any]] = {name: [] for name in names}
         for line in lines:
             try:
-                values: List[Any] = self._line.read(line)
+                values: list[Any] = self._line.read(line)
             except Exception:
                 values = [None] * len(self._columns)
-            for name, val in zip(names, values):
+            for name, val in zip(names, values, strict=False):
                 result[name].append(val)
         return result
 
-    def format_rows(self, data: Dict[str, List[Any]]) -> List[str]:
+    def format_rows(self, data: dict[str, list[Any]]) -> list[str]:
         """
         Format a dict-of-lists into text lines — the inverse of parse_lines().
 
@@ -83,14 +83,14 @@ class TabularParser:
         """
         names = [col.name for col in self._columns]
         n_rows = len(next(iter(data.values()))) if data else 0
-        result: List[str] = []
+        result: list[str] = []
         for i in range(n_rows):
             values = [data[name][i] for name in names]
-            result.append(self._line.write(values))
+            result.append(cast(str, self._line.write(values)))
         return result
 
     @staticmethod
-    def to_dataframe(data: Dict[str, List[Any]]) -> "pd.DataFrame":  # type: ignore[name-defined]  # noqa: F821
+    def to_dataframe(data: dict[str, list[Any]]) -> "pd.DataFrame":  # type: ignore[name-defined]  # noqa: F821
         """
         Convert a dict-of-lists to a pandas DataFrame.
 
@@ -102,7 +102,7 @@ class TabularParser:
             raise ImportError(
                 "pandas is required for this operation. "
                 "Install it with: pip install cfinterface[pandas]"
-            )
+            ) from None
         return pd.DataFrame(data)
 
 
@@ -128,16 +128,16 @@ class TabularSection(Section):
 
     __slots__ = ["_parser", "_headers"]
 
-    COLUMNS: List[ColumnDef] = []
+    COLUMNS: list[ColumnDef] = []
     HEADER_LINES: int = 0
     END_PATTERN: str = ""
-    DELIMITER: Optional[Union[str, bytes]] = None
+    DELIMITER: str | bytes | None = None
 
     def __init__(
         self,
-        previous=None,
-        next=None,
-        data=None,
+        previous: Any | None = None,
+        next: Any | None = None,
+        data: Any | None = None,
     ) -> None:
         super().__init__(previous, next, data)
         self._parser = TabularParser(
@@ -145,14 +145,14 @@ class TabularSection(Section):
             storage=self.__class__.STORAGE,
             delimiter=self.__class__.DELIMITER,
         )
-        self._headers: List[str] = []
+        self._headers: list[str] = []
 
-    def read(self, file: IO, *args, **kwargs) -> bool:
+    def read(self, file: IO[Any], *args: Any, **kwargs: Any) -> bool:
         self._headers = []
         for _ in range(self.__class__.HEADER_LINES):
             self._headers.append(file.readline())
 
-        lines: List[str] = []
+        lines: list[str] = []
         end_pattern = self.__class__.END_PATTERN
         while True:
             pos = file.tell()
@@ -167,7 +167,7 @@ class TabularSection(Section):
         self.data = self._parser.parse_lines(lines)
         return True
 
-    def write(self, file: IO, *args, **kwargs) -> bool:
+    def write(self, file: IO[Any], *args: Any, **kwargs: Any) -> bool:
         for header in self._headers:
             file.write(header)
         if self.data is not None:

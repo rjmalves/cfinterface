@@ -1,11 +1,11 @@
-from typing import Union, IO
+from typing import IO, Any
 
-from cfinterface.data.sectiondata import SectionData
-from cfinterface.storage import StorageType
 from cfinterface.adapters.writing.repository import (
     Repository,
     factory,
 )
+from cfinterface.data.sectiondata import SectionData
+from cfinterface.storage import StorageType
 
 
 class SectionWriting:
@@ -20,17 +20,23 @@ class SectionWriting:
     ]
 
     def __init__(
-        self, data: SectionData, storage: Union[str, StorageType] = ""
+        self, data: SectionData, storage: str | StorageType = ""
     ) -> None:
         self.__data = data
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
 
-    def __write_file(self, *args, **kwargs):
+    def __write_file(self, *args: Any, **kwargs: Any) -> None:
         for s in self.__data:
             s.write(self.__repository.file, *args, **kwargs)
 
-    def write(self, to: Union[str, IO], encoding: str, *args, **kwargs):
+    def write(
+        self,
+        to: str | IO[Any],
+        encoding: str,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         """
         Writes to a file with a given name in a given directory or
         to a buffer with the data from the SectionData structure.

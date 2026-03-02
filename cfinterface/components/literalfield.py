@@ -1,6 +1,6 @@
-from typing import Optional
-from cfinterface.components.field import Field
+
 from cfinterface._utils import _is_null
+from cfinterface.components.field import Field
 
 
 class LiteralField(Field):
@@ -15,7 +15,7 @@ class LiteralField(Field):
         self,
         size: int = 80,
         starting_position: int = 0,
-        value: Optional[str] = None,
+        value: str | None = None,
     ) -> None:
         super().__init__(size, starting_position, value)
 
@@ -43,9 +43,9 @@ class LiteralField(Field):
         return value.ljust(self._size)
 
     @property
-    def value(self) -> Optional[str]:
+    def value(self) -> str | None:
         return self._value
 
     @value.setter
-    def value(self, val: str):
+    def value(self, val: str) -> None:
         self._value = val

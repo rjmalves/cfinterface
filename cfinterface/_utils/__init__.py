@@ -3,7 +3,8 @@ from typing import Any
 
 
 def _is_null(value: Any) -> bool:
-    """Return True if value is None, NaN, or a datetime-like null (e.g. pandas.NaT)."""
+    """Return True if value is None, NaN, or a datetime-like null
+    (e.g. pandas.NaT)."""
     if value is None:
         return True
     try:

@@ -1,12 +1,11 @@
-from typing import List, Type, Union
 from os.path import isfile
+from typing import Any
 
+from cfinterface.adapters.reading.repository import Repository, factory
 from cfinterface.components.block import Block
 from cfinterface.components.defaultblock import DefaultBlock
 from cfinterface.data.blockdata import BlockData
 from cfinterface.storage import StorageType
-
-from cfinterface.adapters.reading.repository import Repository, factory
 
 
 class BlockReading:
@@ -25,8 +24,8 @@ class BlockReading:
 
     def __init__(
         self,
-        allowed_blocks: List[Type[Block]],
-        storage: Union[str, StorageType] = "",
+        allowed_blocks: list[type[Block]],
+        storage: str | StorageType = "",
         linesize: int = 1,
     ) -> None:
         self.__allowed_blocks = allowed_blocks
@@ -36,22 +35,22 @@ class BlockReading:
         self.__repository: Repository = None  # type: ignore
         self.__linesize = linesize
 
-    def __read_line_with_backup(self) -> Union[str, bytes]:
+    def __read_line_with_backup(self) -> str | bytes:
         self.__last_position_filepointer = self.__repository.file.tell()
         return self.__repository.read(self.__linesize)
 
-    def __restore_previous_line(self):
+    def __restore_previous_line(self) -> None:
         self.__repository.file.seek(self.__last_position_filepointer)
 
     def __find_starting_block(
-        self, blockdata: Union[str, bytes]
-    ) -> Type[Block]:
+        self, blockdata: str | bytes
+    ) -> "type[Block]":
         for b in self.__allowed_blocks:
             if b.begins(blockdata):
                 return b
         return DefaultBlock
 
-    def __read_file(self, *args, **kwargs) -> BlockData:
+    def __read_file(self, *args: Any, **kwargs: Any) -> BlockData:
         while True:
             line = self.__read_line_with_backup()
             if len(line) == 0:
@@ -64,7 +63,11 @@ class BlockReading:
         return self.__data
 
     def read(
-        self, content: Union[str, bytes], encoding: str, *args, **kwargs
+        self,
+        content: str | bytes,
+        encoding: str,
+        *args: Any,
+        **kwargs: Any,
     ) -> BlockData:
         """
         Reads a file in a given path and

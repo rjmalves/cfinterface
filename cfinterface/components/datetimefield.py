@@ -1,8 +1,7 @@
 from datetime import datetime
-from typing import Optional, Union, List
 
-from cfinterface.components.field import Field
 from cfinterface._utils import _is_null
+from cfinterface.components.field import Field
 
 
 class DatetimeField(Field):
@@ -18,8 +17,8 @@ class DatetimeField(Field):
         self,
         size: int = 16,
         starting_position: int = 0,
-        format: Union[str, List[str]] = "%Y/%m/%d",
-        value: Optional[datetime] = None,
+        format: str | list[str] = "%Y/%m/%d",
+        value: datetime | None = None,
     ) -> None:
         super().__init__(size, starting_position, value)
         self.__format = format
@@ -80,9 +79,9 @@ class DatetimeField(Field):
         return value.ljust(self._size)
 
     @property
-    def value(self) -> Optional[datetime]:
+    def value(self) -> datetime | None:
         return self._value
 
     @value.setter
-    def value(self, val: datetime):
+    def value(self, val: datetime) -> None:
         self._value = val

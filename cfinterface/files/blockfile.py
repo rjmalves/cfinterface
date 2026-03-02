@@ -1,5 +1,5 @@
 import warnings
-from typing import IO, TYPE_CHECKING, Dict, List, Optional, Type, Union
+from typing import IO, TYPE_CHECKING, Any
 
 from cfinterface.components.block import Block
 from cfinterface.components.defaultblock import DefaultBlock
@@ -21,19 +21,21 @@ class BlockFile:
 
     __slots__ = ["__data", "__storage", "__encoding"]
 
-    VERSIONS: Dict[str, List[Type[Block]]] = {}
-    BLOCKS: List[Type[Block]] = []
-    ENCODING: Union[str, List[str]] = ["utf-8", "latin-1", "ascii"]
-    STORAGE: Union[str, StorageType] = StorageType.TEXT
+    VERSIONS: dict[str, list[type[Block]]] = {}
+    BLOCKS: list[type[Block]] = []
+    ENCODING: str | list[str] = ["utf-8", "latin-1", "ascii"]
+    STORAGE: str | StorageType = StorageType.TEXT
     __VERSION = "latest"
 
     def __init__(
         self,
-        data=BlockData(DefaultBlock()),
+        data: BlockData = BlockData(DefaultBlock()),  # noqa: B008
     ) -> None:
-        self.__data = data
-        self.__storage = _ensure_storage_type(self.__class__.STORAGE)
-        self.__encoding = (
+        self.__data: BlockData = data
+        self.__storage: str | StorageType = _ensure_storage_type(
+            self.__class__.STORAGE
+        )
+        self.__encoding: str = (
             self.__class__.ENCODING
             if type(self.__class__.ENCODING) is str
             else self.__class__.ENCODING[0]
@@ -47,11 +49,11 @@ class BlockFile:
     @classmethod
     def read(
         cls,
-        content: Union[str, bytes],
-        *args,
-        version: Optional[str] = None,
-        **kwargs,
-    ):
+        content: str | bytes,
+        *args: Any,
+        version: str | None = None,
+        **kwargs: Any,
+    ) -> "BlockFile":
         """Read from a file path or buffer. ``version`` selects a component set
         from VERSIONS without mutating the class."""
         components = cls.BLOCKS
@@ -78,22 +80,22 @@ class BlockFile:
             "Failed to decode content with all specified encodings."
         )
 
-    def write(self, to: Union[str, IO], *args, **kwargs):
+    def write(self, to: str | IO[Any], *args: Any, **kwargs: Any) -> None:
         writer = BlockWriting(self.__data, self.__storage)
         writer.write(to, self.__encoding, *args, **kwargs)
 
     @classmethod
     def read_many(
         cls,
-        paths: List[str],
+        paths: list[str],
         *,
-        version: Optional[str] = None,
-    ) -> Dict[str, "BlockFile"]:
+        version: str | None = None,
+    ) -> dict[str, "BlockFile"]:
         return {path: cls.read(path, version=version) for path in paths}
 
     def validate(
         self,
-        version: Optional[str] = None,
+        version: str | None = None,
         threshold: float = 0.5,
     ) -> "VersionMatchResult":
         """Validate parsed data against expected component types."""
@@ -115,7 +117,7 @@ class BlockFile:
         return self.__data
 
     @classmethod
-    def set_version(cls, v: str):
+    def set_version(cls, v: str) -> None:
         """
         Set the active block set for the given version key.
 
@@ -126,7 +128,8 @@ class BlockFile:
             Use ``read(content, version="...")`` instead.
         """
         warnings.warn(
-            'set_version() is deprecated. Use read(content, version="...") instead.',
+            "set_version() is deprecated. "
+            'Use read(content, version="...") instead.',
             DeprecationWarning,
             stacklevel=2,
         )

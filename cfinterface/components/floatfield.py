@@ -1,8 +1,9 @@
-from typing import Optional
-import numpy as np  # type: ignore
 from math import floor, log10
-from cfinterface.components.field import Field
+
+import numpy as np  # type: ignore[import-untyped]
+
 from cfinterface._utils import _is_null
+from cfinterface.components.field import Field
 
 
 class FloatField(Field):
@@ -27,7 +28,7 @@ class FloatField(Field):
         decimal_digits: int = 4,
         format: str = "F",
         sep: str = ".",
-        value: Optional[float] = None,
+        value: float | None = None,
     ) -> None:
         super().__init__(
             size,
@@ -116,9 +117,9 @@ class FloatField(Field):
         return value.rjust(self.size)
 
     @property
-    def value(self) -> Optional[float]:
+    def value(self) -> float | None:
         return self._value
 
     @value.setter
-    def value(self, val: float):
+    def value(self, val: float) -> None:
         self._value = val

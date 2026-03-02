@@ -1,8 +1,8 @@
-from typing import Optional
-import numpy as np  # type: ignore
 
-from cfinterface.components.field import Field
+import numpy as np  # type: ignore[import-untyped]
+
 from cfinterface._utils import _is_null
+from cfinterface.components.field import Field
 
 
 class IntegerField(Field):
@@ -23,7 +23,7 @@ class IntegerField(Field):
         self,
         size: int = 8,
         starting_position: int = 0,
-        value: Optional[int] = None,
+        value: int | None = None,
     ) -> None:
         super().__init__(size, starting_position, value)
         self.__type = self.__class__.TYPES.get(size, np.int32)
@@ -54,9 +54,9 @@ class IntegerField(Field):
         return value.rjust(self.size)
 
     @property
-    def value(self) -> Optional[int]:
+    def value(self) -> int | None:
         return self._value
 
     @value.setter
-    def value(self, val: int):
+    def value(self, val: int) -> None:
         self._value = val

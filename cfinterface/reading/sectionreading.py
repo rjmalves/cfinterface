@@ -1,12 +1,11 @@
-from typing import List, Type, Union
 from os.path import isfile
-
-from cfinterface.components.section import Section
-from cfinterface.components.defaultsection import DefaultSection
-from cfinterface.data.sectiondata import SectionData
-from cfinterface.storage import StorageType
+from typing import Any
 
 from cfinterface.adapters.reading.repository import Repository, factory
+from cfinterface.components.defaultsection import DefaultSection
+from cfinterface.components.section import Section
+from cfinterface.data.sectiondata import SectionData
+from cfinterface.storage import StorageType
 
 
 class SectionReading:
@@ -25,8 +24,8 @@ class SectionReading:
 
     def __init__(
         self,
-        sections: List[Type[Section]],
-        storage: Union[str, StorageType] = "",
+        sections: list[type[Section]],
+        storage: str | StorageType = "",
         linesize: int = 1,
     ) -> None:
         self.__sections = sections
@@ -36,14 +35,14 @@ class SectionReading:
         self.__repository: Repository = None  # type: ignore
         self.__linesize = linesize
 
-    def __read_line_with_backup(self) -> Union[str, bytes]:
+    def __read_line_with_backup(self) -> str | bytes:
         self.__last_position_filepointer = self.__repository.file.tell()
         return self.__repository.read(self.__linesize)
 
-    def __restore_previous_line(self):
+    def __restore_previous_line(self) -> None:
         self.__repository.file.seek(self.__last_position_filepointer)
 
-    def __read_file(self, *args, **kwargs) -> SectionData:
+    def __read_file(self, *args: Any, **kwargs: Any) -> SectionData:
         for sectiontype in self.__sections:
             section = sectiontype()
             section.read(self.__repository.file, *args, **kwargs)
@@ -59,7 +58,11 @@ class SectionReading:
         return self.__data
 
     def read(
-        self, content: Union[str, bytes], encoding: str, *args, **kwargs
+        self,
+        content: str | bytes,
+        encoding: str,
+        *args: Any,
+        **kwargs: Any,
     ) -> SectionData:
         """
         Reads a file with a given name in a given directory and

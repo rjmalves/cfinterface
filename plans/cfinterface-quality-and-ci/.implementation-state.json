@@ -1,0 +1,241 @@
+{
+  "plan": "cfinterface-quality-and-ci",
+  "last_updated": "2026-03-02T14:37:43Z",
+  "progressive": true,
+  "tickets": {
+    "ticket-001-update-classifiers-and-metadata.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "epic": "epic-01-pyproject-and-tool-config",
+      "scores": {
+        "readiness": 1.0,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      },
+      "workflow_step": null,
+      "agent": "direct"
+    },
+    "ticket-002-add-pytest-configuration.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "epic": "epic-01-pyproject-and-tool-config",
+      "scores": {
+        "readiness": 1.0,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      },
+      "workflow_step": null,
+      "agent": "direct"
+    },
+    "ticket-003-add-mypy-configuration.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "epic": "epic-01-pyproject-and-tool-config",
+      "scores": {
+        "readiness": 1.0,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      },
+      "workflow_step": null,
+      "agent": "direct"
+    },
+    "ticket-004-fix-mypy-strict-errors.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "epic": "epic-01-pyproject-and-tool-config",
+      "scores": {
+        "readiness": 0.92,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 0.8,
+          "dependency_clarity": 1.0,
+          "atomicity": 0.6
+        }
+      },
+      "workflow_step": null,
+      "agent": "python-task-automation-developer"
+    },
+    "ticket-005-add-coverage-and-ruff-config.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "epic": "epic-01-pyproject-and-tool-config",
+      "scores": {
+        "readiness": 0.96,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 0.8,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      },
+      "workflow_step": null,
+      "agent": "direct"
+    },
+    "ticket-006-add-py-typed-and-dev-deps.md": {
+      "status": "completed",
+      "detail_level": "detailed",
+      "epic": "epic-01-pyproject-and-tool-config",
+      "scores": {
+        "readiness": 1.0,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      },
+      "workflow_step": null,
+      "agent": "direct"
+    },
+    "ticket-007-expand-test-matrix.md": {
+      "status": "pending",
+      "detail_level": "detailed",
+      "epic": "epic-02-ci-overhaul",
+      "scores": {
+        "readiness": 1.0,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      }
+    },
+    "ticket-008-extract-lint-job.md": {
+      "status": "pending",
+      "detail_level": "detailed",
+      "epic": "epic-02-ci-overhaul",
+      "scores": {
+        "readiness": 0.97,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 0.85,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      }
+    },
+    "ticket-009-create-benchmark-workflow.md": {
+      "status": "pending",
+      "detail_level": "detailed",
+      "epic": "epic-02-ci-overhaul",
+      "scores": {
+        "readiness": 1.0,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      }
+    },
+    "ticket-010-update-docs-and-publish-workflows.md": {
+      "status": "pending",
+      "detail_level": "detailed",
+      "epic": "epic-02-ci-overhaul",
+      "scores": {
+        "readiness": 1.0,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 1.0
+        }
+      }
+    },
+    "ticket-011-create-conftest-and-fixtures.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-03-test-infrastructure"
+    },
+    "ticket-012-add-hypothesis-field-tests.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-03-test-infrastructure"
+    },
+    "ticket-013-add-hypothesis-tabular-tests.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-03-test-infrastructure"
+    },
+    "ticket-014-migrate-to-pytest-benchmark.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-03-test-infrastructure"
+    },
+    "ticket-015-add-tabular-reference-pages.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-04-sphinx-docs"
+    },
+    "ticket-016-add-versioning-reference-page.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-04-sphinx-docs"
+    },
+    "ticket-017-add-storage-and-adapter-pages.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-04-sphinx-docs"
+    },
+    "ticket-018-fix-docstrings-and-index.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-04-sphinx-docs"
+    },
+    "ticket-019-create-changelog.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-05-changelog-and-release-prep"
+    },
+    "ticket-020-release-prep-review.md": {
+      "status": "pending",
+      "detail_level": "outline",
+      "epic": "epic-05-changelog-and-release-prep"
+    }
+  },
+  "epics": {
+    "epic-01-pyproject-and-tool-config": {
+      "phase": "executing",
+      "learning_extracted": false
+    },
+    "epic-02-ci-overhaul": {
+      "phase": "executing",
+      "learning_extracted": false
+    },
+    "epic-03-test-infrastructure": {
+      "phase": "outline",
+      "learning_extracted": false
+    },
+    "epic-04-sphinx-docs": {
+      "phase": "outline",
+      "learning_extracted": false
+    },
+    "epic-05-changelog-and-release-prep": {
+      "phase": "outline",
+      "learning_extracted": false
+    }
+  }
+}

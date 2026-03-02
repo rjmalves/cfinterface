@@ -1,6 +1,13 @@
-from typing import TypeVar, Type, Generator, Optional, Union, List, Dict
+from collections.abc import Generator, Iterator
+from typing import (
+    Any,
+    TypeVar,
+    cast,
+)
 
 from cfinterface.components.register import Register
+
+_T = TypeVar("_T")
 
 
 class RegisterData:
@@ -10,14 +17,12 @@ class RegisterData:
 
     __slots__ = ["_items", "_type_index"]
 
-    T = TypeVar("T")
-
     def __init__(self, root: Register) -> None:
-        self._items: List[Register] = [root]
-        self._type_index: Dict[Type, List[int]] = {type(root): [0]}
+        self._items: list[Register] = [root]
+        self._type_index: dict[type[Register], list[int]] = {type(root): [0]}
         self._refresh_indices(0)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Register]:
         return iter(self._items)
 
     def __len__(self) -> int:
@@ -31,11 +36,13 @@ class RegisterData:
             return False
         if len(self) != len(o):
             return False
-        return all(r1 == r2 for r1, r2 in zip(self._items, o._items))
+        return all(
+            r1 == r2 for r1, r2 in zip(self._items, o._items, strict=False)
+        )
 
     def _refresh_indices(self, start: int = 0) -> None:
         for i in range(start, len(self._items)):
-            self._items[i]._container = self
+            self._items[i]._container = self  # type: ignore[assignment]
             self._items[i]._index = i
 
     def _index_of(self, item: Register) -> int:
@@ -52,7 +59,7 @@ class RegisterData:
                 self._type_index[t] = []
             self._type_index[t].append(i)
 
-    def preppend(self, r: Register):
+    def preppend(self, r: Register) -> None:
         """
         Appends a register to the beginning of the data.
 
@@ -63,7 +70,7 @@ class RegisterData:
         self._refresh_indices(0)
         self._rebuild_type_index()
 
-    def append(self, r: Register):
+    def append(self, r: Register) -> None:
         """
         Appends a register to the end of the data.
 
@@ -77,7 +84,7 @@ class RegisterData:
             self._type_index[t] = []
         self._type_index[t].append(len(self._items) - 1)
 
-    def add_before(self, before: Register, new: Register):
+    def add_before(self, before: Register, new: Register) -> None:
         """
         Adds a new register to the data before another
         specified register.
@@ -92,7 +99,7 @@ class RegisterData:
         self._refresh_indices(idx)
         self._rebuild_type_index()
 
-    def add_after(self, after: Register, new: Register):
+    def add_after(self, after: Register, new: Register) -> None:
         """
         Adds a new register to the data after another
         specified register.
@@ -107,7 +114,7 @@ class RegisterData:
         self._refresh_indices(idx + 1)
         self._rebuild_type_index()
 
-    def remove(self, r: Register):
+    def remove(self, r: Register) -> None:
         """
         Removes an existing register in the chain.
 
@@ -121,38 +128,38 @@ class RegisterData:
         self._refresh_indices(idx)
         self._rebuild_type_index()
 
-    def of_type(self, t: Type[T]) -> Generator[T, None, None]:
+    def of_type(self, t: type[_T]) -> Generator[_T, None, None]:
         """
         A register generator that only returns registers of type T.
 
         :param t: The register type that is desired
-        :type t: Type[T]
-        :yield: Registers filtered by type T
-        :rtype: Generator[T, None, None]
+        :type t: Type[_T]
+        :yield: Registers filtered by type _T
+        :rtype: Generator[_T, None, None]
         """
-        indices: List[int] = []
+        indices: list[int] = []
         for cls, idx_list in self._type_index.items():
             if issubclass(cls, t):
                 indices.extend(idx_list)
         indices.sort()
         for idx in indices:
-            yield self._items[idx]
+            yield cast(_T, self._items[idx])
 
     def get_registers_of_type(
-        self, t: Type[T], **kwargs
-    ) -> Optional[Union[T, List[T]]]:
+        self, t: type[_T], **kwargs: object
+    ) -> _T | list[_T] | None:
         """
         A register or register list that only returns
         registers of type T that meet
         given filter requirements passed as kwargs.
 
         :param t: The register type that is desired
-        :type t: Type[T]
-        :return: Registers filtered by type T and optional properties
-        :rtype: T | list[T] | None
+        :type t: Type[_T]
+        :return: Registers filtered by type _T and optional properties
+        :rtype: _T | list[_T] | None
         """
 
-        def __meets(r) -> bool:
+        def __meets(r: Any) -> bool:
             return all(
                 getattr(r, k) == v for k, v in kwargs.items() if v is not None
             )
@@ -165,21 +172,21 @@ class RegisterData:
         else:
             return filtered_registers
 
-    def remove_registers_of_type(self, t: Type[T], **kwargs):
+    def remove_registers_of_type(self, t: type[_T], **kwargs: object) -> None:
         """
         Removes a set of registers given a type and an optional group of
         filters, similar to `get_registers_of_type()`
 
         :param t: The register type that is desired
-        :type t: Type[T]
+        :type t: Type[_T]
         """
         filtered_registers = self.get_registers_of_type(t, **kwargs)
         if isinstance(filtered_registers, t):
-            self.remove(filtered_registers)
+            self.remove(cast(Register, filtered_registers))
         elif isinstance(filtered_registers, list):
             for r in filtered_registers:
                 if r is not self._items[0]:
-                    self.remove(r)
+                    self.remove(cast(Register, r))
 
     @property
     def first(self) -> Register:

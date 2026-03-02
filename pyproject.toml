@@ -19,8 +19,14 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
+    "Typing :: Typed",
 ]
 
 [project.optional-dependencies]
@@ -28,17 +34,20 @@ pandas = [
     "pandas>=2.2.3",
 ]
 dev = [
+    "hypothesis",
+    "matplotlib",
+    "mypy",
+    "numpydoc",
     "pandas>=2.2.3",
+    "pandas-stubs",
+    "plotly",
     "pytest",
+    "pytest-benchmark",
     "pytest-cov",
     "ruff",
-    "mypy",
-    "sphinx-rtd-theme",
-    "sphinx-gallery",
     "sphinx",
-    "numpydoc",
-    "plotly",
-    "matplotlib",
+    "sphinx-gallery",
+    "sphinx-rtd-theme",
 ]
 
 
@@ -54,5 +63,57 @@ include = [
   "cfinterface/",
 ]
 
+[tool.mypy]
+python_version = "3.10"
+disallow_untyped_defs = true
+warn_return_any = true
+strict_optional = true
+warn_unused_configs = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["pandas", "pandas.*"]
+ignore_missing_imports = true
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "--strict-markers",
+    "-ra",
+    "--cov=cfinterface",
+    "--cov-fail-under=90",
+]
+markers = [
+    "slow: marks tests as slow (> 1s runtime)",
+    "benchmark: performance benchmarks (deselect with -m 'not benchmark')",
+]
+filterwarnings = [
+    "error::DeprecationWarning:cfinterface.*",
+]
+
+[tool.coverage.run]
+source = ["cfinterface"]
+omit = ["cfinterface/__pycache__/*"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__",
+    "if TYPE_CHECKING",
+]
+
 [tool.ruff]
 line-length = 80
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["B011", "S101"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["cfinterface"]

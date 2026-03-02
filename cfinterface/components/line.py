@@ -1,10 +1,9 @@
-from typing import Any, List, Optional, Union, overload
-
-from cfinterface.components.field import Field
+from typing import Any, cast, overload
 
 from cfinterface.adapters.components.line.repository import (
     factory,
 )
+from cfinterface.components.field import Field
 from cfinterface.storage import StorageType
 
 
@@ -25,10 +24,10 @@ class Line:
 
     def __init__(
         self,
-        fields: List[Field],
-        values: Optional[List[Any]] = None,
-        delimiter: Optional[Union[str, bytes]] = None,
-        storage: Union[str, StorageType] = "",
+        fields: list[Field],
+        values: list[Any] | None = None,
+        delimiter: str | bytes | None = None,
+        storage: str | StorageType = "",
     ):
         self._delimiter = delimiter
         self._fields = fields
@@ -37,51 +36,53 @@ class Line:
         self.__generate_repository()
         self._size = sum([f.size for f in fields])
 
-    def __generate_repository(self):
+    def __generate_repository(self) -> None:
         self._repository = factory(self._storage)(self._fields, self._values)
 
     @overload
-    def read(self, line: str) -> List[Any]: ...
+    def read(self, line: str) -> list[Any]: ...
 
     @overload
-    def read(self, line: bytes) -> List[Any]: ...
+    def read(self, line: bytes) -> list[Any]: ...
 
-    def read(self, line: Union[str, bytes]) -> List[Any]:
+    def read(self, line: str | bytes) -> list[Any]:
         return self._repository.read(line, self._delimiter)
 
-    def write(self, values: List[Any]) -> Union[str, bytes]:
-        return self._repository.write(values, self._delimiter)
+    def write(self, values: list[Any]) -> str | bytes:
+        return cast(
+            str | bytes, self._repository.write(values, self._delimiter)
+        )
 
     @property
-    def fields(self) -> List[Field]:
+    def fields(self) -> list[Field]:
         return self._repository.fields
 
     @fields.setter
-    def fields(self, vals: List[Field]):
+    def fields(self, vals: list[Field]) -> None:
         self._repository.fields = vals
 
     @property
-    def values(self) -> List[Any]:
+    def values(self) -> list[Any]:
         return self._repository.values
 
     @values.setter
-    def values(self, vals: List[Any]):
+    def values(self, vals: list[Any]) -> None:
         self._repository.values = vals
 
     @property
-    def delimiter(self) -> Optional[Union[str, bytes]]:
+    def delimiter(self) -> str | bytes | None:
         return self._delimiter
 
     @delimiter.setter
-    def delimiter(self, d: Optional[Union[str, bytes]]):
+    def delimiter(self, d: str | bytes | None) -> None:
         self._delimiter = d
 
     @property
-    def storage(self) -> Union[str, StorageType]:
+    def storage(self) -> str | StorageType:
         return self._storage
 
     @storage.setter
-    def storage(self, s: Union[str, StorageType]):
+    def storage(self, s: str | StorageType) -> None:
         self._storage = s
         self.__generate_repository()
 

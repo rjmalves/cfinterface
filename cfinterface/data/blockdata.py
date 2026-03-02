@@ -1,6 +1,13 @@
-from typing import TypeVar, Type, Generator, Optional, Union, List, Dict
+from collections.abc import Generator, Iterator
+from typing import (
+    Any,
+    TypeVar,
+    cast,
+)
 
 from cfinterface.components.block import Block
+
+_T = TypeVar("_T")
 
 
 class BlockData:
@@ -10,14 +17,12 @@ class BlockData:
 
     __slots__ = ["_items", "_type_index"]
 
-    T = TypeVar("T")
-
     def __init__(self, root: Block) -> None:
-        self._items: List[Block] = [root]
-        self._type_index: Dict[Type, List[int]] = {type(root): [0]}
+        self._items: list[Block] = [root]
+        self._type_index: dict[type[Block], list[int]] = {type(root): [0]}
         self._refresh_indices(0)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Block]:
         return iter(self._items)
 
     def __len__(self) -> int:
@@ -31,11 +36,13 @@ class BlockData:
             return False
         if len(self) != len(o):
             return False
-        return all(b1 == b2 for b1, b2 in zip(self._items, o._items))
+        return all(
+            b1 == b2 for b1, b2 in zip(self._items, o._items, strict=False)
+        )
 
     def _refresh_indices(self, start: int = 0) -> None:
         for i in range(start, len(self._items)):
-            self._items[i]._container = self
+            self._items[i]._container = self  # type: ignore[assignment]
             self._items[i]._index = i
 
     def _index_of(self, item: Block) -> int:
@@ -52,7 +59,7 @@ class BlockData:
                 self._type_index[t] = []
             self._type_index[t].append(i)
 
-    def preppend(self, b: Block):
+    def preppend(self, b: Block) -> None:
         """
         Appends a block to the beginning of the data.
 
@@ -63,7 +70,7 @@ class BlockData:
         self._refresh_indices(0)
         self._rebuild_type_index()
 
-    def append(self, b: Block):
+    def append(self, b: Block) -> None:
         """
         Appends a block to the end of the data.
 
@@ -77,7 +84,7 @@ class BlockData:
             self._type_index[t] = []
         self._type_index[t].append(len(self._items) - 1)
 
-    def add_before(self, before: Block, new: Block):
+    def add_before(self, before: Block, new: Block) -> None:
         """
         Adds a new block to the data before another
         specified block.
@@ -92,7 +99,7 @@ class BlockData:
         self._refresh_indices(idx)
         self._rebuild_type_index()
 
-    def add_after(self, after: Block, new: Block):
+    def add_after(self, after: Block, new: Block) -> None:
         """
         Adds a new block to the data after another
         specified block.
@@ -107,7 +114,7 @@ class BlockData:
         self._refresh_indices(idx + 1)
         self._rebuild_type_index()
 
-    def remove(self, b: Block):
+    def remove(self, b: Block) -> None:
         """
         Removes an existing block in the chain.
 
@@ -121,38 +128,38 @@ class BlockData:
         self._refresh_indices(idx)
         self._rebuild_type_index()
 
-    def of_type(self, t: Type[T]) -> Generator[T, None, None]:
+    def of_type(self, t: type[_T]) -> Generator[_T, None, None]:
         """
         A block generator that only returns blocks of type T.
 
         :param t: The block type that is desired
-        :type t: Type[T]
-        :yield: Blocks filtered by type T
-        :rtype: Generator[T, None, None]
+        :type t: Type[_T]
+        :yield: Blocks filtered by type _T
+        :rtype: Generator[_T, None, None]
         """
-        indices: List[int] = []
+        indices: list[int] = []
         for cls, idx_list in self._type_index.items():
             if issubclass(cls, t):
                 indices.extend(idx_list)
         indices.sort()
         for idx in indices:
-            yield self._items[idx]
+            yield cast(_T, self._items[idx])
 
     def get_blocks_of_type(
-        self, t: Type[T], **kwargs
-    ) -> Optional[Union[T, List[T]]]:
+        self, t: type[_T], **kwargs: object
+    ) -> _T | list[_T] | None:
         """
         A block or block list that only returns
         blocks of type T that meet
         given filter requirements passed as kwargs.
 
         :param t: The block type that is desired
-        :type t: Type[T]
-        :return: Blocks filtered by type T and optional properties
-        :rtype: T | list[T] | None
+        :type t: Type[_T]
+        :return: Blocks filtered by type _T and optional properties
+        :rtype: _T | list[_T] | None
         """
 
-        def __meets(r) -> bool:
+        def __meets(r: Any) -> bool:
             return all(
                 getattr(r, k) == v for k, v in kwargs.items() if v is not None
             )
@@ -165,21 +172,21 @@ class BlockData:
         else:
             return filtered_blocks
 
-    def remove_blocks_of_type(self, t: Type[T], **kwargs):
+    def remove_blocks_of_type(self, t: type[_T], **kwargs: object) -> None:
         """
         Removes a set of blocks given a type and an optional group of
         filters, similar to `get_blocks_of_type()`
 
         :param t: The block type that is desired
-        :type t: Type[T]
+        :type t: Type[_T]
         """
         filtered_blocks = self.get_blocks_of_type(t, **kwargs)
-        if isinstance(filtered_blocks, Block):
-            self.remove(filtered_blocks)
+        if isinstance(filtered_blocks, t):
+            self.remove(cast(Block, filtered_blocks))
         elif isinstance(filtered_blocks, list):
             for b in filtered_blocks:
                 if b is not self._items[0]:
-                    self.remove(b)
+                    self.remove(cast(Block, b))
 
     @property
     def first(self) -> Block:

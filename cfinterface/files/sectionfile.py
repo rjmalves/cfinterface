@@ -1,5 +1,5 @@
 import warnings
-from typing import IO, TYPE_CHECKING, Dict, List, Optional, Type, Union
+from typing import IO, TYPE_CHECKING, Any
 
 from cfinterface.components.defaultsection import DefaultSection
 from cfinterface.components.section import Section
@@ -21,19 +21,21 @@ class SectionFile:
 
     __slots__ = ["__data", "__storage", "__encoding"]
 
-    VERSIONS: Dict[str, List[Type[Section]]] = {}
-    SECTIONS: List[Type[Section]] = []
-    ENCODING: Union[str, List[str]] = ["utf-8", "latin-1", "ascii"]
-    STORAGE: Union[str, StorageType] = StorageType.TEXT
+    VERSIONS: dict[str, list[type[Section]]] = {}
+    SECTIONS: list[type[Section]] = []
+    ENCODING: str | list[str] = ["utf-8", "latin-1", "ascii"]
+    STORAGE: str | StorageType = StorageType.TEXT
     __VERSION = "latest"
 
     def __init__(
         self,
-        data=SectionData(DefaultSection()),
+        data: SectionData = SectionData(DefaultSection()),  # noqa: B008
     ) -> None:
-        self.__data = data
-        self.__storage = _ensure_storage_type(self.__class__.STORAGE)
-        self.__encoding = (
+        self.__data: SectionData = data
+        self.__storage: str | StorageType = _ensure_storage_type(
+            self.__class__.STORAGE
+        )
+        self.__encoding: str = (
             self.__class__.ENCODING
             if type(self.__class__.ENCODING) is str
             else self.__class__.ENCODING[0]
@@ -47,11 +49,11 @@ class SectionFile:
     @classmethod
     def read(
         cls,
-        content: Union[str, bytes],
-        *args,
-        version: Optional[str] = None,
-        **kwargs,
-    ):
+        content: str | bytes,
+        *args: Any,
+        version: str | None = None,
+        **kwargs: Any,
+    ) -> "SectionFile":
         """Read from a file path or buffer. ``version`` selects a component set
         from VERSIONS without mutating the class."""
         components = cls.SECTIONS
@@ -78,22 +80,22 @@ class SectionFile:
             "Failed to decode content with all specified encodings."
         )
 
-    def write(self, to: Union[str, IO], *args, **kwargs):
+    def write(self, to: str | IO[Any], *args: Any, **kwargs: Any) -> None:
         writer = SectionWriting(self.__data, self.__storage)
         writer.write(to, self.__encoding, *args, **kwargs)
 
     @classmethod
     def read_many(
         cls,
-        paths: List[str],
+        paths: list[str],
         *,
-        version: Optional[str] = None,
-    ) -> Dict[str, "SectionFile"]:
+        version: str | None = None,
+    ) -> dict[str, "SectionFile"]:
         return {path: cls.read(path, version=version) for path in paths}
 
     def validate(
         self,
-        version: Optional[str] = None,
+        version: str | None = None,
         threshold: float = 0.5,
     ) -> "VersionMatchResult":
         """Validate parsed data against expected component types."""
@@ -115,7 +117,7 @@ class SectionFile:
         return self.__data
 
     @classmethod
-    def set_version(cls, v: str):
+    def set_version(cls, v: str) -> None:
         """
         Set the active section set for the given version key.
 
@@ -126,7 +128,8 @@ class SectionFile:
             Use ``read(content, version="...")`` instead.
         """
         warnings.warn(
-            'set_version() is deprecated. Use read(content, version="...") instead.',
+            "set_version() is deprecated. "
+            'Use read(content, version="...") instead.',
             DeprecationWarning,
             stacklevel=2,
         )

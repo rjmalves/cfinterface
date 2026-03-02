@@ -1,6 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Optional, TypeVar, overload
-
+from typing import Any, TypeVar, overload
 
 _T = TypeVar("_T", str, bytes)
 
@@ -17,7 +16,7 @@ class Field:
         self,
         size: int,
         starting_position: int,
-        value: Optional[Any] = None,
+        value: Any | None = None,
     ) -> None:
         self._size = size
         self._starting_position = starting_position

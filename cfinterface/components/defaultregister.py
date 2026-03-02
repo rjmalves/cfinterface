@@ -1,4 +1,5 @@
-from typing import IO, Union
+from typing import IO, Any
+
 from cfinterface.components.register import Register
 from cfinterface.storage import StorageType
 
@@ -11,16 +12,25 @@ class DefaultRegister(Register):
 
     __slots__ = []
 
-    def __init__(self, previous=None, next=None, data=None) -> None:
+    def __init__(
+        self,
+        previous: Any | None = None,
+        next: Any | None = None,
+        data: Any | None = None,
+    ) -> None:
         super().__init__(previous, next, data)
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, DefaultRegister):
             return False
-        return self.data == o.data
+        return bool(self.data == o.data)
 
     def read(
-        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+        self,
+        file: IO[Any],
+        storage: str | StorageType = "",
+        *args: Any,
+        **kwargs: Any,
     ) -> bool:
         if storage != StorageType.BINARY:
             self.data = file.readline()
@@ -29,7 +39,11 @@ class DefaultRegister(Register):
         return True
 
     def write(
-        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+        self,
+        file: IO[Any],
+        storage: str | StorageType = "",
+        *args: Any,
+        **kwargs: Any,
     ) -> bool:
         if storage != StorageType.BINARY:
             file.write(self.data)

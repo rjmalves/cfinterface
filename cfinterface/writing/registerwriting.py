@@ -1,11 +1,11 @@
-from typing import Union, IO
+from typing import IO, Any
 
-from cfinterface.data.registerdata import RegisterData
-from cfinterface.storage import StorageType
 from cfinterface.adapters.writing.repository import (
     Repository,
     factory,
 )
+from cfinterface.data.registerdata import RegisterData
+from cfinterface.storage import StorageType
 
 
 class RegisterWriting:
@@ -20,17 +20,23 @@ class RegisterWriting:
     ]
 
     def __init__(
-        self, data: RegisterData, storage: Union[str, StorageType] = ""
+        self, data: RegisterData, storage: str | StorageType = ""
     ) -> None:
         self.__data = data
         self.__storage = storage
         self.__repository: Repository = None  # type: ignore
 
-    def __write_file(self, *args, **kwargs):
+    def __write_file(self, *args: Any, **kwargs: Any) -> None:
         for r in self.__data:
             r.write(self.__repository.file, self.__storage, *args, **kwargs)
 
-    def write(self, to: Union[str, IO], encoding: str, *args, **kwargs):
+    def write(
+        self,
+        to: str | IO[Any],
+        encoding: str,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         """
         Writes a file with a given name in a given directory with
         the data from the RegisterData structure.

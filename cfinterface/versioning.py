@@ -1,18 +1,19 @@
-from typing import Dict, List, NamedTuple, Optional, Type
+from typing import Any, NamedTuple
 
 
 class SchemaVersion(NamedTuple):
-    """Associates a version key with its component types and an optional description."""
+    """Associates a version key with its component types and an optional
+    description."""
 
     key: str
-    components: List[Type]
+    components: list[type]
     description: str = ""
 
 
 def resolve_version(
     requested: str,
-    versions: Dict[str, List[Type]],
-) -> Optional[List[Type]]:
+    versions: dict[str, list[type]],
+) -> list[type] | None:
     """
     Return the component list for the most recent version key <= requested.
 
@@ -35,17 +36,17 @@ class VersionMatchResult(NamedTuple):
     """
 
     matched: bool
-    expected_types: List[Type]
-    found_types: List[Type]
-    missing_types: List[Type]
-    unexpected_types: List[Type]
+    expected_types: list[type]
+    found_types: list[type]
+    missing_types: list[type]
+    unexpected_types: list[type]
     default_ratio: float
 
 
 def validate_version(
-    data,
-    expected_types: List[Type],
-    default_type: Type,
+    data: Any,
+    expected_types: list[type],
+    default_type: type,
     threshold: float = 0.5,
 ) -> VersionMatchResult:
     """

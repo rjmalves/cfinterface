@@ -1,11 +1,13 @@
-from typing import Any, IO, Union, List, overload
-from cfinterface.components.field import Field
+from __future__ import annotations
+
 import inspect
-from cfinterface.components.literalfield import LiteralField
-from cfinterface.components.line import Line
-from cfinterface.storage import StorageType
+from typing import IO, Any, overload
 
 from cfinterface.adapters.components.repository import factory
+from cfinterface.components.field import Field
+from cfinterface.components.line import Line
+from cfinterface.components.literalfield import LiteralField
+from cfinterface.storage import StorageType
 
 
 class Register:
@@ -23,7 +25,7 @@ class Register:
         "__next_fallback",
     ]
 
-    IDENTIFIER: Union[str, bytes] = ""
+    IDENTIFIER: str | bytes = ""
     IDENTIFIER_DIGITS = 0
     LINE = Line([])
     _REGISTER_PROPERTIES = [
@@ -38,9 +40,9 @@ class Register:
 
     def __init__(
         self,
-        previous=None,
-        next=None,
-        data=None,
+        previous: Any | None = None,
+        next: Any | None = None,
+        data: Any | None = None,
     ) -> None:
         self.__identifier_field: Field = LiteralField(
             self.__class__.IDENTIFIER_DIGITS, 0
@@ -57,30 +59,34 @@ class Register:
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, self.__class__):
             return False
-        return o.data == self.data
+        return bool(o.data == self.data)
 
     @classmethod
     @overload
     def matches(
-        cls, line: str, storage: Union[str, StorageType] = ""
+        cls, line: str, storage: str | StorageType = ""
     ) -> bool: ...
 
     @classmethod
     @overload
     def matches(
-        cls, line: bytes, storage: Union[str, StorageType] = ""
+        cls, line: bytes, storage: str | StorageType = ""
     ) -> bool: ...
 
     @classmethod
     def matches(
-        cls, line: Union[str, bytes], storage: Union[str, StorageType] = ""
+        cls, line: str | bytes, storage: str | StorageType = ""
     ) -> bool:
         return factory(storage).matches(
             cls.IDENTIFIER, line[: cls.IDENTIFIER_DIGITS]
         )
 
     def read(
-        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+        self,
+        file: IO[Any],
+        storage: str | StorageType = "",
+        *args: Any,
+        **kwargs: Any,
     ) -> bool:
         line = Line(
             [self.__identifier_field] + self.__class__.LINE.fields,
@@ -93,7 +99,11 @@ class Register:
         return True
 
     def write(
-        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
+        self,
+        file: IO[Any],
+        storage: str | StorageType = "",
+        *args: Any,
+        **kwargs: Any,
     ) -> bool:
         if not self.empty:
             line = Line(
@@ -106,17 +116,25 @@ class Register:
         return True
 
     def read_register(
-        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
-    ):
+        self,
+        file: IO[Any],
+        storage: str | StorageType = "",
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         self.read(file, storage, *args, **kwargs)
 
     def write_register(
-        self, file: IO, storage: Union[str, StorageType] = "", *args, **kwargs
-    ):
+        self,
+        file: IO[Any],
+        storage: str | StorageType = "",
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         self.write(file, storage, *args, **kwargs)
 
     @property
-    def previous(self) -> "Register":
+    def previous(self) -> Register | None:
         if self._container is not None:
             if self._index == 0:
                 return None
@@ -124,11 +142,11 @@ class Register:
         return self.__previous_fallback
 
     @previous.setter
-    def previous(self, b: "Register"):
+    def previous(self, b: Register) -> None:
         self.__previous_fallback = b
 
     @property
-    def next(self) -> "Register":
+    def next(self) -> Register | None:
         if self._container is not None:
             if self._index >= len(self._container._items) - 1:
                 return None
@@ -136,7 +154,7 @@ class Register:
         return self.__next_fallback
 
     @next.setter
-    def next(self, b: "Register"):
+    def next(self, b: Register) -> None:
         self.__next_fallback = b
 
     @property
@@ -144,7 +162,7 @@ class Register:
         return self.__data
 
     @data.setter
-    def data(self, d: Any):
+    def data(self, d: Any) -> None:
         self.__data = d
 
     @property
@@ -164,7 +182,7 @@ class Register:
         return len([d for d in self.__data if d is not None]) == 0
 
     @property
-    def custom_properties(self) -> List[str]:
+    def custom_properties(self) -> list[str]:
         return [
             nome
             for (nome, _) in inspect.getmembers(
