@@ -40,7 +40,7 @@ class CabecalhoBloco(Block):
         campos: dict[str, str] = {}
         while True:
             linha = file.readline()
-            if not linha or self.__class__.END_PATTERN.lstrip("^") in linha:
+            if not linha or self.__class__.ends(linha):
                 break
             if "=" in linha:
                 chave, _, valor = linha.partition("=")
@@ -75,7 +75,7 @@ class DadosBloco(Block):
         registros: list[dict[str, str]] = []
         while True:
             linha = file.readline()
-            if not linha or self.__class__.END_PATTERN.lstrip("^") in linha:
+            if not linha or self.__class__.ends(linha):
                 break
             linha = linha.strip()
             if not linha:

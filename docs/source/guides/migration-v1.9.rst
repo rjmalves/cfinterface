@@ -45,12 +45,12 @@ seu projeto ou instale o extra:
 
     # Antes: import implicito que funcionava porque cfinterface trazia pandas
     import pandas as pd
-    df = arquivo.data_as_df()
+    df = pd.DataFrame(arquivo.data)
 
     # Depois: instale cfinterface[pandas] ou declare pandas como dependencia
     # propria do seu projeto
     import pandas as pd  # requer pip install cfinterface[pandas]
-    df = arquivo.data_as_df()
+    df = pd.DataFrame(arquivo.data)
 
 StorageType Enum
 -----------------
