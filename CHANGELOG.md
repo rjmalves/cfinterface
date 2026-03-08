@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-03-08
+
+### Fixed
+
+- Translate all documentation and examples from pt-BR to English, matching the project's established language
+- Change Sphinx language setting from `pt_BR` to `en`
+
 ## [1.9.0] - 2026-03-08
 
 ### Added
@@ -67,5 +74,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Null value detection in `Field` write methods now uses `math.isnan()` instead of `pd.isnull()`, eliminating the unnecessary pandas import at module level
 - `RegisterFile._as_df()` now performs a lazy pandas import, only importing the library when the method is actually called
 
-[Unreleased]: https://github.com/rjmalves/cfinterface/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/rjmalves/cfinterface/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/rjmalves/cfinterface/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/rjmalves/cfinterface/compare/v1.8.3...v1.9.0
