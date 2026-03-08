@@ -1,5 +1,3 @@
-:orphan:
-
 Visao Geral da Arquitetura
 ==========================
 

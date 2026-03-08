@@ -3,7 +3,7 @@
 **Project**: cfinterface
 **Plan**: infra-docs-overhaul
 **Status**: In Progress (Progressive)
-**Total Tickets**: 13 (11 detailed/refined, 2 outline)
+**Total Tickets**: 13 (13 detailed/refined, 0 outline)
 
 ## Overview
 
@@ -21,8 +21,8 @@ Modernize cfinterface's developer tooling, CI infrastructure, and documentation 
 | ---- | ---------------------- | ------- | --------- |
 | 01   | CI & Developer Tooling | 3       | completed |
 | 02   | Sphinx Modernization   | 3       | completed |
-| 03   | Documentation Content  | 5       | executing |
-| 04   | Repository Polish      | 2       | outline   |
+| 03   | Documentation Content  | 5       | completed |
+| 04   | Repository Polish      | 2       | executing |
 
 ## Dependency Graph
 
@@ -57,8 +57,8 @@ ticket-004 (Furo theme) ──> ticket-005 (examples)
 | ticket-009 | Create v1.8-to-v1.9 migration guide                       | epic-03 | completed | Refined      | 1.00      | 0.95    | EXCELLENT |
 | ticket-010 | Create performance tips page                              | epic-03 | completed | Refined      | 1.00      | 0.95    | EXCELLENT |
 | ticket-011 | Update contributing.rst content and fix repository URL    | epic-03 | completed | Refined      | 0.98      | 0.95    | EXCELLENT |
-| ticket-012 | Create root-level CONTRIBUTING.md                         | epic-04 | pending   | Outline      | --        | --      | --        |
-| ticket-013 | Restructure index.rst with new documentation sections     | epic-04 | pending   | Outline      | --        | --      | --        |
+| ticket-012 | Create root-level CONTRIBUTING.md                         | epic-04 | completed | Refined      | 0.98      | 0.95    | EXCELLENT |
+| ticket-013 | Restructure index.rst with new documentation sections     | epic-04 | completed | Refined      | 0.94      | 0.95    | EXCELLENT |
 
 ## Readiness Scores (Detailed/Refined Tickets)
 
@@ -75,5 +75,7 @@ ticket-004 (Furo theme) ──> ticket-005 (examples)
 | ticket-009 | 1.00      | 1.00      | 1.00        | 1.00     | 1.00        | 1.00      |
 | ticket-010 | 1.00      | 1.00      | 1.00        | 1.00     | 1.00        | 1.00      |
 | ticket-011 | 0.98      | 1.00      | 1.00        | 1.00     | 1.00        | 0.80      |
+| ticket-012 | 0.98      | 1.00      | 1.00        | 1.00     | 1.00        | 0.80      |
+| ticket-013 | 0.94      | 1.00      | 1.00        | 1.00     | 1.00        | 0.40      |
 
-Dimensions below 0.85: ticket-011:atomicity (0.80 -- title contains "and", preserved from original outline)
+Dimensions below 0.85: ticket-011:atomicity (0.80), ticket-012:atomicity (0.80), ticket-013:atomicity (0.40 -- 10 criteria across 5 files, but the ticket is genuinely atomic as removing orphan directives and adding toctree entries is a single indivisible operation)

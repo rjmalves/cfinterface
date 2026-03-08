@@ -1,6 +1,6 @@
 {
   "plan": "infra-docs-overhaul",
-  "last_updated": "2026-03-08T17:37:19Z",
+  "last_updated": "2026-03-08T17:47:41Z",
   "progressive": true,
   "tickets": {
     "ticket-001-add-pre-commit-configuration.md": {
@@ -268,12 +268,52 @@
       "agent": "open-source-documentation-writer"
     },
     "ticket-012-create-root-contributing-md.md": {
-      "status": "pending",
-      "detail_level": "outline"
+      "status": "completed",
+      "detail_level": "refined",
+      "scores": {
+        "quality": 0.95,
+        "quality_breakdown": {
+          "conformance": 1.0,
+          "scope_adherence": 1.0,
+          "lint_cleanliness": 1.0,
+          "type_safety": 1.0,
+          "test_delta": 0.5
+        },
+        "readiness": 0.98,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 0.8
+        }
+      },
+      "workflow_step": null,
+      "agent": "open-source-documentation-writer"
     },
     "ticket-013-restructure-index-rst.md": {
-      "status": "pending",
-      "detail_level": "outline"
+      "status": "completed",
+      "detail_level": "refined",
+      "scores": {
+        "quality": 0.95,
+        "quality_breakdown": {
+          "conformance": 1.0,
+          "scope_adherence": 1.0,
+          "lint_cleanliness": 1.0,
+          "type_safety": 1.0,
+          "test_delta": 0.5
+        },
+        "readiness": 0.94,
+        "readiness_breakdown": {
+          "structure": 1.0,
+          "testability": 1.0,
+          "boundary": 1.0,
+          "dependency_clarity": 1.0,
+          "atomicity": 0.4
+        }
+      },
+      "workflow_step": null,
+      "agent": "open-source-documentation-writer"
     }
   },
   "epics": {
@@ -290,8 +330,8 @@
       "learning_extracted": true
     },
     "epic-04-repository-polish": {
-      "phase": "outline",
-      "learning_extracted": false
+      "phase": "completed",
+      "learning_extracted": true
     }
   }
 }

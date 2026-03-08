@@ -1,5 +1,3 @@
-:orphan:
-
 Dicas de Performance
 ====================
 
