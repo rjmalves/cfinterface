@@ -1,94 +1,94 @@
-Visao Geral da Arquitetura
-==========================
+Architecture Overview
+=====================
 
-O ``cfinterface`` e um framework declarativo para construcao de interfaces de baixo nivel com
-arquivos de texto ou binarios de estrutura complexa. Em vez de escrever codigo imperativo para
-percorrer linhas de arquivo, o desenvolvedor declara o esquema -- quais campos existem, em quais
-posicoes, como identificar cada registro -- e o framework cuida da leitura e escrita. Essa abordagem
-torna o esquema do arquivo explicito, reutilizavel e testavel de forma independente.
+``cfinterface`` is a declarative framework for building low-level interfaces with text or binary
+files of complex structure. Instead of writing imperative code to iterate over file lines, the
+developer declares the schema -- which fields exist, at which positions, how to identify each
+record -- and the framework handles reading and writing. This approach makes the file schema
+explicit, reusable, and independently testable.
 
-O design segue um principio de composicao em camadas: componentes atomicos sao agrupados em
-componentes intermediarios, que por sua vez sao orquestrados por classes de arquivo de alto nivel.
-Uma camada de adaptadores isola as diferencas entre armazenamento textual e binario do restante do
-codigo.
+The design follows a layered composition principle: atomic components are grouped into
+intermediate components, which in turn are orchestrated by high-level file classes.
+An adapter layer isolates the differences between textual and binary storage from the rest of
+the code.
 
-Hierarquia de Componentes
---------------------------
+Component Hierarchy
+--------------------
 
-A hierarquia completa de componentes e ilustrada abaixo:
+The full component hierarchy is illustrated below:
 
 .. code-block:: text
 
     Field  (FloatField, IntegerField, LiteralField, DatetimeField)
       |
       v
-    Line  (sequencia ordenada de Fields; delega I/O ao adaptador)
+    Line  (ordered sequence of Fields; delegates I/O to the adapter)
       |
       v
-    Register / Block / Section  (componentes intermediarios; operam sobre handles de arquivo)
+    Register / Block / Section  (intermediate components; operate on file handles)
       |
       v
-    RegisterFile / BlockFile / SectionFile  (classes de arquivo de alto nivel)
+    RegisterFile / BlockFile / SectionFile  (high-level file classes)
 
-Cada camada depende apenas da camada imediatamente inferior, mantendo o acoplamento minimo e
-permitindo que cada nivel seja testado e reutilizado de forma independente.
+Each layer depends only on the layer immediately below it, keeping coupling minimal and
+allowing each level to be tested and reused independently.
 
-Campos (Fields)
-----------------
+Fields
+-------
 
-:class:`cfinterface.components.field.Field` e a unidade atomica do framework. Um ``Field``
-representa um unico valor posicional dentro de uma linha de arquivo: ele conhece sua posicao de
-inicio (``starting_position``), seu tamanho em caracteres ou bytes (``size``) e o valor atual
-(``value``). Os metodos publicos :meth:`~cfinterface.components.field.Field.read` e
-:meth:`~cfinterface.components.field.Field.write` aceitam tanto ``str`` quanto ``bytes``,
-delegando internamente para ``_textual_read``/``_binary_read`` ou
+:class:`cfinterface.components.field.Field` is the atomic unit of the framework. A ``Field``
+represents a single positional value within a file line: it knows its starting position
+(``starting_position``), its size in characters or bytes (``size``), and the current value
+(``value``). The public methods :meth:`~cfinterface.components.field.Field.read` and
+:meth:`~cfinterface.components.field.Field.write` accept both ``str`` and ``bytes``,
+delegating internally to ``_textual_read``/``_binary_read`` or
 ``_textual_write``/``_binary_write``.
 
-O framework fornece quatro subclasses concretas prontas para uso:
+The framework provides four concrete subclasses ready for use:
 
 :class:`cfinterface.components.floatfield.FloatField`
-    Le e escreve numeros de ponto flutuante. Suporta notacoes fixa (``format="F"``),
-    cientifica (``format="E"`` ou ``format="D"``) e separador decimal configuravel.
-    Para armazenamento binario usa ``numpy`` (``float16``, ``float32`` ou ``float64``
-    conforme o ``size``).
+    Reads and writes floating-point numbers. Supports fixed notation (``format="F"``),
+    scientific notation (``format="E"`` or ``format="D"``), and a configurable decimal
+    separator. For binary storage uses ``numpy`` (``float16``, ``float32``, or ``float64``
+    depending on ``size``).
 
 :class:`cfinterface.components.integerfield.IntegerField`
-    Le e escreve inteiros. Em modo binario usa ``numpy`` (``int16``, ``int32`` ou ``int64``).
+    Reads and writes integers. In binary mode uses ``numpy`` (``int16``, ``int32``, or ``int64``).
 
 :class:`cfinterface.components.literalfield.LiteralField`
-    Le e escreve strings de largura fixa, removendo espacos em branco nas extremidades ao ler
-    e alinhando a esquerda ao escrever.
+    Reads and writes fixed-width strings, stripping whitespace from the edges when reading
+    and left-aligning when writing.
 
 :class:`cfinterface.components.datetimefield.DatetimeField`
-    Le e escreve objetos :class:`datetime.datetime` a partir de uma ou mais strings de formato.
+    Reads and writes :class:`datetime.datetime` objects from one or more format strings.
 
-Exemplo -- definindo um campo textual:
+Example -- defining a textual field:
 
 .. code-block:: python
 
     from cfinterface import LiteralField, FloatField
 
-    nome = LiteralField(size=20, starting_position=0)
-    saldo = FloatField(size=12, starting_position=20, decimal_digits=2)
+    name = LiteralField(size=20, starting_position=0)
+    balance = FloatField(size=12, starting_position=20, decimal_digits=2)
 
-    linha = "Conta Corrente       -1234.56    "
-    nome.read(linha)    # "Conta Corrente"
-    saldo.read(linha)   # -1234.56
+    line = "Current Account      -1234.56    "
+    name.read(line)    # "Current Account"
+    balance.read(line)   # -1234.56
 
-Linha (Line)
--------------
+Line
+-----
 
-:class:`cfinterface.components.line.Line` agrega uma lista ordenada de
-:class:`~cfinterface.components.field.Field` e oferece os metodos
-:meth:`~cfinterface.components.line.Line.read` e
-:meth:`~cfinterface.components.line.Line.write` para operar sobre a linha inteira de uma so vez.
-Internamente, ``Line`` nao realiza I/O diretamente: ela instancia um repositorio via a funcao
-:func:`cfinterface.adapters.components.line.repository.factory`, passando o ``StorageType``
-configurado. Esse repositorio e quem executa a leitura e escrita de acordo com o backend de
-armazenamento (textual ou binario).
+:class:`cfinterface.components.line.Line` aggregates an ordered list of
+:class:`~cfinterface.components.field.Field` instances and provides the methods
+:meth:`~cfinterface.components.line.Line.read` and
+:meth:`~cfinterface.components.line.Line.write` to operate on the entire line at once.
+Internally, ``Line`` does not perform I/O directly: it instantiates a repository via the
+function :func:`cfinterface.adapters.components.line.repository.factory`, passing the
+configured ``StorageType``. That repository is what executes reading and writing according
+to the storage backend (textual or binary).
 
-``Line`` aceita um ``delimiter`` opcional: quando informado, os campos sao separados por esse
-caractere em vez de ocuparem posicoes fixas.
+``Line`` accepts an optional ``delimiter``: when provided, fields are separated by that
+character instead of occupying fixed positions.
 
 .. code-block:: python
 
@@ -96,31 +96,31 @@ caractere em vez de ocuparem posicoes fixas.
     from cfinterface.components.line import Line
     from cfinterface.storage import StorageType
 
-    campos = [
+    fields = [
         LiteralField(size=20, starting_position=0),
         FloatField(size=10, starting_position=20, decimal_digits=2),
     ]
-    linha = Line(campos, storage=StorageType.TEXT)
-    valores = linha.read("Conta Corrente      -1234.56  ")
-    # valores == ["Conta Corrente", -1234.56]
+    line = Line(fields, storage=StorageType.TEXT)
+    values = line.read("Current Account     -1234.56  ")
+    # values == ["Current Account", -1234.56]
 
-Componentes Intermediarios
----------------------------
+Intermediate Components
+------------------------
 
-Os componentes intermediarios operam diretamente sobre handles de arquivo (``IO[Any]``) e
-implementam a logica de identificacao e delimitacao de blocos de conteudo.
+Intermediate components operate directly on file handles (``IO[Any]``) and implement the
+logic for identifying and delimiting content blocks.
 
 Register
 ~~~~~~~~~
 
-:class:`cfinterface.components.register.Register` representa uma unica linha de arquivo
-identificada por um prefixo fixo. O atributo de classe ``IDENTIFIER`` define o prefixo
-(``str`` ou ``bytes``) e ``IDENTIFIER_DIGITS`` especifica o numero de caracteres ou bytes
-que formam esse identificador. O atributo de classe ``LINE`` e uma instancia de
-:class:`~cfinterface.components.line.Line` que descreve os campos apos o identificador.
+:class:`cfinterface.components.register.Register` represents a single file line identified
+by a fixed prefix. The class attribute ``IDENTIFIER`` defines the prefix (``str`` or
+``bytes``) and ``IDENTIFIER_DIGITS`` specifies the number of characters or bytes that form
+this identifier. The class attribute ``LINE`` is an instance of
+:class:`~cfinterface.components.line.Line` that describes the fields after the identifier.
 
-O metodo de classe :meth:`~cfinterface.components.register.Register.matches` verifica se uma
-linha pertence a esse tipo de registro comparando seu inicio com ``IDENTIFIER``.
+The class method :meth:`~cfinterface.components.register.Register.matches` checks whether a
+line belongs to this record type by comparing its beginning with ``IDENTIFIER``.
 
 .. code-block:: python
 
@@ -128,7 +128,7 @@ linha pertence a esse tipo de registro comparando seu inicio com ``IDENTIFIER``.
     from cfinterface.components.line import Line
     from cfinterface.components.floatfield import FloatField
 
-    class ValorMensal(Register):
+    class MonthlyValue(Register):
         IDENTIFIER = "VM"
         IDENTIFIER_DIGITS = 2
         LINE = Line([FloatField(size=10, starting_position=2, decimal_digits=2)])
@@ -136,152 +136,152 @@ linha pertence a esse tipo de registro comparando seu inicio com ``IDENTIFIER``.
 Block
 ~~~~~~
 
-:class:`cfinterface.components.block.Block` representa um bloco delimitado por padroes de
-inicio e fim. Os atributos de classe ``BEGIN_PATTERN`` e ``END_PATTERN`` sao expressoes
-regulares (``str`` ou ``bytes``) que indicam onde o bloco comeca e termina. O atributo
-``MAX_LINES`` (padrao: 10000) limita o numero de linhas processadas por bloco como
-salvaguarda contra leituras infinitas.
+:class:`cfinterface.components.block.Block` represents a block delimited by begin and end
+patterns. The class attributes ``BEGIN_PATTERN`` and ``END_PATTERN`` are regular expressions
+(``str`` or ``bytes``) that indicate where the block starts and ends. The attribute
+``MAX_LINES`` (default: 10000) limits the number of lines processed per block as a safeguard
+against infinite reads.
 
-Os metodos de classe :meth:`~cfinterface.components.block.Block.begins` e
-:meth:`~cfinterface.components.block.Block.ends` testam uma linha contra os padroes
-correspondentes. Os metodos :meth:`~cfinterface.components.block.Block.read` e
-:meth:`~cfinterface.components.block.Block.write` devem ser implementados pela subclasse.
+The class methods :meth:`~cfinterface.components.block.Block.begins` and
+:meth:`~cfinterface.components.block.Block.ends` test a line against the corresponding
+patterns. The methods :meth:`~cfinterface.components.block.Block.read` and
+:meth:`~cfinterface.components.block.Block.write` must be implemented by the subclass.
 
 .. code-block:: python
 
     from cfinterface.components.block import Block
 
-    class SecaoDados(Block):
-        BEGIN_PATTERN = r"^INICIO"
-        END_PATTERN = r"^FIM"
+    class DataSection(Block):
+        BEGIN_PATTERN = r"^BEGIN"
+        END_PATTERN = r"^END"
 
         def read(self, file, *args, **kwargs):
-            # logica de leitura customizada
+            # custom read logic
             return True
 
         def write(self, file, *args, **kwargs):
-            # logica de escrita customizada
+            # custom write logic
             return True
 
 Section
 ~~~~~~~~
 
-:class:`cfinterface.components.section.Section` representa uma divisao ordenada e sequencial
-do arquivo, sem padroes de inicio ou fim. Sections sao processadas na ordem em que aparecem em
-``SectionFile.SECTIONS``. O atributo de classe ``STORAGE`` (do tipo
-:class:`~cfinterface.storage.StorageType`) indica se a secao opera em modo textual ou binario.
-Os metodos :meth:`~cfinterface.components.section.Section.read` e
-:meth:`~cfinterface.components.section.Section.write` devem ser implementados pela subclasse.
+:class:`cfinterface.components.section.Section` represents an ordered, sequential division
+of the file, without begin or end patterns. Sections are processed in the order in which they
+appear in ``SectionFile.SECTIONS``. The class attribute ``STORAGE`` (of type
+:class:`~cfinterface.storage.StorageType`) indicates whether the section operates in textual
+or binary mode. The methods :meth:`~cfinterface.components.section.Section.read` and
+:meth:`~cfinterface.components.section.Section.write` must be implemented by the subclass.
 
-Classes de Arquivo
--------------------
+File Classes
+-------------
 
-As classes de arquivo sao o ponto de entrada do framework para o usuario final. Cada uma agrega
-um conjunto de componentes intermediarios e fornece os metodos de alto nivel
-:meth:`read`, :meth:`write`, :meth:`read_many` e :meth:`validate`.
+File classes are the framework's entry point for the end user. Each one aggregates a set of
+intermediate components and provides the high-level methods
+:meth:`read`, :meth:`write`, :meth:`read_many`, and :meth:`validate`.
 
 :class:`cfinterface.files.registerfile.RegisterFile`
-    Modela arquivos compostos por registros de linha unica. O atributo de classe ``REGISTERS``
-    e uma lista de subclasses de :class:`~cfinterface.components.register.Register` na ordem
-    em que podem aparecer no arquivo.
+    Models files composed of single-line records. The class attribute ``REGISTERS``
+    is a list of :class:`~cfinterface.components.register.Register` subclasses in the order
+    in which they may appear in the file.
 
 :class:`cfinterface.files.blockfile.BlockFile`
-    Modela arquivos compostos por blocos delimitados. O atributo de classe ``BLOCKS`` e uma lista
-    de subclasses de :class:`~cfinterface.components.block.Block`.
+    Models files composed of delimited blocks. The class attribute ``BLOCKS`` is a list
+    of :class:`~cfinterface.components.block.Block` subclasses.
 
 :class:`cfinterface.files.sectionfile.SectionFile`
-    Modela arquivos compostos por secoes sequenciais. O atributo de classe ``SECTIONS`` e uma
-    lista de subclasses de :class:`~cfinterface.components.section.Section`.
+    Models files composed of sequential sections. The class attribute ``SECTIONS`` is a
+    list of :class:`~cfinterface.components.section.Section` subclasses.
 
-Atributos de classe comuns a todas as classes de arquivo:
+Class attributes common to all file classes:
 
 ``STORAGE``
-    :class:`~cfinterface.storage.StorageType` que indica o backend de armazenamento
-    (``StorageType.TEXT`` ou ``StorageType.BINARY``). Padrao: ``StorageType.TEXT``.
+    :class:`~cfinterface.storage.StorageType` that indicates the storage backend
+    (``StorageType.TEXT`` or ``StorageType.BINARY``). Default: ``StorageType.TEXT``.
 
 ``ENCODING``
-    Codificacao de texto a usar (``str``) ou lista de codificacoes tentadas em ordem
-    (``list[str]``). Padrao: ``["utf-8", "latin-1", "ascii"]``.
+    Text encoding to use (``str``) or list of encodings tried in order
+    (``list[str]``). Default: ``["utf-8", "latin-1", "ascii"]``.
 
 ``VERSIONS``
-    Dicionario opcional que mapeia chaves de versao a listas de tipos de componentes,
-    permitindo que um mesmo arquivo suporte multiplas versoes de esquema. Consulte a secao
-    `Versionamento`_ para detalhes.
+    Optional dictionary mapping version keys to lists of component types,
+    allowing the same file class to support multiple schema versions. See the
+    `Versioning`_ section for details.
 
 .. code-block:: python
 
     from cfinterface.files.registerfile import RegisterFile
     from cfinterface.storage import StorageType
 
-    class MeuArquivo(RegisterFile):
-        REGISTERS = [ValorMensal]
+    class MyFile(RegisterFile):
+        REGISTERS = [MonthlyValue]
         STORAGE = StorageType.TEXT
         ENCODING = "utf-8"
 
-    arquivo = MeuArquivo.read("/caminho/para/arquivo.txt")
-    arquivo.write("/caminho/para/saida.txt")
+    file = MyFile.read("/path/to/file.txt")
+    file.write("/path/to/output.txt")
 
-Camada de Adaptadores
-----------------------
+Adapter Layer
+--------------
 
-A camada de adaptadores isola as diferencas entre armazenamento textual e binario do restante do
-framework. O modulo :mod:`cfinterface.adapters.components.repository` define a hierarquia:
+The adapter layer isolates the differences between textual and binary storage from the rest
+of the framework. The module :mod:`cfinterface.adapters.components.repository` defines the
+hierarchy:
 
-- :class:`~cfinterface.adapters.components.repository.Repository` -- interface abstrata com
-  metodos estaticos ``matches``, ``begins``, ``ends``, ``read`` e ``write``.
-- :class:`~cfinterface.adapters.components.repository.TextualRepository` -- implementacao para
-  arquivos de texto; usa ``file.readline()`` para leitura e comparacoes baseadas em regex
-  sobre strings.
-- :class:`~cfinterface.adapters.components.repository.BinaryRepository` -- implementacao para
-  arquivos binarios; usa ``file.read(linesize)`` e comparacoes de bytes.
+- :class:`~cfinterface.adapters.components.repository.Repository` -- abstract interface with
+  static methods ``matches``, ``begins``, ``ends``, ``read``, and ``write``.
+- :class:`~cfinterface.adapters.components.repository.TextualRepository` -- implementation for
+  text files; uses ``file.readline()`` for reading and regex-based comparisons on strings.
+- :class:`~cfinterface.adapters.components.repository.BinaryRepository` -- implementation for
+  binary files; uses ``file.read(linesize)`` and byte comparisons.
 
-A funcao :func:`cfinterface.adapters.components.repository.factory` recebe um
-:class:`~cfinterface.storage.StorageType` e retorna a classe de repositorio adequada.
-Quando ``StorageType.TEXT`` e passado, retorna ``TextualRepository``; quando
-``StorageType.BINARY``, retorna ``BinaryRepository``. Esse padrao de fabrica e o ponto central
-que permite ao framework ser agnostico ao tipo de armazenamento.
+The function :func:`cfinterface.adapters.components.repository.factory` receives a
+:class:`~cfinterface.storage.StorageType` and returns the appropriate repository class.
+When ``StorageType.TEXT`` is passed, it returns ``TextualRepository``; when
+``StorageType.BINARY``, it returns ``BinaryRepository``. This factory pattern is the central
+point that allows the framework to be agnostic to the storage type.
 
-As expressoes regulares usadas pelos adaptadores sao compiladas e armazenadas em cache na primeira
-utilizacao (``_pattern_cache``), eliminando a recompilacao por chamada.
+The regular expressions used by the adapters are compiled and cached on first use
+(``_pattern_cache``), eliminating recompilation per call.
 
 TabularParser
 --------------
 
-Introduzido na versao 1.9.0, :class:`cfinterface.components.tabular.TabularParser` oferece
-uma abordagem declarativa para analisar conteudo tabular -- blocos de linhas onde cada linha
-representa uma linha de dados com colunas definidas por posicoes fixas ou por um delimitador.
+Introduced in version 1.9.0, :class:`cfinterface.components.tabular.TabularParser` provides
+a declarative approach for parsing tabular content -- blocks of lines where each line
+represents a data row with columns defined by fixed positions or by a delimiter.
 
-O esquema de colunas e declarado como uma lista de :class:`cfinterface.components.tabular.ColumnDef`,
-uma ``NamedTuple`` com dois campos:
+The column schema is declared as a list of :class:`cfinterface.components.tabular.ColumnDef`,
+a ``NamedTuple`` with two fields:
 
 ``name``
-    Nome da coluna (chave no dicionario de saida).
+    Column name (key in the output dictionary).
 
 ``field``
-    Instancia de :class:`~cfinterface.components.field.Field` que define o tipo, posicao e
-    tamanho da coluna. Cada ``ColumnDef`` deve usar sua propria instancia de ``Field`` -- o
-    metodo ``Line.read()`` muta os valores dos campos in-place, portanto compartilhar instancias
-    entre colunas produz resultados incorretos.
+    Instance of :class:`~cfinterface.components.field.Field` that defines the type, position,
+    and size of the column. Each ``ColumnDef`` must use its own ``Field`` instance -- the
+    ``Line.read()`` method mutates field values in-place, so sharing instances between columns
+    produces incorrect results.
 
-Os metodos principais sao:
+The main methods are:
 
 :meth:`~cfinterface.components.tabular.TabularParser.parse_lines`
-    Recebe uma lista de strings e retorna um dicionario cujas chaves sao os nomes das colunas
-    e cujos valores sao listas com os valores lidos linha a linha.
+    Receives a list of strings and returns a dictionary whose keys are column names
+    and whose values are lists of values read line by line.
 
 :meth:`~cfinterface.components.tabular.TabularParser.format_rows`
-    Operacao inversa: recebe um dicionario no mesmo formato e retorna uma lista de strings
-    formatadas.
+    Inverse operation: receives a dictionary in the same format and returns a list of
+    formatted strings.
 
 :meth:`~cfinterface.components.tabular.TabularParser.to_dataframe`
-    Converte o dicionario resultante de ``parse_lines`` em um ``pandas.DataFrame``. Requer
-    a dependencia opcional ``cfinterface[pandas]``.
+    Converts the dictionary returned by ``parse_lines`` into a ``pandas.DataFrame``. Requires
+    the optional dependency ``cfinterface[pandas]``.
 
-Para uso integrado com ``SectionFile``, a classe
-:class:`cfinterface.components.tabular.TabularSection` estende
-:class:`~cfinterface.components.section.Section` e implementa ``read()`` e ``write()``
-automaticamente com base nos atributos de classe ``COLUMNS``, ``HEADER_LINES``, ``END_PATTERN``
-e ``DELIMITER``.
+For integrated use with ``SectionFile``, the class
+:class:`cfinterface.components.tabular.TabularSection` extends
+:class:`~cfinterface.components.section.Section` and implements ``read()`` and ``write()``
+automatically based on the class attributes ``COLUMNS``, ``HEADER_LINES``, ``END_PATTERN``,
+and ``DELIMITER``.
 
 .. code-block:: python
 
@@ -289,46 +289,45 @@ e ``DELIMITER``.
     from cfinterface.components.literalfield import LiteralField
     from cfinterface.components.floatfield import FloatField
 
-    colunas = [
-        ColumnDef(name="nome", field=LiteralField(size=20, starting_position=0)),
-        ColumnDef(name="valor", field=FloatField(size=10, starting_position=20, decimal_digits=2)),
+    columns = [
+        ColumnDef(name="name", field=LiteralField(size=20, starting_position=0)),
+        ColumnDef(name="value", field=FloatField(size=10, starting_position=20, decimal_digits=2)),
     ]
-    parser = TabularParser(colunas)
+    parser = TabularParser(columns)
 
-    linhas = [
-        "Produto A               12.50     ",
-        "Produto B                7.99     ",
+    lines = [
+        "Product A               12.50     ",
+        "Product B                7.99     ",
     ]
-    dados = parser.parse_lines(linhas)
-    # dados == {"nome": ["Produto A", "Produto B"], "valor": [12.5, 7.99]}
+    data = parser.parse_lines(lines)
+    # data == {"name": ["Product A", "Product B"], "value": [12.5, 7.99]}
 
-Versionamento
---------------
+Versioning
+-----------
 
-O modulo :mod:`cfinterface.versioning` oferece suporte a arquivos cujo esquema evolui ao longo
-do tempo, permitindo que uma mesma classe de arquivo leia conteudo de versoes diferentes sem
-necessidade de classes separadas.
+The module :mod:`cfinterface.versioning` provides support for files whose schema evolves over
+time, allowing the same file class to read content from different versions without needing
+separate classes.
 
 :class:`cfinterface.versioning.SchemaVersion`
-    ``NamedTuple`` com tres campos: ``key`` (identificador de versao como string), ``components``
-    (lista de tipos de componentes correspondentes a essa versao) e ``description`` (texto
-    opcional).
+    ``NamedTuple`` with three fields: ``key`` (version identifier as a string), ``components``
+    (list of component types corresponding to this version), and ``description`` (optional text).
 
 ``VERSIONS``
-    Atributo de classe das classes de arquivo (``RegisterFile``, ``BlockFile``, ``SectionFile``).
-    E um dicionario que mapeia chaves de versao (strings ordenadas lexicograficamente) a listas
-    de tipos de componentes. Exemplo: ``{"1.0": [RegV1], "2.0": [RegV1, RegV2]}``.
+    Class attribute of file classes (``RegisterFile``, ``BlockFile``, ``SectionFile``).
+    It is a dictionary mapping version keys (strings compared lexicographically) to lists
+    of component types. Example: ``{"1.0": [RegV1], "2.0": [RegV1, RegV2]}``.
 
 :func:`cfinterface.versioning.resolve_version`
-    Recebe uma chave de versao solicitada e o dicionario ``VERSIONS``. Retorna a lista de
-    componentes cuja chave e a mais recente disponivel que seja menor ou igual a versao
-    solicitada (comparacao lexicografica). Retorna ``None`` se a versao solicitada for anterior
-    a todas as disponiveis.
+    Receives a requested version key and the ``VERSIONS`` dictionary. Returns the list of
+    components whose key is the most recent available that is less than or equal to the
+    requested version (lexicographic comparison). Returns ``None`` if the requested version
+    is earlier than all available ones.
 
 :func:`cfinterface.versioning.validate_version`
-    Valida o conteudo lido contra os tipos de componentes esperados. Retorna um
-    :class:`~cfinterface.versioning.VersionMatchResult` com os campos ``matched``,
-    ``expected_types``, ``found_types``, ``missing_types``, ``unexpected_types`` e
+    Validates the read content against the expected component types. Returns a
+    :class:`~cfinterface.versioning.VersionMatchResult` with the fields ``matched``,
+    ``expected_types``, ``found_types``, ``missing_types``, ``unexpected_types``, and
     ``default_ratio``.
 
 .. code-block:: python
@@ -336,69 +335,69 @@ necessidade de classes separadas.
     from cfinterface.files.registerfile import RegisterFile
     from cfinterface.storage import StorageType
 
-    class ArquivoVersionado(RegisterFile):
-        REGISTERS = [ValorMensalV2]
+    class VersionedFile(RegisterFile):
+        REGISTERS = [MonthlyValueV2]
         VERSIONS = {
-            "1.0": [ValorMensalV1],
-            "2.0": [ValorMensalV2],
+            "1.0": [MonthlyValueV1],
+            "2.0": [MonthlyValueV2],
         }
         STORAGE = StorageType.TEXT
 
-    # Leitura selecionando versao sem mutar a classe
-    arquivo = ArquivoVersionado.read("/caminho/arquivo.txt", version="1.5")
-    # resolve_version("1.5", VERSIONS) retornara os componentes de "1.0"
+    # Reading while selecting a version without mutating the class
+    file = VersionedFile.read("/path/to/file.txt", version="1.5")
+    # resolve_version("1.5", VERSIONS) will return the components for "1.0"
 
-    # Validacao do conteudo lido
-    resultado = arquivo.validate(version="1.0")
-    print(resultado.matched)  # True se o conteudo corresponde ao esquema 1.0
+    # Validating the read content
+    result = file.validate(version="1.0")
+    print(result.matched)  # True if the content matches the 1.0 schema
 
 StorageType
 ------------
 
-:class:`cfinterface.storage.StorageType` e uma enumeracao (``str``, ``Enum``) que substitui o
-uso de strings literais ``"TEXT"`` e ``"BINARY"`` para identificar o backend de armazenamento.
-Ela herda de ``str``, o que garante compatibilidade retroativa: ``StorageType.TEXT == "TEXT"``
-e ``True``.
+:class:`cfinterface.storage.StorageType` is an enumeration (``str``, ``Enum``) that replaces
+the use of literal strings ``"TEXT"`` and ``"BINARY"`` to identify the storage backend.
+It inherits from ``str``, which ensures backward compatibility: ``StorageType.TEXT == "TEXT"``
+is ``True``.
 
-Os dois valores disponiveis sao:
+The two available values are:
 
 ``StorageType.TEXT``
-    Indica armazenamento textual. O arquivo e aberto em modo texto e as operacoes usam
+    Indicates textual storage. The file is opened in text mode and operations use
     ``str``.
 
 ``StorageType.BINARY``
-    Indica armazenamento binario. O arquivo e aberto em modo binario e as operacoes usam
+    Indicates binary storage. The file is opened in binary mode and operations use
     ``bytes``.
 
-O uso de strings literais ``"TEXT"`` e ``"BINARY"`` no atributo ``STORAGE`` das classes de
-arquivo esta depreciado desde a versao 1.9.0. A funcao interna ``_ensure_storage_type`` emite
-um :class:`DeprecationWarning` quando uma string simples e detectada no lugar de um membro da
-enumeracao.
+The use of literal strings ``"TEXT"`` and ``"BINARY"`` in the ``STORAGE`` attribute of file
+classes has been deprecated since version 1.9.0. The internal function ``_ensure_storage_type``
+emits a :class:`DeprecationWarning` when a plain string is detected instead of an enumeration
+member.
 
 .. code-block:: python
 
     from cfinterface.storage import StorageType
 
-    # Correto -- use sempre a enumeracao
-    class MeuArquivoBinario(RegisterFile):
+    # Correct -- always use the enumeration
+    class MyBinaryFile(RegisterFile):
         REGISTERS = [...]
         STORAGE = StorageType.BINARY
 
-    # Depreciado -- nao usar
+    # Deprecated -- do not use
     # STORAGE = "BINARY"
 
-Pontos de Extensao
--------------------
+Extension Points
+-----------------
 
-O ``cfinterface`` foi projetado para ser estendido por subclasses. Os principais pontos de
-extensao para desenvolvedores de bibliotecas downstream sao:
+``cfinterface`` is designed to be extended through subclassing. The main extension points for
+downstream library developers are:
 
-Subclasses de Field
-~~~~~~~~~~~~~~~~~~~~
+Field Subclasses
+~~~~~~~~~~~~~~~~~
 
-Crie uma subclasse de :class:`~cfinterface.components.field.Field` para suportar tipos de dados
-nao cobertos pelas implementacoes nativas. Implemente os quatro metodos abstratos:
-``_textual_read``, ``_binary_read``, ``_textual_write`` e ``_binary_write``.
+Create a subclass of :class:`~cfinterface.components.field.Field` to support data types not
+covered by the native implementations. Implement the four abstract methods:
+``_textual_read``, ``_binary_read``, ``_textual_write``, and ``_binary_write``.
 
 .. code-block:: python
 
@@ -417,39 +416,39 @@ nao cobertos pelas implementacoes nativas. Implemente os quatro metodos abstrato
         def _binary_write(self) -> bytes:
             return b"\x01" if self._value else b"\x00"
 
-Subclasses de Register
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Declare ``IDENTIFIER``, ``IDENTIFIER_DIGITS`` e ``LINE`` para definir um novo tipo de registro
-identificado por prefixo. Nenhum metodo precisa ser sobrescrito para o caso padrao de leitura e
-escrita posicional.
-
-Subclasses de Block
+Register Subclasses
 ~~~~~~~~~~~~~~~~~~~~
 
-Declare ``BEGIN_PATTERN`` e ``END_PATTERN`` e implemente ``read()`` e ``write()`` com a logica
-de processamento especifica para o bloco.
+Declare ``IDENTIFIER``, ``IDENTIFIER_DIGITS``, and ``LINE`` to define a new record type
+identified by a prefix. No methods need to be overridden for the standard case of positional
+reading and writing.
 
-Subclasses de Section
+Block Subclasses
+~~~~~~~~~~~~~~~~~
+
+Declare ``BEGIN_PATTERN`` and ``END_PATTERN`` and implement ``read()`` and ``write()`` with
+the processing logic specific to the block.
+
+Section Subclasses
+~~~~~~~~~~~~~~~~~~~
+
+Declare ``STORAGE`` and implement ``read()`` and ``write()``. For tabular sections, prefer
+subclassing :class:`~cfinterface.components.tabular.TabularSection` and declaring only
+``COLUMNS``, ``HEADER_LINES``, ``END_PATTERN``, and ``DELIMITER``.
+
+VERSIONS Dictionaries
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Declare ``STORAGE`` e implemente ``read()`` e ``write()``. Para secoes tabulares, prefira
-subclassificar :class:`~cfinterface.components.tabular.TabularSection` e declarar apenas
-``COLUMNS``, ``HEADER_LINES``, ``END_PATTERN`` e ``DELIMITER``.
-
-Dicionarios VERSIONS
-~~~~~~~~~~~~~~~~~~~~~
-
-Adicione o atributo de classe ``VERSIONS`` a qualquer subclasse de
+Add the class attribute ``VERSIONS`` to any subclass of
 :class:`~cfinterface.files.registerfile.RegisterFile`,
-:class:`~cfinterface.files.blockfile.BlockFile` ou
-:class:`~cfinterface.files.sectionfile.SectionFile` para habilitar a selecao de esquema por
-versao em tempo de leitura, sem necessidade de criar subclasses separadas para cada versao.
+:class:`~cfinterface.files.blockfile.BlockFile`, or
+:class:`~cfinterface.files.sectionfile.SectionFile` to enable schema selection by version at
+read time, without needing to create separate subclasses for each version.
 
-TabularParser com schemas personalizados
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TabularParser with Custom Schemas
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Instancie :class:`~cfinterface.components.tabular.TabularParser` com uma lista de
-:class:`~cfinterface.components.tabular.ColumnDef` para analisar qualquer bloco tabular, seja
-de largura fixa ou delimitado. A mesma instancia pode ser reutilizada para multiplos arquivos
-com o mesmo esquema.
+Instantiate :class:`~cfinterface.components.tabular.TabularParser` with a list of
+:class:`~cfinterface.components.tabular.ColumnDef` instances to parse any tabular block,
+whether fixed-width or delimited. The same instance can be reused for multiple files
+with the same schema.

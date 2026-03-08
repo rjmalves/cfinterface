@@ -1,21 +1,21 @@
 """
-Lendo arquivos com BlockFile
+Reading files with BlockFile
 =============================
 
-Este exemplo demonstra como usar ``Block`` e ``BlockFile`` para ler e
-escrever arquivos de texto estruturados em blocos delimitados por padrões
-de início e fim.
+This example demonstrates how to use ``Block`` and ``BlockFile`` to read and
+write structured text files organized in blocks delimited by start and end
+patterns.
 
-Definimos dois tipos de bloco -- um para metadados do arquivo e outro para
-registros de dados -- e realizamos o ciclo completo de leitura e escrita.
+We define two block types -- one for file metadata and another for data
+records -- and perform the complete read-write cycle.
 """
 
 # %%
-# Definindo os tipos de bloco
-# ----------------------------
-# Cada subclasse de ``Block`` declara ``BEGIN_PATTERN`` (padrão de início)
-# e ``END_PATTERN`` (padrão de fim) como expressões regulares. Os métodos
-# ``read()`` e ``write()`` implementam a lógica de leitura e escrita.
+# Defining the block types
+# -------------------------
+# Each ``Block`` subclass declares ``BEGIN_PATTERN`` (start pattern)
+# and ``END_PATTERN`` (end pattern) as regular expressions. The
+# ``read()`` and ``write()`` methods implement the reading and writing logic.
 
 import tempfile
 from io import StringIO
@@ -26,8 +26,8 @@ from cfinterface.components import Block
 from cfinterface.files import BlockFile
 
 
-class CabecalhoBloco(Block):
-    """Bloco de cabeçalho com informações gerais do arquivo."""
+class HeaderBlock(Block):
+    """Header block with general file information."""
 
     BEGIN_PATTERN = r"^CABECALHO"
     END_PATTERN = r"^FIM_CABECALHO"
@@ -36,33 +36,33 @@ class CabecalhoBloco(Block):
         super().__init__(previous, next, data)
 
     def read(self, file: IO[Any], *args: Any, **kwargs: Any) -> bool:
-        file.readline()  # consome a linha BEGIN_PATTERN
-        campos: dict[str, str] = {}
+        file.readline()  # consume the BEGIN_PATTERN line
+        fields: dict[str, str] = {}
         while True:
-            linha = file.readline()
-            if not linha or self.__class__.ends(linha):
+            line = file.readline()
+            if not line or self.__class__.ends(line):
                 break
-            if "=" in linha:
-                chave, _, valor = linha.partition("=")
-                campos[chave.strip()] = valor.strip()
-        self.data = campos
+            if "=" in line:
+                key, _, value = line.partition("=")
+                fields[key.strip()] = value.strip()
+        self.data = fields
         return True
 
     def write(self, file: IO[Any], *args: Any, **kwargs: Any) -> bool:
         file.write("CABECALHO\n")
-        for chave, valor in (self.data or {}).items():
-            file.write(f"{chave} = {valor}\n")
+        for key, value in (self.data or {}).items():
+            file.write(f"{key} = {value}\n")
         file.write("FIM_CABECALHO\n")
         return True
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, CabecalhoBloco):
+        if not isinstance(o, HeaderBlock):
             return False
         return o.data == self.data
 
 
-class DadosBloco(Block):
-    """Bloco de dados com registros no formato chave=valor por linha."""
+class DataBlock(Block):
+    """Data block with records in key=value format per line."""
 
     BEGIN_PATTERN = r"^DADOS"
     END_PATTERN = r"^FIM_DADOS"
@@ -71,70 +71,70 @@ class DadosBloco(Block):
         super().__init__(previous, next, data)
 
     def read(self, file: IO[Any], *args: Any, **kwargs: Any) -> bool:
-        file.readline()  # consome a linha BEGIN_PATTERN
-        registros: list[dict[str, str]] = []
+        file.readline()  # consume the BEGIN_PATTERN line
+        records: list[dict[str, str]] = []
         while True:
-            linha = file.readline()
-            if not linha or self.__class__.ends(linha):
+            line = file.readline()
+            if not line or self.__class__.ends(line):
                 break
-            linha = linha.strip()
-            if not linha:
+            line = line.strip()
+            if not line:
                 continue
-            campos = dict(
-                par.split("=", 1) for par in linha.split("|") if "=" in par
+            fields = dict(
+                pair.split("=", 1) for pair in line.split("|") if "=" in pair
             )
-            campos = {k.strip(): v.strip() for k, v in campos.items()}
-            if campos:
-                registros.append(campos)
-        self.data = registros
+            fields = {k.strip(): v.strip() for k, v in fields.items()}
+            if fields:
+                records.append(fields)
+        self.data = records
         return True
 
     def write(self, file: IO[Any], *args: Any, **kwargs: Any) -> bool:
         file.write("DADOS\n")
-        for registro in self.data or []:
-            linha = " | ".join(f"{k}={v}" for k, v in registro.items())
-            file.write(f"{linha}\n")
+        for record in self.data or []:
+            line = " | ".join(f"{k}={v}" for k, v in record.items())
+            file.write(f"{line}\n")
         file.write("FIM_DADOS\n")
         return True
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, DadosBloco):
+        if not isinstance(o, DataBlock):
             return False
         return o.data == self.data
 
 
 # %%
-# Definindo o modelo de arquivo
-# ------------------------------
-# A subclasse de ``BlockFile`` declara quais tipos de bloco o arquivo
-# pode conter via ``BLOCKS``. Propriedades convenientes expõem os blocos
-# por tipo usando ``data.get_blocks_of_type()``.
+# Defining the file model
+# ------------------------
+# The ``BlockFile`` subclass declares which block types the file can
+# contain via ``BLOCKS``. Convenience properties expose the blocks
+# by type using ``data.get_blocks_of_type()``.
 
 
-class MeuArquivoDeRegistros(BlockFile):
-    BLOCKS = [CabecalhoBloco, DadosBloco]
-
-    @property
-    def cabecalho(self) -> CabecalhoBloco | None:
-        return self.data.get_blocks_of_type(CabecalhoBloco)
+class MyRecordFile(BlockFile):
+    BLOCKS = [HeaderBlock, DataBlock]
 
     @property
-    def registros(self) -> list[DadosBloco] | None:
-        resultado = self.data.get_blocks_of_type(DadosBloco)
-        if resultado is None:
+    def header(self) -> HeaderBlock | None:
+        return self.data.get_blocks_of_type(HeaderBlock)
+
+    @property
+    def records(self) -> list[DataBlock] | None:
+        result = self.data.get_blocks_of_type(DataBlock)
+        if result is None:
             return None
-        if isinstance(resultado, list):
-            return resultado
-        return [resultado]
+        if isinstance(result, list):
+            return result
+        return [result]
 
 
 # %%
-# Escrevendo dados de exemplo e lendo de volta
-# ---------------------------------------------
-# Criamos um arquivo temporário com conteúdo conhecido, deixamos o
-# framework fazer a leitura e verificamos os valores extraídos.
+# Writing sample data and reading it back
+# ----------------------------------------
+# We create a temporary file with known content, let the framework
+# perform the read, and verify the extracted values.
 
-CONTEUDO_EXEMPLO = (
+EXAMPLE_CONTENT = (
     "CABECALHO\n"
     "autor = joao.silva\n"
     "versao = 2.1\n"
@@ -152,50 +152,50 @@ CONTEUDO_EXEMPLO = (
 )
 
 with tempfile.TemporaryDirectory() as tmpdir:
-    caminho = Path(tmpdir) / "registros.txt"
-    caminho.write_text(CONTEUDO_EXEMPLO, encoding="utf-8")
+    path = Path(tmpdir) / "records.txt"
+    path.write_text(EXAMPLE_CONTENT, encoding="utf-8")
 
-    arquivo = MeuArquivoDeRegistros.read(str(caminho))
+    file_obj = MyRecordFile.read(str(path))
 
-    # Inspeciona o cabeçalho
-    cab = arquivo.cabecalho
-    print("=== Cabeçalho ===")
-    for chave, valor in cab.data.items():
-        print(f"  {chave}: {valor}")
+    # Inspect the header
+    hdr = file_obj.header
+    print("=== Header ===")
+    for key, value in hdr.data.items():
+        print(f"  {key}: {value}")
 
-    # Inspeciona os blocos de dados
-    print(f"\n=== Blocos de Dados ({len(arquivo.registros)}) ===")
-    for i, bloco in enumerate(arquivo.registros, start=1):
-        print(f"  Bloco {i} ({len(bloco.data)} registros):")
-        for reg in bloco.data:
+    # Inspect the data blocks
+    print(f"\n=== Data Blocks ({len(file_obj.records)}) ===")
+    for i, block in enumerate(file_obj.records, start=1):
+        print(f"  Block {i} ({len(block.data)} records):")
+        for rec in block.data:
             print(
-                f"    id={reg['id']}  nome={reg['nome']}  preco={reg['preco']}"
+                f"    id={rec['id']}  nome={rec['nome']}  preco={rec['preco']}"
             )
 
-    # Escreve em um buffer de texto e verifica o round-trip
+    # Write to a text buffer and verify the round-trip
     buffer = StringIO()
-    arquivo.write(buffer)
-    conteudo_saida = buffer.getvalue()
+    file_obj.write(buffer)
+    output_content = buffer.getvalue()
 
-    linhas_entrada = CONTEUDO_EXEMPLO.strip().splitlines()
-    linhas_saida = conteudo_saida.strip().splitlines()
+    input_lines = EXAMPLE_CONTENT.strip().splitlines()
+    output_lines = output_content.strip().splitlines()
     print(
-        f"\nRound-trip: {len(linhas_entrada)} linhas -> {len(linhas_saida)} linhas"
+        f"\nRound-trip: {len(input_lines)} lines -> {len(output_lines)} lines"
     )
 
 # %%
-# Escrevendo diretamente para arquivo
-# -------------------------------------
-# ``BlockFile.write()`` aceita tanto um caminho de arquivo quanto um
-# objeto ``IO``, o que facilita a integração com pipelines existentes.
+# Writing directly to a file
+# ---------------------------
+# ``BlockFile.write()`` accepts both a file path and an ``IO``
+# object, making it easy to integrate with existing pipelines.
 
 with tempfile.TemporaryDirectory() as tmpdir:
-    caminho_entrada = Path(tmpdir) / "entrada.txt"
-    caminho_saida = Path(tmpdir) / "saida.txt"
+    input_path = Path(tmpdir) / "input.txt"
+    output_path = Path(tmpdir) / "output.txt"
 
-    caminho_entrada.write_text(CONTEUDO_EXEMPLO, encoding="utf-8")
-    arquivo2 = MeuArquivoDeRegistros.read(str(caminho_entrada))
-    arquivo2.write(str(caminho_saida))
+    input_path.write_text(EXAMPLE_CONTENT, encoding="utf-8")
+    file_obj2 = MyRecordFile.read(str(input_path))
+    file_obj2.write(str(output_path))
 
-    print(f"\nArquivo de saída criado: {caminho_saida.exists()}")
-    print(f"Tamanho: {caminho_saida.stat().st_size} bytes")
+    print(f"\nOutput file created: {output_path.exists()}")
+    print(f"Size: {output_path.stat().st_size} bytes")
