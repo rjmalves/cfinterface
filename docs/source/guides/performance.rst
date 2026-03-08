@@ -1,138 +1,135 @@
-Dicas de Performance
-====================
+Performance Tips
+================
 
-O ``cfinterface`` v1.9.0 inclui diversas otimizacoes internas que melhoram o
-desempenho em cenarios de leitura e escrita de arquivos. Alem dessas
-melhorias automaticas, existem padroes de uso que permitem ao desenvolvedor
-extrair ainda mais performance ao modelar arquivos com o framework.
+``cfinterface`` v1.9.0 includes several internal optimizations that improve
+performance in file reading and writing scenarios. Beyond these automatic
+improvements, there are usage patterns that allow developers to extract even
+more performance when modeling files with the framework.
 
-Esta pagina descreve as otimizacoes internas e orienta como aproveita-las
-por meio de escolhas conscientes de design.
+This page describes the internal optimizations and guides how to take advantage
+of them through conscious design choices.
 
-Cache de Regex nos Adaptadores
--------------------------------
+Regex Cache in Adapters
+------------------------
 
-Nas versoes anteriores, cada chamada de leitura que usava um padrao de
-expressao regular recompilava o padrao a partir da string original. A partir
-da v1.9.0, o modulo de adaptadores mantem um dicionario global
-``_pattern_cache`` que armazena os objetos compilados de cada padrao apos o
-primeiro uso.
+In previous versions, each read call that used a regular expression pattern
+recompiled the pattern from the original string. Starting from v1.9.0, the
+adapter module maintains a global dictionary ``_pattern_cache`` that stores the
+compiled objects for each pattern after its first use.
 
-O impacto e transparente para o usuario: o mesmo padrao passado em
-``BEGIN_PATTERN`` ou ``END_PATTERN`` de um
-:class:`~cfinterface.components.block.Block` e compilado uma unica vez, por
-mais vezes que o arquivo seja lido durante a execucao do programa.
+The impact is transparent to the user: the same pattern passed in
+``BEGIN_PATTERN`` or ``END_PATTERN`` of a
+:class:`~cfinterface.components.block.Block` is compiled only once, no matter
+how many times the file is read during program execution.
 
-Nao e necessario nenhuma acao adicional; o cache e automatico. O unico
-cuidado e manter os padroes como strings literais estaveis na definicao da
-classe, evitando a construcao de padroes dinamicos em tempo de execucao, que
-gerariam entradas distintas no cache e anulariam o beneficio.
+No additional action is required; the cache is automatic. The only consideration
+is to keep patterns as stable literal strings in the class definition, avoiding
+the construction of dynamic patterns at runtime, which would generate distinct
+cache entries and negate the benefit.
 
 .. code-block:: python
 
     from cfinterface.components.block import Block
 
-    class MeuBloco(Block):
-        # Padrao compilado uma vez e reutilizado em todas as leituras
-        BEGIN_PATTERN = r"^INICIO"
-        END_PATTERN = r"^FIM"
+    class MyBlock(Block):
+        # Pattern compiled once and reused across all reads
+        BEGIN_PATTERN = r"^BEGIN"
+        END_PATTERN = r"^END"
 
-Otimizacao do FloatField
+FloatField Optimization
 -------------------------
 
-O metodo ``_textual_write()`` do
-:class:`~cfinterface.components.floatfield.FloatField` foi reescrito para
-realizar no maximo tres tentativas de formatacao, independente do valor de
-``decimal_digits``. A implementacao anterior percorria um loop de tamanho
-O(decimal_digits) para encontrar o numero de casas decimais que cabe no campo.
+The ``_textual_write()`` method of
+:class:`~cfinterface.components.floatfield.FloatField` was rewritten to perform
+at most three formatting attempts, regardless of the value of
+``decimal_digits``. The previous implementation iterated through a loop of size
+O(decimal_digits) to find the number of decimal places that fits in the field.
 
-Para aproveitar ao maximo essa otimizacao, declare ``size`` e
-``decimal_digits`` com os valores minimos necessarios para representar os
-valores do seu dominio. Campos superdimensionados ainda funcionam corretamente,
-mas campos ajustados ao valor real eliminam tentativas de formatacao
-desnecessarias.
+To get the most out of this optimization, declare ``size`` and
+``decimal_digits`` with the minimum values needed to represent the values in
+your domain. Oversized fields still work correctly, but fields sized to the
+actual value eliminate unnecessary formatting attempts.
 
 .. code-block:: python
 
     from cfinterface.components.floatfield import FloatField
     from cfinterface.components.line import Line
 
-    # Preferir tamanho ajustado ao dominio do valor
-    campo_preco = FloatField(size=10, starting_position=0, decimal_digits=2)
+    # Prefer size adjusted to the domain of the value
+    price_field = FloatField(size=10, starting_position=0, decimal_digits=2)
 
-    # Evitar campos excessivamente grandes sem necessidade
-    # campo_preco = FloatField(size=30, starting_position=0, decimal_digits=15)
+    # Avoid unnecessarily large fields
+    # price_field = FloatField(size=30, starting_position=0, decimal_digits=15)
 
-    linha = Line([campo_preco])
+    line = Line([price_field])
 
-Containers Baseados em Array
------------------------------
+Array-Based Containers
+-----------------------
 
-As classes de container
+The container classes
 :class:`~cfinterface.data.registerdata.RegisterData`,
-``BlockData`` e ``SectionData`` foram migradas de estruturas encadeadas
-(linked-list) para listas Python (``list``) com indice auxiliar por tipo.
+``BlockData``, and ``SectionData`` have been migrated from linked-list
+structures to Python lists (``list``) with an auxiliary index by type.
 
-As principais consequencias praticas sao:
+The main practical consequences are:
 
-- ``len()`` agora e O(1) ao inves de O(n) na implementacao anterior
-- Iteracao sobre todos os elementos continua sendo O(n), porem com melhor
-  localidade de memoria (elementos contiguos em memoria)
-- As propriedades ``previous`` e ``next`` de registros, blocos e secoes sao
-  agora calculadas a partir da posicao no container, sem custo de armazenamento
-  adicional
+- ``len()`` is now O(1) instead of O(n) as in the previous implementation
+- Iteration over all elements remains O(n), but with better memory locality
+  (contiguous elements in memory)
+- The ``previous`` and ``next`` properties of records, blocks, and sections are
+  now computed from the position in the container, with no additional storage cost
 
-Esse ganho e automatico para qualquer codigo que use as classes de arquivo
-existentes sem modificacao.
+This gain is automatic for any code that uses the existing file classes without
+modification.
 
-Leitura em Lote com read_many()
----------------------------------
+Batch Reading with read_many()
+--------------------------------
 
-Quando e necessario ler multiplos arquivos do mesmo tipo, o padrao de loop
-com instanciacao individual pode ser substituido pelo metodo de classe
-:meth:`~cfinterface.files.registerfile.RegisterFile.read_many`, disponivel
-em :class:`~cfinterface.files.registerfile.RegisterFile`,
-:class:`~cfinterface.files.blockfile.BlockFile` e
+When multiple files of the same type need to be read, the loop pattern with
+individual instantiation can be replaced by the class method
+:meth:`~cfinterface.files.registerfile.RegisterFile.read_many`, available on
+:class:`~cfinterface.files.registerfile.RegisterFile`,
+:class:`~cfinterface.files.blockfile.BlockFile`, and
 :class:`~cfinterface.files.sectionfile.SectionFile`.
 
 .. code-block:: python
 
-    # Antes: leitura individual em loop
-    from meu_modulo import MeuArquivo
+    # Before: individual reading in a loop
+    from my_module import MyFile
 
-    arquivos = []
-    for caminho in caminhos:
-        f = MeuArquivo.read(caminho)
-        arquivos.append(f)
-
-.. code-block:: python
-
-    # Depois: leitura em lote com read_many()
-    from meu_modulo import MeuArquivo
-
-    # Retorna um dict[str, MeuArquivo] keyed pelo caminho
-    arquivos = MeuArquivo.read_many(caminhos)
-
-    # Acesso por caminho
-    arquivo = arquivos["/caminho/para/arquivo.txt"]
-
-O metodo ``read_many()`` aceita o parametro opcional ``version`` para
-selecionar o esquema de versionamento, da mesma forma que ``read()``:
+    files = []
+    for path in paths:
+        f = MyFile.read(path)
+        files.append(f)
 
 .. code-block:: python
 
-    arquivos = MeuArquivo.read_many(caminhos, version="1.0")
+    # After: batch reading with read_many()
+    from my_module import MyFile
 
-Selecao de Colunas no TabularParser
--------------------------------------
+    # Returns a dict[str, MyFile] keyed by path
+    files = MyFile.read_many(paths)
 
-O :class:`~cfinterface.components.tabular.TabularParser` analisa linhas de
-texto posicionais (ou delimitadas) e converte cada coluna declarada em uma
-lista de valores. Em arquivos tabulares grandes, declarar apenas as colunas
-necessarias reduz o trabalho de conversao de tipos para cada linha lida.
+    # Access by path
+    file = files["/path/to/file.txt"]
 
-Use :class:`~cfinterface.components.tabular.ColumnDef` para listar somente
-as colunas de interesse, omitindo as demais:
+The ``read_many()`` method accepts the optional ``version`` parameter to
+select the versioning schema, in the same way as ``read()``:
+
+.. code-block:: python
+
+    files = MyFile.read_many(paths, version="1.0")
+
+Column Selection in TabularParser
+------------------------------------
+
+The :class:`~cfinterface.components.tabular.TabularParser` parses positional
+(or delimited) text lines and converts each declared column into a list of
+values. In large tabular files, declaring only the necessary columns reduces
+the type conversion work for each line read.
+
+Use :class:`~cfinterface.components.tabular.ColumnDef` to list only the
+columns of interest, omitting the rest:
 
 .. code-block:: python
 
@@ -141,20 +138,20 @@ as colunas de interesse, omitindo as demais:
     from cfinterface.components.floatfield import FloatField
     from cfinterface.components.integerfield import IntegerField
 
-    # Arquivo tem 5 colunas; apenas 2 sao necessarias
-    colunas_necessarias = [
-        ColumnDef(name="codigo", field=LiteralField(size=8, starting_position=0)),
-        ColumnDef(name="valor", field=FloatField(size=12, starting_position=20, decimal_digits=4)),
-        # As colunas nas posicoes 8-19 e 32+ sao simplesmente ignoradas
+    # File has 5 columns; only 2 are needed
+    required_columns = [
+        ColumnDef(name="code", field=LiteralField(size=8, starting_position=0)),
+        ColumnDef(name="value", field=FloatField(size=12, starting_position=20, decimal_digits=4)),
+        # Columns at positions 8-19 and 32+ are simply ignored
     ]
 
-    parser = TabularParser(colunas_necessarias)
-    dados = parser.parse_lines(linhas)
-    # {"codigo": [...], "valor": [...]}
+    parser = TabularParser(required_columns)
+    data = parser.parse_lines(lines)
+    # {"code": [...], "value": [...]}
 
-Para secoes tabulares integradas ao framework, declare apenas as colunas
-necessarias no atributo de classe ``COLUMNS`` da sua subclasse de
-:class:`~cfinterface.components.tabular.TabularSection`:
+For tabular sections integrated with the framework, declare only the necessary
+columns in the ``COLUMNS`` class attribute of your
+:class:`~cfinterface.components.tabular.TabularSection` subclass:
 
 .. code-block:: python
 
@@ -162,56 +159,54 @@ necessarias no atributo de classe ``COLUMNS`` da sua subclasse de
     from cfinterface.components.literalfield import LiteralField
     from cfinterface.components.floatfield import FloatField
 
-    class SecaoDados(TabularSection):
+    class DataSection(TabularSection):
         COLUMNS = [
             ColumnDef(name="id", field=LiteralField(size=8, starting_position=0)),
-            ColumnDef(name="resultado", field=FloatField(size=12, starting_position=20, decimal_digits=3)),
+            ColumnDef(name="result", field=FloatField(size=12, starting_position=20, decimal_digits=3)),
         ]
         HEADER_LINES = 1
         END_PATTERN = r"^---"
 
-Dicas Gerais
+General Tips
 -------------
 
-As dicas a seguir complementam as otimizacoes internas descritas acima e
-se aplicam a qualquer codigo que use o ``cfinterface``.
+The following tips complement the internal optimizations described above and
+apply to any code that uses ``cfinterface``.
 
-**Reutilize instancias de classe de arquivo para multiplas leituras**
+**Reuse file class instances for multiple reads**
 
-O metodo ``read()`` e um metodo de classe que retorna uma nova instancia a
-cada chamada. Quando o mesmo arquivo precisa ser lido novamente (por exemplo,
-apos uma escrita), prefira guardar e reutilizar a instancia existente ou
-use ``read_many()`` para um conjunto de caminhos conhecidos de uma vez.
+The ``read()`` method is a class method that returns a new instance on each
+call. When the same file needs to be read again (for example, after a write),
+prefer saving and reusing the existing instance or use ``read_many()`` for a
+known set of paths at once.
 
-**Use o enum StorageType ao inves de strings literais**
+**Use the StorageType enum instead of literal strings**
 
-O atributo ``STORAGE`` aceita tanto strings (``"TEXT"``, ``"BINARY"``) quanto
-o enum :class:`~cfinterface.storage.StorageType`. O uso de strings esta
-depreciado desde a v1.9.0 e emite um aviso em tempo de execucao. Prefira
-sempre o enum:
+The ``STORAGE`` attribute accepts both strings (``"TEXT"``, ``"BINARY"``) and
+the enum :class:`~cfinterface.storage.StorageType`. The use of strings has been
+deprecated since v1.9.0 and emits a warning at runtime. Always prefer the enum:
 
 .. code-block:: python
 
     from cfinterface.files.registerfile import RegisterFile
     from cfinterface.storage import StorageType
 
-    class MeuArquivo(RegisterFile):
-        REGISTERS = [MeuRegistro]
-        STORAGE = StorageType.TEXT  # correto
-        # STORAGE = "TEXT"  # depreciado; evitar
+    class MyFile(RegisterFile):
+        REGISTERS = [MyRecord]
+        STORAGE = StorageType.TEXT  # correct
+        # STORAGE = "TEXT"  # deprecated; avoid
 
-**Declare ENCODING como string unica quando a codificacao e conhecida**
+**Declare ENCODING as a single string when the encoding is known**
 
-O atributo ``ENCODING`` aceita uma string unica ou uma lista de strings. Quando
-passado como lista, o framework tenta cada codificacao em ordem ate que uma
-leitura seja bem-sucedida. Se a codificacao do arquivo e conhecida e fixa,
-declare ``ENCODING`` como uma string diretamente para eliminar as tentativas
-desnecessarias:
+The ``ENCODING`` attribute accepts a single string or a list of strings. When
+passed as a list, the framework tries each encoding in order until a read
+succeeds. If the file encoding is known and fixed, declare ``ENCODING`` as a
+string directly to eliminate the unnecessary attempts:
 
 .. code-block:: python
 
-    class MeuArquivo(RegisterFile):
-        REGISTERS = [MeuRegistro]
-        ENCODING = "latin-1"           # leitura direta, sem tentativas extras
-        # ENCODING = ["latin-1", "utf-8"]  # necessario apenas quando a
-        #                                   # codificacao pode variar
+    class MyFile(RegisterFile):
+        REGISTERS = [MyRecord]
+        ENCODING = "latin-1"           # direct read, no extra attempts
+        # ENCODING = ["latin-1", "utf-8"]  # only needed when the
+        #                                   # encoding may vary
