@@ -1,10 +1,10 @@
+from unittest.mock import MagicMock, patch
+
 from cfinterface.components.line import Line
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.register import Register
 from cfinterface.storage import StorageType
 from tests.mocks.mock_open import mock_open
-
-from unittest.mock import MagicMock, patch
 
 
 class DummyRegister(Register):
@@ -71,7 +71,7 @@ def test_dummy_register_read():
     filedata = DummyRegister.IDENTIFIER + " " + data + "\n"
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        with open("", "r") as fp:
+        with open("") as fp:
             b = DummyRegister()
             b.read_register(fp)
             assert b.data[0] == data
@@ -95,7 +95,7 @@ def test_dummy_delimiterregister_read():
     filedata = DummyDelimitedRegister.IDENTIFIER + " ;" + data + "\n"
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        with open("", "r") as fp:
+        with open("") as fp:
             b = DummyDelimitedRegister()
             b.read_register(fp)
             assert b.data[0] == data

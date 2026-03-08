@@ -14,7 +14,6 @@ from cfinterface.components.tabular import (
     TabularSection,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -211,7 +210,7 @@ def test_round_trip_mixed_columns() -> None:
     formatted = parser.format_rows(parsed)
     reparsed = parser.parse_lines([ln.rstrip("\n") for ln in formatted])
     assert reparsed["id"] == parsed["id"]
-    for v1, v2 in zip(reparsed["value"], parsed["value"]):
+    for v1, v2 in zip(reparsed["value"], parsed["value"], strict=False):
         assert abs(v1 - v2) < 1e-4
     assert reparsed["label"] == parsed["label"]
 
@@ -420,7 +419,7 @@ def test_tabular_section_round_trip() -> None:
 
     assert sec2.data is not None
     assert sec2.data["year"] == sec.data["year"]
-    for v1, v2 in zip(sec2.data["value"], sec.data["value"]):
+    for v1, v2 in zip(sec2.data["value"], sec.data["value"], strict=False):
         assert abs(v1 - v2) < 1e-4
 
 
@@ -674,7 +673,7 @@ def test_round_trip_delimited() -> None:
     formatted = parser.format_rows(parsed)
     reparsed = parser.parse_lines(formatted)
     assert reparsed["id"] == parsed["id"]
-    for v1, v2 in zip(reparsed["value"], parsed["value"]):
+    for v1, v2 in zip(reparsed["value"], parsed["value"], strict=False):
         assert abs(v1 - v2) < 1e-4
     assert reparsed["label"] == parsed["label"]
 

@@ -41,20 +41,14 @@ class Block:
 
     @classmethod
     @overload
-    def begins(
-        cls, line: str, storage: str | StorageType = ""
-    ) -> bool: ...
+    def begins(cls, line: str, storage: str | StorageType = "") -> bool: ...
 
     @classmethod
     @overload
-    def begins(
-        cls, line: bytes, storage: str | StorageType = ""
-    ) -> bool: ...
+    def begins(cls, line: bytes, storage: str | StorageType = "") -> bool: ...
 
     @classmethod
-    def begins(
-        cls, line: str | bytes, storage: str | StorageType = ""
-    ) -> bool:
+    def begins(cls, line: str | bytes, storage: str | StorageType = "") -> bool:
         return factory(storage).begins(cls.BEGIN_PATTERN, line)
 
     @classmethod
@@ -63,14 +57,10 @@ class Block:
 
     @classmethod
     @overload
-    def ends(
-        cls, line: bytes, storage: str | StorageType = ""
-    ) -> bool: ...
+    def ends(cls, line: bytes, storage: str | StorageType = "") -> bool: ...
 
     @classmethod
-    def ends(
-        cls, line: str | bytes, storage: str | StorageType = ""
-    ) -> bool:
+    def ends(cls, line: str | bytes, storage: str | StorageType = "") -> bool:
         return factory(storage).ends(cls.END_PATTERN, line)
 
     def read(self, file: IO[Any], *args: Any, **kwargs: Any) -> bool:

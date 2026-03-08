@@ -1,11 +1,9 @@
-from typing import IO, List
+from typing import IO
+from unittest.mock import MagicMock, patch
 
 from cfinterface.components.section import Section
 from cfinterface.reading.sectionreading import SectionReading
-
 from tests.mocks.mock_open import mock_open
-
-from unittest.mock import MagicMock, patch
 
 
 class DummySection(Section):
@@ -16,7 +14,7 @@ class DummySection(Section):
             return o.data == self.data
 
     def read(self, file: IO) -> bool:
-        self.data: List[str] = []
+        self.data: list[str] = []
         self.data.append(file.readline())
         return True
 

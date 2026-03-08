@@ -1,12 +1,11 @@
-from typing import IO, List
+from io import StringIO
+from typing import IO
+from unittest.mock import MagicMock, patch
 
 from cfinterface.components.block import Block
 from cfinterface.data.blockdata import BlockData
 from cfinterface.writing.blockwriting import BlockWriting
-
 from tests.mocks.mock_open import mock_open
-from io import StringIO
-from unittest.mock import MagicMock, patch
 
 
 class DummyBlock(Block):
@@ -20,7 +19,7 @@ class DummyBlock(Block):
             return o.data == self.data
 
     def read(self, file: IO) -> bool:
-        self.data: List[str] = []
+        self.data: list[str] = []
         while True:
             line: str = file.readline()
             self.data.append(line)

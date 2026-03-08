@@ -42,9 +42,7 @@ class BlockReading:
     def __restore_previous_line(self) -> None:
         self.__repository.file.seek(self.__last_position_filepointer)
 
-    def __find_starting_block(
-        self, blockdata: str | bytes
-    ) -> "type[Block]":
+    def __find_starting_block(self, blockdata: str | bytes) -> "type[Block]":
         for b in self.__allowed_blocks:
             if b.begins(blockdata):
                 return b

@@ -1,4 +1,3 @@
-
 from cfinterface._utils import _is_null
 from cfinterface.components.field import Field
 

@@ -1,5 +1,6 @@
-from cfinterface.components.integerfield import IntegerField
 import numpy as np
+
+from cfinterface.components.integerfield import IntegerField
 
 
 def test_integerfield_read():

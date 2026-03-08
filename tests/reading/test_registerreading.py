@@ -1,11 +1,10 @@
+from unittest.mock import MagicMock, patch
+
 from cfinterface.components.line import Line
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.register import Register
 from cfinterface.reading.registerreading import RegisterReading
-
 from tests.mocks.mock_open import mock_open
-
-from unittest.mock import MagicMock, patch
 
 
 class DummyRegister(Register):

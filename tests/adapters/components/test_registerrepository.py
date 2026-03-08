@@ -1,6 +1,6 @@
 from cfinterface.adapters.components.repository import (
-    TextualRepository,
     BinaryRepository,
+    TextualRepository,
 )
 
 

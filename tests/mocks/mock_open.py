@@ -1,5 +1,5 @@
 import io
-from unittest.mock import MagicMock, DEFAULT
+from unittest.mock import DEFAULT, MagicMock
 
 file_spec = None
 

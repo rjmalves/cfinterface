@@ -70,13 +70,17 @@ def test_schema_version_equality():
 
 
 def test_import_from_top_level():
-    from cfinterface import SchemaVersion as SV, resolve_version as rv  # noqa: F401
+    from cfinterface import SchemaVersion as SV  # noqa: F401
+    from cfinterface import resolve_version as rv
 
     assert SV is SchemaVersion
     assert rv is resolve_version
 
 
-from cfinterface.versioning import VersionMatchResult, validate_version  # noqa: E402
+from cfinterface.versioning import (  # noqa: E402
+    VersionMatchResult,
+    validate_version,
+)
 
 
 class TypeA:
@@ -147,7 +151,8 @@ def test_validate_version_empty_data():
 
 
 def test_import_version_match_result():
-    from cfinterface import VersionMatchResult as VMR, validate_version as vv  # noqa: F401
+    from cfinterface import VersionMatchResult as VMR  # noqa: F401
+    from cfinterface import validate_version as vv
 
     assert VMR is not None
     assert vv is not None

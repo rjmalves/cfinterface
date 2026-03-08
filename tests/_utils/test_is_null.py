@@ -1,6 +1,8 @@
 from datetime import datetime
+
 import numpy as np
 import pytest
+
 from cfinterface._utils import _is_null
 
 

@@ -1,23 +1,23 @@
 Custom File Interface Framework (cfinterface)
 ==============================================
 
-**Version:** |release|
+**Versao:** |release|
 
-**Date:** |today|
+**Data:** |today|
 
-*cfinterface* is a framework for designing low-level interfaces that depends on complex
-text or binary file parsing. It provides components for modeling lines, registers,
-blocks and sections in a declarative way and aggregate these blocks as components
-for defining files.
+*cfinterface* e um framework para projetar interfaces de baixo nivel que dependem de
+analise complexa de arquivos de texto ou binarios. Ele fornece componentes para modelar
+linhas, registros, blocos e secoes de forma declarativa, e agrega esses blocos como
+componentes para a definicao de arquivos.
 
 .. toctree::
-   :caption: Install
+   :caption: Instalacao
    :maxdepth: 3
 
    install/install.rst
 
 .. toctree::
-   :caption: Getting Started
+   :caption: Primeiros Passos
    :maxdepth: 3
 
    getting_started/tutorial
@@ -25,7 +25,15 @@ for defining files.
    getting_started/contributing
 
 .. toctree::
-   :caption: Module Reference
+   :caption: Guias
+   :maxdepth: 2
+
+   guides/architecture
+   guides/performance
+   guides/migration-v1.9
+
+.. toctree::
+   :caption: Referencia de Modulos
    :maxdepth: 2
 
    reference/fields/index.rst
@@ -37,6 +45,12 @@ for defining files.
    reference/versioning/index.rst
    reference/storage/index.rst
    reference/adapters/index.rst
+
+.. toctree::
+   :caption: Recursos
+   :maxdepth: 2
+
+   guides/faq
 
 
 :ref:`genindex`

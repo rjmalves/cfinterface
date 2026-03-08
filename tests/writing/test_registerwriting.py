@@ -1,12 +1,12 @@
+from io import StringIO
+from unittest.mock import MagicMock, patch
+
 from cfinterface.components.line import Line
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.register import Register
 from cfinterface.data.registerdata import RegisterData
 from cfinterface.writing.registerwriting import RegisterWriting
-
 from tests.mocks.mock_open import mock_open
-from io import StringIO
-from unittest.mock import MagicMock, patch
 
 
 class DummyRegister(Register):

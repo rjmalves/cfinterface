@@ -1,24 +1,40 @@
-from cfinterface.storage import StorageType
-from cfinterface.adapters.components.repository import (
-    factory as component_factory,
-    TextualRepository as ComponentTextual,
-    BinaryRepository as ComponentBinary,
+from cfinterface.adapters.components.line.repository import (
+    BinaryRepository as LineBinary,
+)
+from cfinterface.adapters.components.line.repository import (
+    TextualRepository as LineTextual,
 )
 from cfinterface.adapters.components.line.repository import (
     factory as line_factory,
-    TextualRepository as LineTextual,
-    BinaryRepository as LineBinary,
+)
+from cfinterface.adapters.components.repository import (
+    BinaryRepository as ComponentBinary,
+)
+from cfinterface.adapters.components.repository import (
+    TextualRepository as ComponentTextual,
+)
+from cfinterface.adapters.components.repository import (
+    factory as component_factory,
+)
+from cfinterface.adapters.reading.repository import (
+    BinaryRepository as ReadingBinary,
+)
+from cfinterface.adapters.reading.repository import (
+    TextualRepository as ReadingTextual,
 )
 from cfinterface.adapters.reading.repository import (
     factory as reading_factory,
-    TextualRepository as ReadingTextual,
-    BinaryRepository as ReadingBinary,
+)
+from cfinterface.adapters.writing.repository import (
+    BinaryRepository as WritingBinary,
+)
+from cfinterface.adapters.writing.repository import (
+    TextualRepository as WritingTextual,
 )
 from cfinterface.adapters.writing.repository import (
     factory as writing_factory,
-    TextualRepository as WritingTextual,
-    BinaryRepository as WritingBinary,
 )
+from cfinterface.storage import StorageType
 
 
 def test_component_factory_with_enum():

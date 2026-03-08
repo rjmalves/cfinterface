@@ -1,6 +1,6 @@
 from cfinterface.adapters.components.line.repository import (
-    TextualRepository,
     BinaryRepository,
+    TextualRepository,
 )
 from cfinterface.components.literalfield import LiteralField
 

@@ -1,6 +1,6 @@
-from cfinterface.storage import StorageType
-from cfinterface.components.register import Register
 from cfinterface.components.block import Block
+from cfinterface.components.register import Register
+from cfinterface.storage import StorageType
 
 
 def test_register_matches_with_enum():
