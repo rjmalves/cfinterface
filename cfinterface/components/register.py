@@ -63,15 +63,11 @@ class Register:
 
     @classmethod
     @overload
-    def matches(
-        cls, line: str, storage: str | StorageType = ""
-    ) -> bool: ...
+    def matches(cls, line: str, storage: str | StorageType = "") -> bool: ...
 
     @classmethod
     @overload
-    def matches(
-        cls, line: bytes, storage: str | StorageType = ""
-    ) -> bool: ...
+    def matches(cls, line: bytes, storage: str | StorageType = "") -> bool: ...
 
     @classmethod
     def matches(

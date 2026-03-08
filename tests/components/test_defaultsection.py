@@ -1,7 +1,7 @@
+from unittest.mock import MagicMock, patch
+
 from cfinterface.components.defaultsection import DefaultSection
 from tests.mocks.mock_open import mock_open
-
-from unittest.mock import MagicMock, patch
 
 
 def test_default_section_eq():
@@ -16,7 +16,7 @@ def test_default_section_read():
     data = "Hello, world!\n"
     m: MagicMock = mock_open(read_data=data)
     with patch("builtins.open", m):
-        with open("", "r") as fp:
+        with open("") as fp:
             b = DefaultSection()
             b.read_section(fp)
             assert b.data == data

@@ -1,6 +1,7 @@
 """Benchmark FloatField._textual_write() across format types and scenarios."""
 
 import timeit
+
 from cfinterface.components.floatfield import FloatField
 
 N_WRITES = 100_000

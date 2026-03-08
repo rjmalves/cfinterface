@@ -1,4 +1,6 @@
 import warnings
+from io import StringIO
+from unittest.mock import MagicMock, patch
 
 import pandas as pd  # type: ignore
 import pytest
@@ -9,8 +11,6 @@ from cfinterface.components.register import Register
 from cfinterface.data.registerdata import RegisterData
 from cfinterface.files.registerfile import RegisterFile
 from tests.mocks.mock_open import mock_open
-from io import StringIO
-from unittest.mock import MagicMock, patch
 
 
 class DummyRegister(Register):

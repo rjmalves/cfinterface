@@ -252,7 +252,7 @@ def test_registerdata_of_type_with_mixed_types():
     dummy_results = list(rd.of_type(DummyRegister))
     assert len(dummy_results) == 6
     assert dummy_results[0] is root
-    for expected, actual in zip(defaults, dummy_results[1:]):
+    for expected, actual in zip(defaults, dummy_results[1:], strict=False):
         assert actual is expected
     default_results = list(rd.of_type(DefaultRegister))
     assert len(default_results) == 5

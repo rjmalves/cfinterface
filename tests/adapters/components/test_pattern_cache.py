@@ -1,4 +1,5 @@
 import re
+
 from cfinterface.adapters.components.repository import _compile, _pattern_cache
 
 

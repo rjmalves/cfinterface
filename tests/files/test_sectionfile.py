@@ -1,5 +1,7 @@
 import warnings
-from typing import IO, List
+from io import StringIO
+from typing import IO
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -7,8 +9,6 @@ from cfinterface.components.section import Section
 from cfinterface.data.sectiondata import SectionData
 from cfinterface.files.sectionfile import SectionFile
 from tests.mocks.mock_open import mock_open
-from io import StringIO
-from unittest.mock import MagicMock, patch
 
 
 class DummySection(Section):
@@ -18,7 +18,7 @@ class DummySection(Section):
         return o.data == self.data
 
     def read(self, file: IO) -> bool:
-        self.data: List[str] = []
+        self.data: list[str] = []
         line: str = file.readline()
         self.data.append(line)
         return True
@@ -36,7 +36,7 @@ class DummySectionV2(Section):
         return o.data == self.data
 
     def read(self, file: IO) -> bool:
-        self.data: List[str] = []
+        self.data: list[str] = []
         line: str = file.readline()
         self.data.append(line)
         return True

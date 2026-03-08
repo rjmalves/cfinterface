@@ -13,7 +13,6 @@
 import os
 import sys
 from datetime import date
-from typing import List
 
 import plotly.io as pio
 
@@ -74,7 +73,7 @@ master_doc = "index"
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns: List[str] = []
+exclude_patterns: list[str] = []
 
 add_module_names = False
 pygments_style = "sphinx"
@@ -110,7 +109,7 @@ numpydoc_show_class_members = False
 
 intersphinx_mapping = {
     "python": (
-        "https://docs.python.org/{.major}".format(sys.version_info),
+        f"https://docs.python.org/{sys.version_info.major}",
         None,
     ),
     "pandas": ("http://pandas.pydata.org/pandas-docs/stable/", None),

@@ -243,7 +243,7 @@ def test_blockdata_of_type_with_mixed_types():
     dummy_results = list(bd.of_type(DummyBlock))
     assert len(dummy_results) == 6
     assert dummy_results[0] is root
-    for expected, actual in zip(dummies, dummy_results[1:]):
+    for expected, actual in zip(dummies, dummy_results[1:], strict=False):
         assert actual is expected
     default_results = list(bd.of_type(DefaultBlock))
     assert len(default_results) == 5

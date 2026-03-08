@@ -1,7 +1,7 @@
+from unittest.mock import MagicMock, patch
+
 from cfinterface.components.defaultregister import DefaultRegister
 from tests.mocks.mock_open import mock_open
-
-from unittest.mock import MagicMock, patch
 
 
 def test_default_register_eq():
@@ -16,7 +16,7 @@ def test_default_register_read():
     data = "Hello, world!\n"
     m: MagicMock = mock_open(read_data=data)
     with patch("builtins.open", m):
-        with open("", "r") as fp:
+        with open("") as fp:
             r = DefaultRegister()
             r.read_register(fp, storage="TEXT")
             assert r.data == data

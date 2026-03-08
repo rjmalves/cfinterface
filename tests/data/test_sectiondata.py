@@ -235,7 +235,7 @@ def test_sectiondata_of_type_with_mixed_types():
     dummy_results = list(sd.of_type(DummySection))
     assert len(dummy_results) == 6
     assert dummy_results[0] is root
-    for expected, actual in zip(dummies, dummy_results[1:]):
+    for expected, actual in zip(dummies, dummy_results[1:], strict=False):
         assert actual is expected
     default_results = list(sd.of_type(DefaultSection))
     assert len(default_results) == 5

@@ -1,12 +1,11 @@
 from typing import IO
+from unittest.mock import MagicMock, patch
 
 import pytest
-from cfinterface.components.literalfield import LiteralField
 
+from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.section import Section
 from tests.mocks.mock_open import mock_open
-
-from unittest.mock import MagicMock, patch
 
 
 class DummySection(Section):
@@ -87,7 +86,7 @@ def test_section_read_error():
     with pytest.raises(NotImplementedError):
         m: MagicMock = mock_open(read_data="")
         with patch("builtins.open", m):
-            with open("", "r") as fp:
+            with open("") as fp:
                 s.read_section(fp)
 
 
@@ -96,7 +95,7 @@ def test_section_write_error():
     with pytest.raises(NotImplementedError):
         m: MagicMock = mock_open(read_data="")
         with patch("builtins.open", m):
-            with open("", "r") as fp:
+            with open("") as fp:
                 s.write_section(fp)
 
 
@@ -110,7 +109,7 @@ def test_dummy_section_read():
     data = "Hello, world!"
     m: MagicMock = mock_open(read_data=data)
     with patch("builtins.open", m):
-        with open("", "r") as fp:
+        with open("") as fp:
             s = DummySection()
             s.read_section(fp)
             assert s.data == data

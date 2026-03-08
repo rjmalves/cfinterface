@@ -41,6 +41,7 @@ dev = [
     "pandas>=2.2.3",
     "pandas-stubs",
     "plotly",
+    "pre-commit",
     "pytest",
     "pytest-benchmark",
     "pytest-cov",
@@ -113,7 +114,8 @@ target-version = "py310"
 select = ["E", "F", "W", "I", "UP", "B", "SIM"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["B011", "S101"]
+"tests/**/*.py" = ["B011", "B015", "E501", "F821", "S101", "SIM117", "UP028"]
+"benchmarks/**/*.py" = ["E501"]
 "examples/**/*.py" = ["E402"]
 
 [tool.ruff.lint.isort]

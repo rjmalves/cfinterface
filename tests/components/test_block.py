@@ -1,4 +1,5 @@
 from typing import IO
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -6,8 +7,6 @@ from cfinterface.components.block import Block
 from cfinterface.components.literalfield import LiteralField
 from cfinterface.storage import StorageType
 from tests.mocks.mock_open import mock_open
-
-from unittest.mock import MagicMock, patch
 
 
 class DummyBlock(Block):
@@ -93,7 +92,7 @@ def test_block_read_error():
     with pytest.raises(NotImplementedError):
         m: MagicMock = mock_open(read_data="")
         with patch("builtins.open", m):
-            with open("", "r") as fp:
+            with open("") as fp:
                 b.read_block(fp)
 
 
@@ -102,7 +101,7 @@ def test_block_write_error():
     with pytest.raises(NotImplementedError):
         m: MagicMock = mock_open(read_data="")
         with patch("builtins.open", m):
-            with open("", "r") as fp:
+            with open("") as fp:
                 b.write_block(fp)
 
 
@@ -120,7 +119,7 @@ def test_dummy_block_read():
     )
     m: MagicMock = mock_open(read_data=filedata)
     with patch("builtins.open", m):
-        with open("", "r") as fp:
+        with open("") as fp:
             b = DummyBlock()
             assert DummyBlock.begins(fp.readline())
             b.read_block(fp)

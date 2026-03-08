@@ -1,4 +1,3 @@
-
 import numpy as np  # type: ignore[import-untyped]
 
 from cfinterface._utils import _is_null
