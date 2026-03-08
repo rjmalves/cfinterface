@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.9.0] - Unreleased
+## [1.9.0] - 2026-03-08
 
 ### Added
 
@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI test matrix covering Python 3.10, 3.11, 3.12, 3.13, and 3.14 on Linux, plus Python 3.12 on Windows
 - Separated lint/quality CI job running mypy, ruff, ty (informational), and `sphinx-build -W`
 - Manual-dispatch benchmark CI workflow (`.github/workflows/benchmark.yml`) for on-demand performance profiling
+- Pre-commit configuration with ruff (lint + format) and mypy hooks (`.pre-commit-config.yaml`)
+- Sphinx gallery examples for `BlockFile` and `SectionFile` usage (`examples/plot_block_file.py`, `examples/plot_section_file.py`)
+- Documentation pages in pt-BR: architecture overview, FAQ, migration guide (v1.8→v1.9), and performance tips
+- Root-level `CONTRIBUTING.md` in pt-BR with links to full Sphinx contributing page
 
 ### Changed
 
@@ -45,6 +49,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - pyproject.toml expanded with `[tool.mypy]`, `[tool.pytest.ini_options]`, `[tool.coverage]`, and an expanded `[tool.ruff.lint]` section
 - Python classifiers updated to include 3.10, 3.11, 3.12, 3.13, and 3.14
 - `docs.yml` and `publish.yml` GitHub Actions workflows modernized to use `uv` and consistent job patterns
+- All GitHub Actions upgraded to latest versions (`setup-uv@v6`, `codecov-action@v5`)
+- Docs deployment migrated from `peaceiris/actions-gh-pages` to official `actions/deploy-pages`
+- Sphinx theme migrated from `sphinx-rtd-theme` to Furo (dark mode, mobile-responsive)
+- Sphinx language setting changed from `en_US` to `pt_BR`
+- Intersphinx pandas URL updated from HTTP to HTTPS
+- `docs/source/getting_started/contributing.rst` rewritten in pt-BR with correct repository URL and uv-based workflow
+- `docs/source/index.rst` restructured with Guias and Recursos toctree sections
 
 ### Deprecated
 
