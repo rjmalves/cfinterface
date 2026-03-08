@@ -49,9 +49,9 @@ ticket-004 (Furo theme) ──> ticket-005 (examples)
 | ticket-001 | Add pre-commit configuration                              | epic-01 | completed | Detailed     | 0.97      | 0.95    | EXCELLENT |
 | ticket-002 | Upgrade GitHub Actions versions                           | epic-01 | completed | Detailed     | 0.97      | 0.98    | EXCELLENT |
 | ticket-003 | Migrate docs deployment to official GitHub Pages action   | epic-01 | completed | Detailed     | 0.97      | 0.98    | EXCELLENT |
-| ticket-004 | Migrate Sphinx theme from RTD to Furo                     | epic-02 | pending   | Detailed     | 0.97      | --      | --        |
-| ticket-005 | Add sphinx-gallery examples for BlockFile and SectionFile | epic-02 | pending   | Detailed     | 0.95      | --      | --        |
-| ticket-006 | Update conf.py language and intersphinx settings          | epic-02 | pending   | Detailed     | 0.97      | --      | --        |
+| ticket-004 | Migrate Sphinx theme from RTD to Furo                     | epic-02 | completed | Detailed     | 0.97      | 0.98    | EXCELLENT |
+| ticket-005 | Add sphinx-gallery examples for BlockFile and SectionFile | epic-02 | completed | Detailed     | 0.95      | 0.95    | EXCELLENT |
+| ticket-006 | Update conf.py language and intersphinx settings          | epic-02 | completed | Detailed     | 0.97      | 0.98    | EXCELLENT |
 | ticket-007 | Create architecture overview page                         | epic-03 | pending   | Outline      | --        | --      | --        |
 | ticket-008 | Create FAQ page                                           | epic-03 | pending   | Outline      | --        | --      | --        |
 | ticket-009 | Create v1.8-to-v1.9 migration guide                       | epic-03 | pending   | Outline      | --        | --      | --        |

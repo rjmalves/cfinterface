@@ -45,7 +45,6 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx_gallery.gen_gallery",
     "numpydoc",
-    "sphinx_rtd_theme",
 ]
 
 # generate autosummary pages
@@ -59,7 +58,7 @@ templates_path = ["_templates"]
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = "en_US"
+language = "pt_BR"
 
 # The suffix of source filenames.
 source_suffix = ".rst"
@@ -84,15 +83,13 @@ modindex_common_prefix = ["cfinterface."]
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
 html_theme_options = {
-    "logo_only": False,
-    # Toc options
-    "collapse_navigation": False,
-    "sticky_navigation": True,
-    "navigation_depth": 4,
-    "includehidden": True,
-    "titles_only": False,
+    "light_css_variables": {
+        "color-brand-primary": "#2980B9",
+        "color-brand-content": "#2980B9",
+    },
+    "navigation_with_keys": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -108,11 +105,8 @@ default_role = "obj"
 numpydoc_show_class_members = False
 
 intersphinx_mapping = {
-    "python": (
-        f"https://docs.python.org/{sys.version_info.major}",
-        None,
-    ),
-    "pandas": ("http://pandas.pydata.org/pandas-docs/stable/", None),
+    "python": ("https://docs.python.org/3/", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
