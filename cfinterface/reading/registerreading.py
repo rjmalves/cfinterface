@@ -82,6 +82,7 @@ class RegisterReading:
         :return: The data from the registers found in the file
         :rtype: RegisterData
         """
+        self.__data = RegisterData(DefaultRegister(data=""))
         self.__repository = factory(self.__storage)(
             content, not isfile(content), encoding
         )

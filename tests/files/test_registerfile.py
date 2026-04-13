@@ -1,3 +1,5 @@
+import os
+import tempfile
 import warnings
 from io import StringIO
 from unittest.mock import MagicMock, patch
@@ -10,6 +12,8 @@ from cfinterface.components.literalfield import LiteralField
 from cfinterface.components.register import Register
 from cfinterface.data.registerdata import RegisterData
 from cfinterface.files.registerfile import RegisterFile
+from cfinterface.reading.registerreading import RegisterReading
+from cfinterface.storage import StorageType
 from tests.mocks.mock_open import mock_open
 
 
@@ -259,3 +263,41 @@ def test_registerfile_validate_unknown_version():
     f = VersionedRegisterFile.read(filedata)
     result = f.validate(version="v0")
     assert result.matched is False
+
+
+def test_registerreading_data_reset_between_reads():
+    """Verify that RegisterReading.__data is reset on each read() call."""
+    data = "Hello, world!"
+    filedata = DummyRegister.IDENTIFIER + " " + data + "\n"
+    reader = RegisterReading([DummyRegister], StorageType.TEXT)
+    result1 = reader.read(filedata, "utf-8")
+    assert len(result1) == 2  # root DefaultRegister + 1 DummyRegister
+    result2 = reader.read(filedata, "utf-8")
+    assert len(result2) == 2  # must be 2 again, not 4
+
+
+def test_registerfile_read_encoding_fallback_no_duplication():
+    """Verify no data duplication when first encoding fails mid-file.
+
+    A Latin-1 file with a non-UTF-8 byte causes UTF-8 decoding to fail
+    partway through. The fallback to Latin-1 must not carry over partially
+    read data from the failed UTF-8 attempt.
+    """
+    line1 = DummyRegister.IDENTIFIER + " " + "Hello, world!" + "\n"
+    line2 = DummyRegister.IDENTIFIER + " " + "with acc\u00eant! " + "\n"
+
+    class FallbackFile(RegisterFile):
+        REGISTERS = [DummyRegister]
+        ENCODING = ["utf-8", "latin-1"]
+
+    with tempfile.NamedTemporaryFile(
+        mode="wb", suffix=".txt", delete=False
+    ) as f:
+        f.write((line1 + line2).encode("latin-1"))
+        tmppath = f.name
+    try:
+        result = FallbackFile.read(tmppath)
+        # root DefaultRegister + 2 DummyRegisters = 3
+        assert len(result.data) == 3
+    finally:
+        os.unlink(tmppath)

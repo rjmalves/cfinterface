@@ -196,3 +196,108 @@ def test_floatfield_write_fuzz_equivalence():
             f"Mismatch: fmt={fmt} size={size} dec={dec} val={val} "
             f"got={result!r} expected={expected!r}"
         )
+
+
+def test_floatfield_compact_positive_small():
+    f = FloatField(5, 0, 4, format="F", value=0.0563, compact=True)
+    assert f._textual_write() == ".0563"
+
+
+def test_floatfield_compact_negative_small():
+    f = FloatField(6, 0, 4, format="F", value=-0.0563, compact=True)
+    assert f._textual_write() == "-.0563"
+
+
+def test_floatfield_compact_no_effect_above_one():
+    f = FloatField(5, 0, 2, format="F", value=1.50, compact=True)
+    assert f._textual_write() == " 1.50"
+
+
+def test_floatfield_compact_no_effect_zero():
+    f = FloatField(6, 0, 3, format="F", value=0.0, compact=True)
+    assert f._textual_write() == " 0.000"
+
+
+def test_floatfield_compact_default_false():
+    f = FloatField(5, 0, 3, format="F", value=0.0563)
+    assert f._textual_write() == "0.056"
+
+
+def test_floatfield_compact_preserves_precision():
+    """Concrete example from issue: size=5, decimal_digits=4.
+
+    Without compact: "0.0563" (6 chars) overflows → reduced to "0.056" (0.53% error).
+    With compact: ".0563" fits in 5 chars → no precision loss.
+    """
+    f_default = FloatField(5, 0, 4, format="F", value=0.0563)
+    f_compact = FloatField(5, 0, 4, format="F", value=0.0563, compact=True)
+    assert f_default._textual_write() == "0.056"
+    assert f_compact._textual_write() == ".0563"
+
+
+def test_floatfield_compact_read_roundtrip():
+    """Reading a compact-formatted value works because float('.0563') parses."""
+    f_write = FloatField(5, 0, 4, format="F", value=0.0563, compact=True)
+    written = f_write._textual_write()
+    assert written == ".0563"
+    line = written + "-rest"
+    f_read = FloatField(5, 0, 4, format="F")
+    f_read.read(line)
+    assert f_read.value == 0.0563
+
+
+def test_floatfield_compact_negative_read_roundtrip():
+    f_write = FloatField(6, 0, 4, format="F", value=-0.0563, compact=True)
+    written = f_write._textual_write()
+    assert written == "-.0563"
+    line = written + "-rest"
+    f_read = FloatField(6, 0, 4, format="F")
+    f_read.read(line)
+    assert f_read.value == -0.0563
+
+
+def test_floatfield_compact_no_effect_negative_zero():
+    f = FloatField(8, 0, 4, format="F", value=-0.0, compact=True)
+    assert f._textual_write() == " -0.0000"
+
+
+def test_floatfield_compact_overflow_still_reduces():
+    """When compact alone doesn't prevent overflow, precision is still reduced."""
+    f = FloatField(4, 0, 4, format="F", value=0.0563, compact=True)
+    result = f._textual_write()
+    assert len(result) == 4
+    assert result == ".056"
+
+
+def test_floatfield_compact_fuzz_properties():
+    """Fuzz: compact output fits field, parses correctly, is at least as precise."""
+    import random
+
+    random.seed(99)
+    for _ in range(50000):
+        size = random.randint(3, 20)
+        dec = random.randint(0, min(10, size - 1))
+        val = random.uniform(-0.999, 0.999)
+        if abs(val) < 1e-15:
+            continue
+        f_default = FloatField(size, 0, dec, format="F", value=val)
+        f_compact = FloatField(
+            size, 0, dec, format="F", value=val, compact=True
+        )
+        default_result = f_default._textual_write()
+        compact_result = f_compact._textual_write()
+        assert len(compact_result) == size, (
+            f"Wrong length: size={size} dec={dec} val={val} "
+            f"compact={compact_result!r} len={len(compact_result)}"
+        )
+        default_float = (
+            float(default_result.strip()) if default_result.strip() else 0.0
+        )
+        compact_float = (
+            float(compact_result.strip()) if compact_result.strip() else 0.0
+        )
+        # Compact must be at least as precise as default
+        assert abs(compact_float - val) <= abs(default_float - val) + 1e-15, (
+            f"Precision loss: size={size} dec={dec} val={val} "
+            f"default={default_result!r} compact={compact_result!r}"
+        )
