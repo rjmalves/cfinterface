@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.1] - 2026-04-13
+
+### Fixed
+
+- Resolve mypy `arg-type` error in `FloatField._apply_compact` by passing the numeric value as a parameter instead of accessing `self._value` directly
+
 ## [1.10.0] - 2026-04-13
 
 ### Added
