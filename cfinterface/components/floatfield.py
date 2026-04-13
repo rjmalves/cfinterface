@@ -13,7 +13,7 @@ class FloatField(Field):
     by 'F' for fixed point notation and 'E' or 'D' for scientific notation.
     """
 
-    __slots__ = ["__decimal_digits", "__format", "__sep", "__type"]
+    __slots__ = ["__compact", "__decimal_digits", "__format", "__sep", "__type"]
 
     TYPES = {
         2: np.float16,
@@ -29,12 +29,14 @@ class FloatField(Field):
         format: str = "F",
         sep: str = ".",
         value: float | None = None,
+        compact: bool = False,
     ) -> None:
         super().__init__(
             size,
             starting_position,
             value,
         )
+        self.__compact = compact
         self.__decimal_digits = decimal_digits
         self.__format = format
         self.__sep = sep
@@ -62,6 +64,14 @@ class FloatField(Field):
             return np.array([0.0], dtype=self.__type).tobytes()
         else:
             return np.array([self._value], dtype=self.__type).tobytes()
+
+    def _apply_compact(self, value: str) -> str:
+        if self.__compact and 0 < abs(self._value) < 1:
+            if value.startswith("0."):
+                return value[1:]
+            if value.startswith("-0."):
+                return "-" + value[2:]
+        return value
 
     def _textual_write(self) -> str:
         value = ""
@@ -97,6 +107,7 @@ class FloatField(Field):
                     d=self.__decimal_digits,
                     format=formatting_format,
                 ).replace("E", self.__format)
+                value = self._apply_compact(value)
                 if len(value) > self._size:
                     excess = len(value) - self._size
                     new_d = self.__decimal_digits - excess
@@ -107,6 +118,7 @@ class FloatField(Field):
                         d=new_d,
                         format=formatting_format,
                     ).replace("E", self.__format)
+                    value = self._apply_compact(value)
                     if len(value) > self._size:
                         new_d = max(0, new_d - 1)
                         value = "{:.{d}{format}}".format(
@@ -114,6 +126,7 @@ class FloatField(Field):
                             d=new_d,
                             format=formatting_format,
                         ).replace("E", self.__format)
+                        value = self._apply_compact(value)
         return value.rjust(self.size)
 
     @property
