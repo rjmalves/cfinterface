@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-04-13
+
+### Added
+
+- `compact` parameter on `FloatField` (`compact=False` by default) that omits the leading zero for values where `0 < |value| < 1`, matching Fortran fixed-width file conventions and preserving precision in narrow fields
+
+### Fixed
+
+- `RegisterReading.read()` now resets its internal data before each call, preventing register duplication when `RegisterFile.read()` retries with fallback encodings after a mid-file `UnicodeDecodeError`
+
 ## [1.9.1] - 2026-03-08
 
 ### Fixed
