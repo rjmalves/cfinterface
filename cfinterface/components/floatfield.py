@@ -65,8 +65,8 @@ class FloatField(Field):
         else:
             return np.array([self._value], dtype=self.__type).tobytes()
 
-    def _apply_compact(self, value: str) -> str:
-        if self.__compact and 0 < abs(self._value) < 1:
+    def _apply_compact(self, value: str, numeric: float) -> str:
+        if self.__compact and 0 < abs(numeric) < 1:
             if value.startswith("0."):
                 return value[1:]
             if value.startswith("-0."):
@@ -107,7 +107,7 @@ class FloatField(Field):
                     d=self.__decimal_digits,
                     format=formatting_format,
                 ).replace("E", self.__format)
-                value = self._apply_compact(value)
+                value = self._apply_compact(value, self.value)
                 if len(value) > self._size:
                     excess = len(value) - self._size
                     new_d = self.__decimal_digits - excess
@@ -118,7 +118,7 @@ class FloatField(Field):
                         d=new_d,
                         format=formatting_format,
                     ).replace("E", self.__format)
-                    value = self._apply_compact(value)
+                    value = self._apply_compact(value, self.value)
                     if len(value) > self._size:
                         new_d = max(0, new_d - 1)
                         value = "{:.{d}{format}}".format(
@@ -126,7 +126,7 @@ class FloatField(Field):
                             d=new_d,
                             format=formatting_format,
                         ).replace("E", self.__format)
-                        value = self._apply_compact(value)
+                        value = self._apply_compact(value, self.value)
         return value.rjust(self.size)
 
     @property
