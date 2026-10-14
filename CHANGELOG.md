@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.2] - 2026-10-14
+
+### Fixed
+
+- Type `SectionFile.read()`, `RegisterFile.read()` and `BlockFile.read()` (and their `read_many()`) as returning the calling subclass instead of the base class, so mypy sees the attributes of files such as `Dadger` or `Caso` read through them
+
 ## [1.10.1] - 2026-04-13
 
 ### Fixed
