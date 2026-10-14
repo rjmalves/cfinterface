@@ -1,5 +1,5 @@
 import warnings
-from typing import IO, TYPE_CHECKING, Any
+from typing import IO, TYPE_CHECKING, Any, TypeVar
 
 from cfinterface.components.block import Block
 from cfinterface.components.defaultblock import DefaultBlock
@@ -11,6 +11,8 @@ from cfinterface.writing.blockwriting import BlockWriting
 
 if TYPE_CHECKING:
     from cfinterface.versioning import VersionMatchResult
+
+_BlockFileT = TypeVar("_BlockFileT", bound="BlockFile")
 
 
 class BlockFile:
@@ -48,12 +50,12 @@ class BlockFile:
 
     @classmethod
     def read(
-        cls,
+        cls: type[_BlockFileT],
         content: str | bytes,
         *args: Any,
         version: str | None = None,
         **kwargs: Any,
-    ) -> "BlockFile":
+    ) -> _BlockFileT:
         """Read from a file path or buffer. ``version`` selects a component set
         from VERSIONS without mutating the class."""
         components = cls.BLOCKS
@@ -86,11 +88,11 @@ class BlockFile:
 
     @classmethod
     def read_many(
-        cls,
+        cls: type[_BlockFileT],
         paths: list[str],
         *,
         version: str | None = None,
-    ) -> dict[str, "BlockFile"]:
+    ) -> dict[str, _BlockFileT]:
         """Read multiple files and return a dict keyed by file path.
 
         Parameters

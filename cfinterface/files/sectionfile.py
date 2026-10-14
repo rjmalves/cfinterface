@@ -1,5 +1,5 @@
 import warnings
-from typing import IO, TYPE_CHECKING, Any
+from typing import IO, TYPE_CHECKING, Any, TypeVar
 
 from cfinterface.components.defaultsection import DefaultSection
 from cfinterface.components.section import Section
@@ -11,6 +11,8 @@ from cfinterface.writing.sectionwriting import SectionWriting
 
 if TYPE_CHECKING:
     from cfinterface.versioning import VersionMatchResult
+
+_SectionFileT = TypeVar("_SectionFileT", bound="SectionFile")
 
 
 class SectionFile:
@@ -48,12 +50,12 @@ class SectionFile:
 
     @classmethod
     def read(
-        cls,
+        cls: type[_SectionFileT],
         content: str | bytes,
         *args: Any,
         version: str | None = None,
         **kwargs: Any,
-    ) -> "SectionFile":
+    ) -> _SectionFileT:
         """Read from a file path or buffer. ``version`` selects a component set
         from VERSIONS without mutating the class."""
         components = cls.SECTIONS
@@ -86,11 +88,11 @@ class SectionFile:
 
     @classmethod
     def read_many(
-        cls,
+        cls: type[_SectionFileT],
         paths: list[str],
         *,
         version: str | None = None,
-    ) -> dict[str, "SectionFile"]:
+    ) -> dict[str, _SectionFileT]:
         """Read multiple files and return a dict keyed by file path.
 
         Parameters
