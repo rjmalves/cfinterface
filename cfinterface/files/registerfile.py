@@ -1,5 +1,5 @@
 import warnings
-from typing import IO, TYPE_CHECKING, Any
+from typing import IO, TYPE_CHECKING, Any, TypeVar
 
 from cfinterface.components.defaultregister import DefaultRegister
 from cfinterface.components.register import Register
@@ -11,6 +11,8 @@ from cfinterface.writing.registerwriting import RegisterWriting
 
 if TYPE_CHECKING:
     from cfinterface.versioning import VersionMatchResult
+
+_RegisterFileT = TypeVar("_RegisterFileT", bound="RegisterFile")
 
 
 class RegisterFile:
@@ -65,12 +67,12 @@ class RegisterFile:
 
     @classmethod
     def read(
-        cls,
+        cls: type[_RegisterFileT],
         content: str | bytes,
         *args: Any,
         version: str | None = None,
         **kwargs: Any,
-    ) -> "RegisterFile":
+    ) -> _RegisterFileT:
         """Read from a file path or buffer. ``version`` selects a component set
         from VERSIONS without mutating the class."""
         components = cls.REGISTERS
@@ -103,11 +105,11 @@ class RegisterFile:
 
     @classmethod
     def read_many(
-        cls,
+        cls: type[_RegisterFileT],
         paths: list[str],
         *,
         version: str | None = None,
-    ) -> dict[str, "RegisterFile"]:
+    ) -> dict[str, _RegisterFileT]:
         """Read multiple files and return a dict keyed by file path.
 
         Parameters
