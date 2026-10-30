@@ -643,6 +643,15 @@ def test_parse_lines_delimited_missing_tokens_filled_with_none() -> None:
     assert result["label"] == [None]
 
 
+def test_parse_lines_delimited_short_line_after_full_line() -> None:
+    """A short line after a full one does not keep the full line's values."""
+    parser = _make_semicolon_parser()
+    lines = ["1;1.25;alpha\n", "10;5.00\n"]
+    result = parser.parse_lines(lines)
+    assert result["id"] == [1, 10]
+    assert result["label"] == ["alpha", None]
+
+
 def test_format_rows_semicolon_delimited() -> None:
     """format_rows with ';' delimiter joins fields with semicolons."""
     parser = _make_semicolon_parser()

@@ -88,7 +88,8 @@ configured ``StorageType``. That repository is what executes reading and writing
 to the storage backend (textual or binary).
 
 ``Line`` accepts an optional ``delimiter``: when provided, fields are separated by that
-character instead of occupying fixed positions.
+character instead of occupying fixed positions. A line with fewer values than fields reads
+each missing field as ``None``.
 
 .. code-block:: python
 
