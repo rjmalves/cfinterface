@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- A delimited line with fewer values than its fields reads the missing fields as `None`; it used to keep the values the previous line of the same register or table left in them
+
 ## [1.10.2] - 2026-10-14
 
 ### Fixed

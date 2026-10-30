@@ -56,6 +56,10 @@ class TextualRepository(Repository):
         values = [v.strip() for v in line.split(delimiter)]
         for field, value in zip(fields, values, strict=False):
             field.read(value)
+        # A field past the end of a short line must be reset, or it keeps the
+        # value the previous line left in the shared field.
+        for field in fields[len(values) :]:
+            field.value = None
         return self.values
 
     def read(

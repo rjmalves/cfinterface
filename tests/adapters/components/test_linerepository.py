@@ -2,6 +2,7 @@ from cfinterface.adapters.components.line.repository import (
     BinaryRepository,
     TextualRepository,
 )
+from cfinterface.components.integerfield import IntegerField
 from cfinterface.components.literalfield import LiteralField
 
 
@@ -47,6 +48,13 @@ def test_delimitedrepository_read_with_fields():
     values = repo.read(fileline, delimiter=";")
     assert values[0] == "hello,"
     assert values[1] == "world!"
+
+
+def test_delimitedrepository_read_short_line_does_not_keep_previous_values():
+    fields = [LiteralField(6, 0), LiteralField(6, 7), IntegerField(4, 14)]
+    repo = TextualRepository(fields)
+    repo.read("a;b;7", delimiter=";")
+    assert repo.read("c", delimiter=";") == ["c", None, None]
 
 
 def test_delimitedrepository_write_no_fields():
