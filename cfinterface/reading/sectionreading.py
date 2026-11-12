@@ -75,6 +75,7 @@ class SectionReading:
         :return: The data from the sections found in the file
         :rtype: SectionData
         """
+        self.__data = SectionData(DefaultSection(data=""))
         self.__repository = factory(self.__storage)(
             content, not isfile(content), encoding
         )
