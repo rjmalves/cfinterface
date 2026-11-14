@@ -78,6 +78,7 @@ class BlockReading:
         :return: The data from the blocks found in the file
         :rtype: BlockData
         """
+        self.__data = BlockData(DefaultBlock(data=""))
         self.__repository = factory(self.__storage)(
             content, not isfile(content), encoding
         )
