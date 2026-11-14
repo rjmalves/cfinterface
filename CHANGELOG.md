@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.4] - 2026-11-14
+
 ### Fixed
 
 - `SectionReading.read()` and `BlockReading.read()` now reset their internal data before each call, as `RegisterReading.read()` does since 1.10.0; a Latin-1 file whose first non-ASCII byte comes after the first 8 KiB used to return the sections or blocks read before the `UnicodeDecodeError` twice
